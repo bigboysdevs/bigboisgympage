@@ -1,4 +1,4 @@
-import { FadeIn } from "../components/FadeIn";
+import { motion } from "framer-motion";
 
 const SERVICES: { num: string; title: string; body: string }[] = [
   {
@@ -28,6 +28,19 @@ const SERVICES: { num: string; title: string; body: string }[] = [
   },
 ];
 
+const serviceVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  }),
+};
+
 export function ServicesSection() {
   return (
     <section
@@ -42,8 +55,15 @@ export function ServicesSection() {
       </h2>
 
       <div className="mx-auto max-w-5xl divide-y divide-[rgba(12,12,12,0.15)] border-y border-[rgba(12,12,12,0.15)]">
-        {SERVICES.map((item, i) => (
-          <FadeIn key={item.num} delay={i * 0.1}>
+        {SERVICES.map((item, index) => (
+          <motion.div
+            key={item.num}
+            custom={index}
+            variants={serviceVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px", amount: 0 }}
+          >
             <article className="grid grid-cols-1 gap-6 py-8 sm:grid-cols-[minmax(0,auto)_1fr] sm:gap-10 sm:py-10 md:gap-12 md:py-12">
               <p
                 className="font-black leading-none text-[#0C0C0C]"
@@ -66,7 +86,7 @@ export function ServicesSection() {
                 </p>
               </div>
             </article>
-          </FadeIn>
+          </motion.div>
         ))}
       </div>
     </section>
