@@ -1,74 +1,79 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ReactNode, type HTMLAttributes } from 'react';
 
-type MagnetProps = {
+interface MagnetProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   padding?: number;
+  disabled?: boolean;
   strength?: number;
   activeTransition?: string;
   inactiveTransition?: string;
-  className?: string;
-};
+  innerClassName?: string;
+}
 
-export function Magnet({
+export default function Magnet({
   children,
-  padding = 150,
-  strength = 3,
-  activeTransition = "transform 0.3s ease-out",
-  inactiveTransition = "transform 0.6s ease-in-out",
-  className = "",
+  padding = 100,
+  disabled = false,
+  strength = 2,
+  activeTransition = 'transform 0.3s ease-out',
+  inactiveTransition = 'transform 0.5s ease-in-out',
+  className = '',
+  innerClassName = '',
+  style,
+  ...props
 }: MagnetProps) {
+  const [isActive, setIsActive] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const ref = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  const onMove = useCallback(
-    (clientX: number, clientY: number) => {
-      const el = ref.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const expanded = {
-        left: rect.left - padding,
-        right: rect.right + padding,
-        top: rect.top - padding,
-        bottom: rect.bottom + padding,
-      };
-      const inside =
-        clientX >= expanded.left &&
-        clientX <= expanded.right &&
-        clientY >= expanded.top &&
-        clientY <= expanded.bottom;
-
-      if (inside) {
-        el.style.transition = activeTransition;
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        setOffset({
-          x: (clientX - cx) / strength,
-          y: (clientY - cy) / strength,
-        });
-      } else {
-        el.style.transition = inactiveTransition;
-        setOffset({ x: 0, y: 0 });
-      }
-    },
-    [activeTransition, inactiveTransition, padding, strength]
-  );
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => onMove(e.clientX, e.clientY);
-    window.addEventListener("mousemove", handler, { passive: true });
-    return () => window.removeEventListener("mousemove", handler);
-  }, [onMove]);
+    if (disabled) {
+      setPosition({ x: 0, y: 0 });
+      return;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+
+      const { left, top, width, height } = ref.current.getBoundingClientRect();
+      const centerX = left + width / 2;
+      const centerY = top + height / 2;
+      const distX = Math.abs(centerX - e.clientX);
+      const distY = Math.abs(centerY - e.clientY);
+
+      if (distX < width / 2 + padding && distY < height / 2 + padding) {
+        setIsActive(true);
+        setPosition({
+          x: (e.clientX - centerX) / strength,
+          y: (e.clientY - centerY) / strength,
+        });
+      } else {
+        setIsActive(false);
+        setPosition({ x: 0, y: 0 });
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [padding, disabled, strength]);
 
   return (
     <div
       ref={ref}
       className={className}
-      style={{
-        willChange: "transform",
-        transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
-      }}
+      style={style}
+      {...props}
     >
-      {children}
+      <div
+        className={innerClassName}
+        style={{
+          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+          transition: isActive ? activeTransition : inactiveTransition,
+          willChange: 'transform',
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

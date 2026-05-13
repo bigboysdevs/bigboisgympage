@@ -1,17 +1,17 @@
-import { AboutSection } from "./sections/AboutSection";
-import { HeroSection } from "./sections/HeroSection";
-import { MarqueeSection } from "./sections/MarqueeSection";
-import { ProjectsSection } from "./sections/ProjectsSection";
-import { ServicesSection } from "./sections/ServicesSection";
+import HeroSection from './components/HeroSection';
+import MarqueeSection from './components/MarqueeSection';
+import AboutSection from './components/AboutSection';
+import ServicesSection from './components/ServicesSection';
+import ProjectsSection from './components/ProjectsSection';
 
 export default function App() {
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#0C0C0C] text-[#D7E2EA] antialiased">
+    <main style={{ backgroundColor: '#0C0C0C', overflowX: 'clip' }}>
       <HeroSection />
       <MarqueeSection />
       <AboutSection />
       <ServicesSection />
       <ProjectsSection />
-    </div>
+    </main>
   );
 }
