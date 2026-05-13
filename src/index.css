@@ -37,3 +37,11 @@
     #6c3483 100%
   );
 }
+
+/* Cursor estilo showcase (motion.page): ocultar cursor nativo cuando el blend cursor está activo */
+@layer utilities {
+  html.use-blend-cursor,
+  html.use-blend-cursor * {
+    cursor: none !important;
+  }
+}

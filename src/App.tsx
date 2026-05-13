@@ -5,6 +5,7 @@ import AboutSection from './components/AboutSection';
 import ServicesSection from './components/ServicesSection';
 import ProjectsSection from './components/ProjectsSection';
 import TiendaSection from './components/TiendaSection';
+import InvertedBlendCursor from './components/InvertedBlendCursor';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <ProjectsSection />
         <TiendaSection />
       </main>
+      <InvertedBlendCursor />
     </>
   );
 }
