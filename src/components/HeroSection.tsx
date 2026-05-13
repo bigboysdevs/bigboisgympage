@@ -6,18 +6,10 @@ export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="min-h-screen flex flex-col overflow-y-visible relative scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
-      style={{ overflowX: 'clip' }}
+      className="relative flex min-h-screen flex-col overflow-x-clip scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
     >
-      {/* Figura a pantalla completa en vertical (desde bajo el header hasta el pie del hero) */}
-      <div className="pointer-events-none absolute inset-x-0 top-[4.25rem] bottom-0 z-[5] md:top-[4.75rem]">
-        <FadeIn delay={0.6} y={30} className="pointer-events-auto h-full w-full block min-h-0">
-          <HeroFigureOnly />
-        </FadeIn>
-      </div>
-
-      <div className="relative z-20 flex min-h-screen flex-1 flex-col px-5 sm:px-8 md:px-10 pointer-events-none">
-        <FadeIn delay={0.15} y={40} className="mt-2 sm:mt-2 md:mt-0 overflow-hidden pointer-events-auto">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 sm:px-8 md:px-10">
+        <FadeIn delay={0.15} y={40} className="mt-2 sm:mt-2 md:mt-0 overflow-hidden">
           <h1
             className="hero-heading font-black uppercase leading-none tracking-tight w-full text-center sm:text-left text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw] whitespace-normal sm:whitespace-nowrap max-w-[100%]"
           >
@@ -25,9 +17,14 @@ export default function HeroSection() {
           </h1>
         </FadeIn>
 
-        <div className="flex-1" />
+        {/* Figura en flujo normal: sube y baja con el scroll de la página */}
+        <div className="relative z-[5] mt-6 w-full flex-1 min-h-0">
+          <FadeIn delay={0.6} y={30} className="block h-full w-full min-h-0">
+            <HeroFigureOnly />
+          </FadeIn>
+        </div>
 
-        <div className="flex justify-between items-end gap-4 pb-7 sm:pb-8 md:pb-10 pointer-events-auto">
+        <div className="relative z-10 mt-auto flex justify-between items-end gap-4 pb-7 pt-6 sm:pb-8 md:pb-10">
           <FadeIn delay={0.35} y={20}>
             <p
               className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[200px] sm:max-w-[280px] md:max-w-[320px]"

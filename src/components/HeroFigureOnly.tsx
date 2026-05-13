@@ -7,8 +7,9 @@ import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
-/** Rellena el contenedor del hero (altura definida por el padre absoluto top→bottom). */
-const FIGURE_SLOT_CLASS = 'relative h-full w-full min-h-0';
+/** Altura fija en viewport para el canvas (flujo de documento = scroll con la página). */
+const FIGURE_SLOT_CLASS =
+  'relative isolate h-[56svh] w-full sm:h-[60svh]';
 
 function TinyLoader() {
   return (
@@ -56,7 +57,7 @@ export default function HeroFigureOnly({
   }
 
   return (
-    <div className={`${FIGURE_SLOT_CLASS} isolate`}>
+    <div className={FIGURE_SLOT_CLASS}>
       <Suspense fallback={<TinyLoader />}>
         <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
       </Suspense>
