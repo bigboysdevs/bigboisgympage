@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { ReactNode, CSSProperties, ElementType } from 'react';
 
 interface FadeInProps {
@@ -11,21 +11,6 @@ interface FadeInProps {
   style?: CSSProperties;
   as?: ElementType;
 }
-
-const variants: Variants = {
-  hidden: (y: number) => ({
-    opacity: 0,
-    y,
-  }),
-  visible: (y: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  }),
-};
 
 export default function FadeIn({
   children,

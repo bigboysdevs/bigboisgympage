@@ -1,7 +1,16 @@
-import { useState, useEffect, useRef, type ReactNode, type HTMLAttributes } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  type ReactNode,
+  type HTMLAttributes,
+  type RefObject,
+} from 'react';
 
 interface MagnetProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  /** Área donde se escucha el puntero (p. ej. el `<section>` del Hero). Si se omite, se usa el ancestro `<section>` o el propio nodo del imán. */
+  interactionRootRef?: RefObject<HTMLElement | null>;
   padding?: number;
   disabled?: boolean;
   strength?: number;
@@ -12,6 +21,7 @@ interface MagnetProps extends HTMLAttributes<HTMLDivElement> {
 
 export default function Magnet({
   children,
+  interactionRootRef,
   padding = 100,
   disabled = false,
   strength = 2,
@@ -29,33 +39,54 @@ export default function Magnet({
   useEffect(() => {
     if (disabled) {
       setPosition({ x: 0, y: 0 });
+      setIsActive(false);
       return;
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
-
-      const { left, top, width, height } = ref.current.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
-      const distX = Math.abs(centerX - e.clientX);
-      const distY = Math.abs(centerY - e.clientY);
-
-      if (distX < width / 2 + padding && distY < height / 2 + padding) {
-        setIsActive(true);
-        setPosition({
-          x: (e.clientX - centerX) / strength,
-          y: (e.clientY - centerY) / strength,
-        });
-      } else {
-        setIsActive(false);
-        setPosition({ x: 0, y: 0 });
-      }
+    const resolveInteractionTarget = (): HTMLElement | null => {
+      if (interactionRootRef?.current) return interactionRootRef.current;
+      const root = ref.current;
+      if (!root) return null;
+      return root.closest('section') ?? root;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [padding, disabled, strength]);
+    const handleMouseMove = (e: MouseEvent) => {
+      const magnetEl = ref.current;
+      if (!magnetEl) return;
+
+      const { left, top, width, height } = magnetEl.getBoundingClientRect();
+      const centerX = left + width / 2;
+      const centerY = top + height / 2;
+      const halfW = width / 2 + padding;
+      const halfH = height / 2 + padding;
+      const near =
+        Math.abs(centerX - e.clientX) < halfW && Math.abs(centerY - e.clientY) < halfH;
+
+      const nextX = near ? (e.clientX - centerX) / strength : 0;
+      const nextY = near ? (e.clientY - centerY) / strength : 0;
+
+      setIsActive((prev) => (prev === near ? prev : near));
+      setPosition((prev) =>
+        prev.x === nextX && prev.y === nextY ? prev : { x: nextX, y: nextY },
+      );
+    };
+
+    const handleMouseLeave = () => {
+      setIsActive((prev) => (prev ? false : prev));
+      setPosition((prev) => (prev.x === 0 && prev.y === 0 ? prev : { x: 0, y: 0 }));
+    };
+
+    const target = resolveInteractionTarget();
+    if (!target) return;
+
+    target.addEventListener('mousemove', handleMouseMove, { passive: true });
+    target.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+
+    return () => {
+      target.removeEventListener('mousemove', handleMouseMove);
+      target.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [padding, disabled, strength, interactionRootRef]);
 
   return (
     <div

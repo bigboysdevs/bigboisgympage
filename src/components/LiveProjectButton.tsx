@@ -20,8 +20,13 @@ export default function LiveProjectButton({
     whitespace-nowrap ${className}`;
 
   if (href) {
+    const sameWindow = href.startsWith('#') || href.startsWith('mailto:');
     return (
-      <a href={href} className={baseClass} target="_blank" rel="noopener noreferrer">
+      <a
+        href={href}
+        className={baseClass}
+        {...(sameWindow ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+      >
         {label}
       </a>
     );

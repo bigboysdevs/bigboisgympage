@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.75rem;
+  }
+
   html, body, #root {
     background-color: #0C0C0C;
     font-family: 'Kanit', sans-serif;

@@ -59,7 +59,7 @@ export default function ProjectCard({ project, index, totalCards, progress }: Pr
             </div>
           </div>
 
-          <LiveProjectButton href={project.href} />
+          <LiveProjectButton href={project.href} label="Ver plan" />
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 md:gap-5 w-full">

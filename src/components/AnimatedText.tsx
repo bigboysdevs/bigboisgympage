@@ -5,19 +5,17 @@ interface AnimatedTextProps {
   text: string;
   className?: string;
   style?: React.CSSProperties;
-  scrollOffset?: [string, string];
 }
 
 export default function AnimatedText({
   text,
   className = '',
   style,
-  scrollOffset = ['start 0.8', 'end 0.2'],
 }: AnimatedTextProps) {
   const containerRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: scrollOffset as [string, string],
+    offset: ['start 0.8', 'end 0.2'],
   });
 
   const totalChars = text.length;

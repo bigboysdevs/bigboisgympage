@@ -1,27 +1,27 @@
 import { useEffect, useRef } from 'react';
 
 const IMAGES = [
-  'https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif',
-  'https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif',
-  'https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif',
-  'https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif',
-  'https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif',
-  'https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif',
-  'https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif',
-  'https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif',
-  'https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif',
-  'https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif',
-  'https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif',
-  'https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif',
-  'https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif',
-  'https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif',
-  'https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif',
-  'https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif',
-  'https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif',
-  'https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif',
-  'https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif',
-  'https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif',
-  'https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif',
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1599058945522-734d051e8e27?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1540497077382-69212b239b72?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1517963879433-6ad2b056d17b?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1526506118085-60ce8714f8c8?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1434682880608-969413d07d4b?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1599058945522-734d051e8e27?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1540497077382-69212b239b72?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=840&h=540&q=80',
+  'https://images.unsplash.com/photo-1526506118085-60ce8714f8c8?auto=format&fit=crop&w=840&h=540&q=80',
 ];
 
 const ROW_1 = IMAGES.slice(0, 11);
@@ -29,7 +29,6 @@ const ROW_2 = IMAGES.slice(11);
 
 export default function MarqueeSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollOffsetRef = useRef(0);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 
@@ -42,8 +41,6 @@ export default function MarqueeSection() {
       const scrolled = window.scrollY - sectionTop + window.innerHeight;
       const offset = scrolled * 0.3;
 
-      scrollOffsetRef.current = offset;
-
       if (row1Ref.current) {
         row1Ref.current.style.transform = `translateX(${offset - 200}px)`;
       }
@@ -53,9 +50,13 @@ export default function MarqueeSection() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   return (
@@ -63,6 +64,7 @@ export default function MarqueeSection() {
       ref={sectionRef}
       className="w-full overflow-hidden pt-24 sm:pt-32 md:pt-40 pb-10"
       style={{ backgroundColor: '#0C0C0C' }}
+      aria-label="Galería de entrenamiento"
     >
       <div className="flex flex-col gap-3">
         <div className="overflow-hidden w-full">

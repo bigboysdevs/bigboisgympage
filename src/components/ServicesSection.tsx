@@ -3,35 +3,41 @@ import FadeIn from './FadeIn';
 const services = [
   {
     number: '01',
-    name: '3D Modeling',
-    description: 'Creation of detailed objects, characters, or environments tailored to specific client needs, ideal for games, products, and visualizations.',
+    name: 'CrossFit',
+    description:
+      'WODs exigentes, gimnásticos y levantamientos olímpicos. Mejora tu motor, tu potencia y tu capacidad de trabajo bajo fatiga con el respaldo de nuestros coaches.',
   },
   {
     number: '02',
-    name: 'Rendering',
-    description: 'High-quality, photorealistic renders that showcase designs with custom lighting, textures, and materials to bring concepts to life.',
+    name: 'Powerlifting',
+    description:
+      'Squat, press banca y peso muerto con periodización clara. Técnica, volumen e intensidad controlada para sumar kilos al barra con seguridad.',
   },
   {
     number: '03',
-    name: 'Motion Design',
-    description: 'Dynamic animations and motion graphics that add energy and storytelling to brands, products, and digital experiences.',
+    name: 'Funcional',
+    description:
+      'Movimientos multiarticulares, core sólido y transferencia al día a día. Ideal para reforzar postura, resistencia y fuerza general sin perder agilidad.',
   },
   {
     number: '04',
-    name: 'Branding',
-    description: 'Crafting cohesive visual identities — from logos to full brand systems — that communicate a clear and memorable presence.',
+    name: 'Strong & conditioning',
+    description:
+      'Bloques de fuerza estructural combinados con trabajo metabólico. Pensado para atletas que quieren masa útil y condición al mismo tiempo.',
   },
   {
     number: '05',
-    name: 'Web Design',
-    description: 'Designing clean, modern, and conversion-focused websites with attention to layout, typography, and user experience.',
+    name: 'Movilidad & recovery',
+    description:
+      'Sesiones enfocadas en rangos articulares, estabilidad y descarga. Complementa tus bloques duros y reduce el riesgo de lesión a largo plazo.',
   },
 ];
 
 export default function ServicesSection() {
   return (
     <section
-      className="flex flex-col px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px]"
+      id="entrenamientos"
+      className="flex flex-col px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] scroll-mt-8"
       style={{ backgroundColor: '#FFFFFF' }}
     >
       <FadeIn delay={0} y={40}>
@@ -39,7 +45,7 @@ export default function ServicesSection() {
           className="font-black uppercase leading-none tracking-tight text-center w-full mb-16 sm:mb-20 md:mb-28"
           style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0C0C0C' }}
         >
-          Services
+          Entrenamientos
         </h2>
       </FadeIn>
 
