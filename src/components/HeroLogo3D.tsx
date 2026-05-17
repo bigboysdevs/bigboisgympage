@@ -12,10 +12,10 @@ const FIGURE_FIT_Y = -0.72;
  * Cuánto bajar la figura en pantalla (solo cámara, la ventana canvas no se mueve).
  * Valores mayores = figura más abajo.
  */
-export const HERO_FIGURE_RAISE = '13cm';
+export const HERO_FIGURE_RAISE = '15cm';
 
-/** ~13cm en pantalla (empírico a fov/distancia del hero). */
-export const HERO_FIGURE_SCREEN_RAISE = 0.23;
+/** ~15cm en pantalla (empírico a fov/distancia del hero). */
+export const HERO_FIGURE_SCREEN_RAISE = 0.27;
 
 const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.5;
 
