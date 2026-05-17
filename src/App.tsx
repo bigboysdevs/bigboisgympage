@@ -5,6 +5,7 @@ import AboutSection from './components/AboutSection';
 import ServicesSection from './components/ServicesSection';
 import ProjectsSection from './components/ProjectsSection';
 import ContactLocationSection from './components/ContactLocationSection';
+import FooterLegalSection from './components/FooterLegalSection';
 import InvertedBlendCursor from './components/InvertedBlendCursor';
 import FloatingRadioPlayer from './components/FloatingRadioPlayer';
 
@@ -24,6 +25,7 @@ export default function App() {
         <ServicesSection />
         <ProjectsSection />
         <ContactLocationSection />
+        <FooterLegalSection />
       </main>
       <InvertedBlendCursor />
       <FloatingRadioPlayer />

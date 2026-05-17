@@ -28,4 +28,5 @@ export const GYM_CONTACT = {
     { label: 'Sábado', value: '7:00 a. m. — 2:00 p. m.' },
     { label: 'Domingo', value: 'Cerrado' },
   ],
+  instagramUrl: 'https://www.instagram.com/bigboys.gym/',
 } as const;
