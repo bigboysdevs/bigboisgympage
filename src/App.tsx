@@ -18,7 +18,7 @@ export default function App() {
       >
         <Navbar />
       </header>
-      <main style={{ backgroundColor: '#0C0C0C', overflowX: 'clip' }}>
+      <main className="relative" style={{ backgroundColor: '#0C0C0C', overflowX: 'clip' }}>
         <HeroSection />
         <MarqueeSection />
         <AboutSection />

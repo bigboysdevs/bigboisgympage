@@ -21,7 +21,7 @@ export default function AnimatedText({
   const totalChars = text.length;
 
   return (
-    <p ref={containerRef} className={className} style={style}>
+    <p ref={containerRef} className={`relative ${className}`.trim()} style={style}>
       {text.split('').map((char, index) => (
         <AnimatedLetter
           key={index}

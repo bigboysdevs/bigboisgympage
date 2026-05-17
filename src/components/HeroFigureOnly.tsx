@@ -4,6 +4,7 @@ import {
   HERO_GLTF_URL,
 } from '../models/branding';
 import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
+import GalacticWarpBackground from './GalacticWarpBackground';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
@@ -45,10 +46,11 @@ export default function HeroFigureOnly({
     return (
       <div className={FIGURE_ROOT_CLASS}>
         <div className={FIGURE_CANVAS_SLOT_CLASS}>
+          <GalacticWarpBackground lite />
           <img
             src={HERO_FIGURE_FALLBACK_PNG}
             alt="Big Boys Gym"
-            className="h-full w-full object-contain object-center scale-110 animate-figure-float"
+            className="relative z-10 h-full w-full object-contain object-center scale-110 animate-figure-float"
             draggable={false}
           />
         </div>
@@ -59,8 +61,11 @@ export default function HeroFigureOnly({
   return (
     <div className={FIGURE_ROOT_CLASS}>
       <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
+        <GalacticWarpBackground lite={mode === 'lite'} />
         <Suspense fallback={<TinyLoader />}>
-          <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
+          <div className="relative z-10 h-full w-full">
+            <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
+          </div>
         </Suspense>
       </div>
     </div>

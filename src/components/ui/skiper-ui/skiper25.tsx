@@ -1,16 +1,22 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import useSound from 'use-sound';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { IBIZA_GLOBAL_RADIO_STREAM } from '@/models/branding';
+import {
+  hasRadioStreamError,
+  isRadioStreamPlaying,
+  pauseRadioStream,
+  playRadioStream,
+  subscribeRadioPlayer,
+} from '@/lib/radioStreamPlayer';
 
 const Skiper25 = () => {
   return (
     <motion.div className="flex h-full w-full flex-col items-center justify-center">
-      <div className="absolute top-[20%] grid content-start justify-items-center gap-6 py-20 text-center">
+      <motion.div className="absolute top-[20%] grid content-start justify-items-center gap-6 py-20 text-center">
         <span className="relative max-w-[12ch] text-xs uppercase leading-tight text-white/40">
           Pulsa para escuchar la radio
         </span>
-      </div>
+      </motion.div>
       <MusicToggleButton />
     </motion.div>
   );
@@ -34,31 +40,18 @@ export const MusicToggleButton = ({
     Array.from({ length: bars }, () => Math.random() * 0.8 + 0.2);
 
   const [heights, setHeights] = useState(() => getRandomHeights());
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [error, setError] = useState(false);
 
-  const [play, { pause }] = useSound(streamUrl, {
-    html5: true,
-    format: ['mp3'],
-    loop: true,
-    volume: 0.85,
-    onplay: () => {
-      setIsPlaying(true);
-      setError(false);
-    },
-    onend: () => setIsPlaying(false),
-    onpause: () => setIsPlaying(false),
-    onstop: () => setIsPlaying(false),
-    onloaderror: () => {
-      setError(true);
-      setIsPlaying(false);
-    },
-    onplayerror: () => {
-      setError(true);
-      setIsPlaying(false);
-    },
-    soundEnabled: true,
-  });
+  const isPlaying = useSyncExternalStore(
+    subscribeRadioPlayer,
+    isRadioStreamPlaying,
+    () => false,
+  );
+
+  const error = useSyncExternalStore(
+    subscribeRadioPlayer,
+    hasRadioStreamError,
+    () => false,
+  );
 
   useEffect(() => {
     if (!isPlaying) {
@@ -75,12 +68,11 @@ export const MusicToggleButton = ({
 
   const handleClick = () => {
     if (isPlaying) {
-      pause();
-      setIsPlaying(false);
+      pauseRadioStream();
       return;
     }
-    setError(false);
-    play();
+
+    playRadioStream(streamUrl);
   };
 
   return (

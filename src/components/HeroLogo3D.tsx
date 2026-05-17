@@ -55,6 +55,35 @@ interface ModelProps {
   url: string;
 }
 
+function FigureOrbitControls({
+  setDragging,
+}: {
+  setDragging: (v: boolean) => void;
+}) {
+  const camera = useThree((s) => s.camera);
+  if (!camera) return null;
+
+  return (
+    <OrbitControls
+      makeDefault
+      enablePan={false}
+      enableRotate
+      enableZoom={false}
+      enableDamping
+      dampingFactor={0.08}
+      rotateSpeed={0.65}
+      autoRotate={false}
+      target={[0, 0.14, 0]}
+      minDistance={1.1}
+      maxDistance={2.2}
+      minPolarAngle={Math.PI * 0.22}
+      maxPolarAngle={Math.PI * 0.78}
+      onStart={() => setDragging(true)}
+      onEnd={() => setDragging(false)}
+    />
+  );
+}
+
 function FigureModel({ url }: ModelProps) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
@@ -73,23 +102,7 @@ function FigureModel({ url }: ModelProps) {
         </Center>
       </Bounds>
       <HeadroomAfterFit />
-      <OrbitControls
-        makeDefault
-        enablePan={false}
-        enableRotate
-        enableZoom={false}
-        enableDamping
-        dampingFactor={0.08}
-        rotateSpeed={0.65}
-        autoRotate={false}
-        target={[0, 0.14, 0]}
-        minDistance={1.1}
-        maxDistance={2.2}
-        minPolarAngle={Math.PI * 0.22}
-        maxPolarAngle={Math.PI * 0.78}
-        onStart={() => setDragging(true)}
-        onEnd={() => setDragging(false)}
-      />
+      <FigureOrbitControls setDragging={setDragging} />
     </>
   );
 }
@@ -124,6 +137,8 @@ export default function HeroLogo3D({
         onCreated={({ gl, scene }) => {
           gl.setClearColor(0x000000, 0);
           scene.background = null;
+          const canvas = gl.domElement;
+          canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
         }}
       >
         <ambientLight intensity={0.52} />
