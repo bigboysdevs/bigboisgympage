@@ -90,7 +90,7 @@ export default function HeroFigureOnly({
       <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
         {withBackdrop ? <FigureBackdrop lite={mode === 'lite'} /> : null}
         <Suspense fallback={<TinyLoader />}>
-          <div className={FIGURE_VIEWPORT_CLASS}>
+          <div className={`${FIGURE_VIEWPORT_CLASS} touch-none pointer-events-auto`}>
             <HeroLogo3D
               modelUrl={modelUrl}
               performanceMode={mode === 'lite'}

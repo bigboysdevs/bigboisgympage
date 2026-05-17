@@ -28,7 +28,7 @@ export default function HeroSection() {
           <GalacticWarpBackground lite={mode === 'lite'} />
         </div>
 
-        <div className="pointer-events-auto absolute inset-0 z-[25] -mx-5 overflow-visible sm:-mx-8 md:mx-0">
+        <div className="pointer-events-auto absolute inset-0 z-[36] touch-none -mx-5 overflow-visible sm:-mx-8 md:z-[25] md:mx-0 md:touch-auto">
           <HeroFigureOnly withBackdrop={false} />
         </div>
 

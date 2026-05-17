@@ -2,6 +2,7 @@ import { Suspense, useLayoutEffect, useMemo, useRef, useState, type ReactNode } 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { TOUCH } from 'three';
 import type { Group, Vector3 } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
 
@@ -24,6 +25,7 @@ type LockedFigureLayout = {
   modelX: number;
   viewPanX: number;
   boundsMargin: number;
+  profile: 'desktop' | 'mobile';
 };
 
 function useLockedFigureLayout(): LockedFigureLayout {
@@ -35,11 +37,13 @@ function useLockedFigureLayout(): LockedFigureLayout {
           modelX: FIGURE_MODEL_X_DESKTOP,
           viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
           boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+          profile: 'desktop',
         }
       : {
           modelX: FIGURE_MODEL_X_MOBILE,
           viewPanX: FIGURE_VIEW_PAN_X_MOBILE,
           boundsMargin: FIGURE_BOUNDS_MARGIN_MOBILE,
+          profile: 'mobile',
         };
   }
   return (
@@ -47,6 +51,7 @@ function useLockedFigureLayout(): LockedFigureLayout {
       modelX: FIGURE_MODEL_X_DESKTOP,
       viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
       boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+      profile: 'desktop',
     }
   );
 }
@@ -102,17 +107,21 @@ type CameraSnapshot = {
   target: Vector3;
 };
 
-/** Aplica offset una vez y restaura cámara al redimensionar (F12) para que no se mueva la figura. */
+const NARROW_CANVAS_MAX_WIDTH = 767;
+
+/** Aplica offset una vez; en desktop ancho restaura cámara al redimensionar (F12). */
 function FigureScreenOffset({
   pushDown,
   viewPanX,
   orbitTargetX,
   orbitTargetY,
+  lockCameraOnResize,
 }: {
   pushDown: number;
   viewPanX: number;
   orbitTargetX: number;
   orbitTargetY: number;
+  lockCameraOnResize: boolean;
 }) {
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
@@ -120,15 +129,35 @@ function FigureScreenOffset({
   const applied = useRef(false);
   const frames = useRef(0);
   const snapshot = useRef<CameraSnapshot | null>(null);
+  const dragging = useRef(false);
 
   const restoreCamera = () => {
-    if (!snapshot.current) return;
+    if (!snapshot.current || dragging.current) return;
     const orbit = controls as OrbitControlsImpl | undefined;
     if (!orbit?.target) return;
     camera.position.copy(snapshot.current.position);
     orbit.target.copy(snapshot.current.target);
     orbit.update();
   };
+
+  useLayoutEffect(() => {
+    const orbit = controls as OrbitControlsImpl | undefined;
+    if (!orbit) return;
+
+    const onStart = () => {
+      dragging.current = true;
+    };
+    const onEnd = () => {
+      dragging.current = false;
+    };
+
+    orbit.addEventListener('start', onStart);
+    orbit.addEventListener('end', onEnd);
+    return () => {
+      orbit.removeEventListener('start', onStart);
+      orbit.removeEventListener('end', onEnd);
+    };
+  }, [controls]);
 
   useFrame(() => {
     const orbit = controls as OrbitControlsImpl | undefined;
@@ -150,8 +179,10 @@ function FigureScreenOffset({
   });
 
   useLayoutEffect(() => {
+    if (!lockCameraOnResize) return;
+    if (size.width <= NARROW_CANVAS_MAX_WIDTH) return;
     restoreCamera();
-  }, [size.width, size.height]);
+  }, [lockCameraOnResize, size.width, size.height]);
 
   return null;
 }
@@ -176,13 +207,17 @@ function FigureOrbitControls({
       enableZoom={false}
       enableDamping
       dampingFactor={0.08}
-      rotateSpeed={0.65}
+      rotateSpeed={0.85}
       autoRotate={false}
       target={[orbitTargetX, orbitTargetY, 0]}
       minDistance={0.92}
       maxDistance={1.75}
       minPolarAngle={Math.PI * 0.22}
       maxPolarAngle={Math.PI * 0.78}
+      touches={{
+        ONE: TOUCH.ROTATE,
+        TWO: TOUCH.DOLLY_ROTATE,
+      }}
       onStart={() => setDragging(true)}
       onEnd={() => setDragging(false)}
     />
@@ -195,7 +230,8 @@ function FigureModel({
 }: ModelProps & { figureScreenOffset: number }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
-  const { modelX, viewPanX, boundsMargin } = useLockedFigureLayout();
+  const layout = useLockedFigureLayout();
+  const { modelX, viewPanX, boundsMargin, profile } = layout;
   const orbitTargetX = modelX + viewPanX * 0.92;
   const orbitTargetY = -0.08;
 
@@ -217,6 +253,7 @@ function FigureModel({
         viewPanX={viewPanX}
         orbitTargetX={orbitTargetX}
         orbitTargetY={orbitTargetY}
+        lockCameraOnResize={profile === 'desktop'}
       />
       <FigureOrbitControls
         setDragging={setDragging}
@@ -260,6 +297,7 @@ export default function HeroLogo3D({
           gl.setClearColor(0x000000, 0);
           scene.background = null;
           const canvas = gl.domElement;
+          canvas.style.touchAction = 'none';
           canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
         }}
       >
