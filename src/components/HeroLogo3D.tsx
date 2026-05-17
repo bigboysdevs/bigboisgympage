@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, type ReactNode } from 'react';
+import { Suspense, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -8,7 +8,13 @@ import { HERO_GLTF_URL } from '../models/branding';
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
 
 /** Oscilación suave arriba/abajo (efecto flotando en el aire). */
-function FloatingFigure({ children }: { children: ReactNode }) {
+function FloatingFigure({
+  children,
+  paused = false,
+}: {
+  children: ReactNode;
+  paused?: boolean;
+}) {
   const group = useRef<Group>(null);
   const reducedMotion = useMemo(
     () =>
@@ -18,7 +24,7 @@ function FloatingFigure({ children }: { children: ReactNode }) {
   );
 
   useFrame((state) => {
-    if (reducedMotion || !group.current) return;
+    if (reducedMotion || paused || !group.current) return;
     const t = state.clock.elapsedTime;
     group.current.position.y = Math.sin(t * 1.15) * 0.07;
     group.current.rotation.z = Math.sin(t * 0.75) * 0.018;
@@ -51,13 +57,14 @@ interface ModelProps {
 
 function FigureModel({ url }: ModelProps) {
   const { scene } = useGLTF(url);
+  const [dragging, setDragging] = useState(false);
 
   return (
     <>
       <Bounds fit margin={0.5} maxDuration={0}>
         <Center>
           <group position={[0, -0.88, 0]} rotation={FIGURE_ROTATION}>
-            <FloatingFigure>
+            <FloatingFigure paused={dragging}>
               <Resize>
                 <primitive object={scene} />
               </Resize>
@@ -69,13 +76,19 @@ function FigureModel({ url }: ModelProps) {
       <OrbitControls
         makeDefault
         enablePan={false}
-        enableRotate={false}
+        enableRotate
         enableZoom={false}
-        enableDamping={false}
+        enableDamping
+        dampingFactor={0.08}
+        rotateSpeed={0.65}
         autoRotate={false}
         target={[0, 0.14, 0]}
         minDistance={1.1}
         maxDistance={2.2}
+        minPolarAngle={Math.PI * 0.22}
+        maxPolarAngle={Math.PI * 0.78}
+        onStart={() => setDragging(true)}
+        onEnd={() => setDragging(false)}
       />
     </>
   );
@@ -94,9 +107,9 @@ export default function HeroLogo3D({
 
   return (
     <div
-      className="absolute inset-0 h-full w-full overflow-visible"
+      className="absolute inset-0 h-full w-full cursor-grab overflow-visible active:cursor-grabbing"
       style={{ touchAction: 'pan-y' }}
-      aria-label="Modelo 3D Big Boys Gym"
+      aria-label="Modelo 3D Big Boys Gym — clic y arrastra para girar"
     >
       <Canvas
         className="!bg-transparent h-full w-full"
@@ -116,7 +129,7 @@ export default function HeroLogo3D({
         <ambientLight intensity={0.52} />
         <directionalLight position={[6, 8, 5]} intensity={1.18} />
         <directionalLight position={[-5, 2, -4]} intensity={0.42} />
-        <pointLight position={[0, 1.5, 2]} intensity={0.35} color="#fecaca" distance={8} />
+        <pointLight position={[0, 1.5, 2]} intensity={0.35} color="#ffffff" distance={8} />
         <Suspense fallback={null}>
           <FigureModel url={modelUrl} />
         </Suspense>

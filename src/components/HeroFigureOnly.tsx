@@ -7,7 +7,6 @@ import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
-/** Sin “ventana”: altura fluida, desborda arriba/abajo si hace falta. */
 const FIGURE_ROOT_CLASS =
   'relative isolate w-full overflow-visible pointer-events-none';
 
@@ -17,7 +16,7 @@ const FIGURE_CANVAS_SLOT_CLASS =
 function TinyLoader() {
   return (
     <div
-      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center"
       aria-busy="true"
       aria-label="Cargando modelo"
     >
