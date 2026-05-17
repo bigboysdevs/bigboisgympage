@@ -18,6 +18,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.15.1",
     "three": "^0.184.0",
     "use-sound": "^5.0.0"
   },

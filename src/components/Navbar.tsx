@@ -1,34 +1,40 @@
 import { useCallback, useEffect, useId, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const SCROLL_LINKS = [
-  { label: 'Inicio', id: 'inicio' as const, href: '#inicio' },
-  { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '#entrenamientos' },
-  { label: 'Rutinas', id: 'rutinas' as const, href: '#rutinas' },
-  { label: 'Contacto', id: 'contacto' as const, href: '#contacto' },
+  { label: 'Inicio', id: 'inicio' as const, href: '/#inicio' },
+  { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '/#entrenamientos' },
+  { label: 'Rutinas', id: 'rutinas' as const, href: '/#rutinas' },
 ] as const;
 
 type ScrollSectionId = (typeof SCROLL_LINKS)[number]['id'];
-
-const contactoHref = '#contacto';
 
 function sectionDocumentTop(el: HTMLElement): number {
   return el.getBoundingClientRect().top + window.scrollY;
 }
 
-const contactoButtonClass =
+const tiendaButtonClass =
   'inline-flex items-center justify-center rounded-full uppercase tracking-widest font-semibold ' +
   'border-2 border-red-500/80 bg-red-600/15 text-[#fafafa] px-5 py-2.5 text-xs sm:text-sm ' +
   'shadow-[0_0_24px_rgba(220,38,38,0.15)] transition-colors duration-200 ' +
   'hover:bg-red-600/35 hover:border-red-400 active:bg-red-700/40';
 
+const drawerLinkClass =
+  'text-[#D7E2EA] font-medium uppercase tracking-wider text-lg py-3 transition-opacity duration-200 hover:opacity-80';
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<ScrollSectionId | null>('inicio');
   const panelId = useId();
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  const isTienda = pathname === '/tienda';
 
   const updateActiveSection = useCallback(() => {
+    if (!isHome) return;
+
     const header = document.getElementById('site-header');
     const headerH = header?.offsetHeight ?? 80;
     const anchor = window.scrollY + headerH + 12;
@@ -44,9 +50,14 @@ export default function Navbar() {
       }
     }
     setActiveSection(next);
-  }, []);
+  }, [isHome]);
 
   useEffect(() => {
+    if (!isHome) {
+      setActiveSection(null);
+      return;
+    }
+
     let raf = 0;
     const onScrollOrResize = () => {
       cancelAnimationFrame(raf);
@@ -60,7 +71,7 @@ export default function Navbar() {
       window.removeEventListener('resize', onScrollOrResize);
       cancelAnimationFrame(raf);
     };
-  }, [updateActiveSection]);
+  }, [isHome, updateActiveSection]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -79,14 +90,21 @@ export default function Navbar() {
         className="flex w-full items-center justify-end gap-2 px-3 py-3 sm:gap-3 sm:px-5 md:px-8 lg:px-10 md:py-4"
         aria-label="Principal"
       >
-        <a href="#inicio" className="sr-only">
+        <Link to="/" className="sr-only">
           Inicio — Big Boys Gym
-        </a>
+        </Link>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <a href={contactoHref} className={contactoButtonClass}>
-            Contacto
-          </a>
+          <Link
+            to="/tienda"
+            className={[
+              tiendaButtonClass,
+              isTienda ? 'bg-red-600/35 border-red-400' : '',
+            ].join(' ')}
+            aria-current={isTienda ? 'page' : undefined}
+          >
+            Tienda
+          </Link>
           <button
             type="button"
             className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#D7E2EA]/30 bg-[#0C0C0C]/35 text-[#D7E2EA] backdrop-blur-[2px] hover:border-red-500/50 hover:bg-[#0C0C0C]/55 transition-colors"
@@ -135,21 +153,32 @@ export default function Navbar() {
                 <X className="h-6 w-6" aria-hidden />
               </button>
               <div className="mt-10 flex flex-col items-stretch gap-1 text-right">
+                <Link
+                  to="/tienda"
+                  className={[
+                    drawerLinkClass,
+                    isTienda ? 'line-through decoration-[#D7E2EA] decoration-2 opacity-70' : '',
+                  ].join(' ')}
+                  onClick={closeMenu}
+                  aria-current={isTienda ? 'page' : undefined}
+                >
+                  Tienda
+                </Link>
                 {SCROLL_LINKS.map((item) => {
-                  const isActive = activeSection === item.id;
+                  const isActive = isHome && activeSection === item.id;
                   return (
-                    <a
+                    <Link
                       key={item.href}
-                      href={item.href}
+                      to={item.href}
                       className={[
-                        'text-[#D7E2EA] font-medium uppercase tracking-wider text-lg py-3 transition-opacity duration-200 hover:opacity-80',
+                        drawerLinkClass,
                         isActive ? 'line-through decoration-[#D7E2EA] decoration-2 opacity-70' : '',
                       ].join(' ')}
                       onClick={closeMenu}
                       aria-current={isActive ? 'location' : undefined}
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>

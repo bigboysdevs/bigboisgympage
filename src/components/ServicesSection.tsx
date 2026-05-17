@@ -3,33 +3,31 @@ import FadeIn from './FadeIn';
 const services = [
   {
     number: '01',
-    name: 'CrossFit',
+    name: 'Entrenamiento mensual',
+    price: '$110.000',
     description:
-      'WODs exigentes, gimnásticos y levantamientos olímpicos. Mejora tu motor, tu potencia y tu capacidad de trabajo bajo fatiga con el respaldo de nuestros coaches.',
+      'Acceso al box y a las sesiones del plan mensual. Entrena con la estructura del gym y el acompañamiento del equipo Big Boys.',
   },
   {
     number: '02',
-    name: 'Powerlifting',
+    name: 'Personalizado alto rendimiento',
+    price: '$500.000',
     description:
-      'Squat, press banca y peso muerto con periodización clara. Técnica, volumen e intensidad controlada para sumar kilos al barra con seguridad.',
+      'Entrenamientos personalizados con plan de alimentación y manejo de cargas para deportistas de alto rendimiento de cualquier deporte.',
   },
   {
     number: '03',
-    name: 'Funcional',
+    name: 'Personalizado hipertrofia y fitness',
+    price: '$500.000',
     description:
-      'Movimientos multiarticulares, core sólido y transferencia al día a día. Ideal para reforzar postura, resistencia y fuerza general sin perder agilidad.',
+      'Plan personalizado de hipertrofia y fitness con alimentación a tu medida. Volumen, técnica e intensidad pensados para tus objetivos.',
   },
   {
     number: '04',
-    name: 'Strong & conditioning',
+    name: 'Entrenamiento personalizado Big Boys Kits',
+    price: '$500.000',
     description:
-      'Bloques de fuerza estructural combinados con trabajo metabólico. Pensado para atletas que quieren masa útil y condición al mismo tiempo.',
-  },
-  {
-    number: '05',
-    name: 'Movilidad & recovery',
-    description:
-      'Sesiones enfocadas en rangos articulares, estabilidad y descarga. Complementa tus bloques duros y reduce el riesgo de lesión a largo plazo.',
+      'Programa personalizado con el kit Big Boys: seguimiento cercano, plan de entrenamiento y todo lo que necesitas para avanzar con el sello del gym.',
   },
 ];
 
@@ -72,12 +70,20 @@ export default function ServicesSection() {
               </span>
 
               <div className="flex flex-col gap-2 sm:gap-4 md:gap-5 pt-1">
-                <span
-                  className="font-medium uppercase"
-                  style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', color: '#0C0C0C' }}
-                >
-                  {service.name}
-                </span>
+                <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4">
+                  <span
+                    className="font-medium uppercase"
+                    style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', color: '#0C0C0C' }}
+                  >
+                    {service.name}
+                  </span>
+                  <span
+                    className="font-semibold tabular-nums"
+                    style={{ fontSize: 'clamp(1.1rem, 2.4vw, 2.25rem)', color: '#dc2626' }}
+                  >
+                    {service.price}
+                  </span>
+                </div>
                 <span
                   className="font-light leading-relaxed max-w-2xl"
                   style={{ fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)', color: '#0C0C0C', opacity: 0.6 }}
