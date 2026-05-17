@@ -1,3 +1,5 @@
+import { ctaSecondaryClass, ctaSecondarySizeClass } from '@/lib/ctaStyles';
+
 interface LiveProjectButtonProps {
   href?: string;
   label?: string;
@@ -11,13 +13,7 @@ export default function LiveProjectButton({
   onClick,
   className = '',
 }: LiveProjectButtonProps) {
-  const baseClass = `inline-flex items-center justify-center rounded-full
-    border-2 border-[#D7E2EA]
-    px-8 py-3 sm:px-10 sm:py-3.5
-    text-[#D7E2EA] font-medium uppercase tracking-widest
-    text-sm sm:text-base
-    transition-colors duration-200 hover:bg-[#D7E2EA]/10 active:bg-[#D7E2EA]/20
-    whitespace-nowrap ${className}`;
+  const baseClass = [ctaSecondaryClass, ctaSecondarySizeClass, className].filter(Boolean).join(' ');
 
   if (href) {
     const sameWindow = href.startsWith('#') || href.startsWith('mailto:');
@@ -33,7 +29,7 @@ export default function LiveProjectButton({
   }
 
   return (
-    <button onClick={onClick} className={baseClass}>
+    <button type="button" onClick={onClick} className={baseClass}>
       {label}
     </button>
   );

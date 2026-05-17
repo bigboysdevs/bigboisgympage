@@ -1,5 +1,5 @@
 import { Instagram } from 'lucide-react';
-import { GYM_CONTACT, HERO_FIGURE_FALLBACK_PNG } from '../models/branding';
+import { GYM_CONTACT, GYM_LOGO_TRANSPARENT_PNG } from '../models/branding';
 
 const LEGAL_ITEMS = [
   {
@@ -97,7 +97,7 @@ export default function FooterLegalSection() {
         <div className="grid gap-10 sm:grid-cols-[auto_1fr] lg:grid-cols-[auto_minmax(0,1fr)_minmax(220px,280px)] lg:items-start lg:gap-x-10">
           <div className="flex shrink-0 justify-center sm:row-span-2 sm:justify-start lg:row-span-1 lg:pt-1">
             <img
-              src={HERO_FIGURE_FALLBACK_PNG}
+              src={GYM_LOGO_TRANSPARENT_PNG}
               alt="Big Boys Gym"
               className="h-16 w-auto object-contain opacity-90 sm:h-20 lg:h-24"
               width={96}

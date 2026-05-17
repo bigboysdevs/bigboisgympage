@@ -2,11 +2,16 @@ import { useCallback, useEffect, useId, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { ctaNavClass } from '@/lib/ctaStyles';
+import { GYM_LOGO_TRANSPARENT_PNG } from '@/models/branding';
 
+/** Enlaces de sección — solo en el drawer del menú hamburguesa. */
 const SCROLL_LINKS = [
   { label: 'Inicio', id: 'inicio' as const, href: '/#inicio' },
+  { label: 'Filosofía', id: 'filosofia' as const, href: '/#filosofia' },
   { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '/#entrenamientos' },
   { label: 'Espacios', id: 'espacios' as const, href: '/#espacios' },
+  { label: 'Contacto', id: 'contacto' as const, href: '/#contacto' },
 ] as const;
 
 type ScrollSectionId = (typeof SCROLL_LINKS)[number]['id'];
@@ -14,12 +19,6 @@ type ScrollSectionId = (typeof SCROLL_LINKS)[number]['id'];
 function sectionDocumentTop(el: HTMLElement): number {
   return el.getBoundingClientRect().top + window.scrollY;
 }
-
-const tiendaButtonClass =
-  'inline-flex items-center justify-center rounded-full uppercase tracking-widest font-semibold ' +
-  'border-2 border-red-500/80 bg-red-600/15 text-[#fafafa] px-5 py-2.5 text-xs sm:text-sm ' +
-  'shadow-[0_0_24px_rgba(220,38,38,0.15)] transition-colors duration-200 ' +
-  'hover:bg-red-600/35 hover:border-red-400 active:bg-red-700/40';
 
 const drawerLinkClass =
   'text-[#D7E2EA] font-medium uppercase tracking-wider text-lg py-3 transition-opacity duration-200 hover:opacity-80';
@@ -87,20 +86,29 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className="flex w-full items-center justify-end gap-2 px-3 py-3 sm:gap-3 sm:px-5 md:px-8 lg:px-10 md:py-4"
+        className="flex w-full items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-5 md:px-8 lg:px-10 md:py-4"
         aria-label="Principal"
       >
-        <Link to="/" className="sr-only">
-          Inicio — Big Boys Gym
+        <Link
+          to="/#inicio"
+          className="group flex shrink-0 items-center rounded-lg outline-none transition-opacity duration-200 hover:opacity-90 focus-visible:opacity-90 focus-visible:ring-2 focus-visible:ring-red-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+          aria-label="Big Boys Gym — inicio"
+          onClick={closeMenu}
+        >
+          <img
+            src={GYM_LOGO_TRANSPARENT_PNG}
+            alt=""
+            className="h-11 w-auto max-w-[min(52vw,200px)] object-contain object-left sm:h-12 md:h-[52px]"
+            width={120}
+            height={52}
+            decoding="async"
+          />
         </Link>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             to="/tienda"
-            className={[
-              tiendaButtonClass,
-              isTienda ? 'bg-red-600/35 border-red-400' : '',
-            ].join(' ')}
+            className={[ctaNavClass, isTienda ? 'border-red-400 bg-red-600/35' : ''].join(' ')}
             aria-current={isTienda ? 'page' : undefined}
           >
             Tienda

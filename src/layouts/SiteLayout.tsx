@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import SeoHead from '@/components/SeoHead';
 import ScrollToHash from '@/components/ScrollToHash';
 import Navbar from '@/components/Navbar';
 import FooterLegalSection from '@/components/FooterLegalSection';
@@ -8,6 +9,7 @@ import FloatingRadioPlayer from '@/components/FloatingRadioPlayer';
 export default function SiteLayout() {
   return (
     <>
+      <SeoHead />
       <ScrollToHash />
       <header
         id="site-header"
