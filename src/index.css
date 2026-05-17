@@ -21,10 +21,24 @@
 }
 
 .hero-heading {
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  background-color: transparent;
+  background-image: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Sin caja negra detrás del título: solo el gradiente de las letras */
+.hero-title-layer,
+.hero-title-layer h1 {
+  background: none;
+  background-color: transparent;
 }
 
 .contact-btn {

@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -7,6 +7,24 @@ import { HERO_GLTF_URL } from '../models/branding';
 
 /** Encuadre del GLB dentro de Bounds (fijo; no usar para bajar en pantalla). */
 const FIGURE_FIT_Y = -0.72;
+
+/** Desplaza el modelo a la derecha en desktop (canvas sigue a ancho completo). */
+const FIGURE_FIT_X_DESKTOP = 0.4;
+const FIGURE_FIT_X_MOBILE = 0.06;
+
+function useFigureFitX() {
+  const [x, setX] = useState(FIGURE_FIT_X_MOBILE);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = () => setX(mq.matches ? FIGURE_FIT_X_DESKTOP : FIGURE_FIT_X_MOBILE);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  return x;
+}
 
 /**
  * Cuánto bajar la figura en pantalla (solo cámara, la ventana canvas no se mueve).
@@ -55,7 +73,13 @@ interface ModelProps {
 }
 
 /** Tras el fit de Bounds, empuja la figura hacia abajo sin mover el canvas. */
-function FigureScreenOffset({ pushDown }: { pushDown: number }) {
+function FigureScreenOffset({
+  pushDown,
+  offsetX,
+}: {
+  pushDown: number;
+  offsetX: number;
+}) {
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
   const applied = useRef(false);
@@ -63,10 +87,12 @@ function FigureScreenOffset({ pushDown }: { pushDown: number }) {
 
   useFrame(() => {
     const orbit = controls as OrbitControlsImpl | undefined;
-    if (applied.current || !orbit?.target || pushDown === 0) return;
+    if (applied.current || !orbit?.target) return;
     frames.current += 1;
     if (frames.current < 4) return;
+    camera.position.x += offsetX * 0.35;
     camera.position.y += pushDown;
+    orbit.target.x += offsetX * 0.45;
     orbit.target.y += pushDown * 0.88;
     orbit.update();
     applied.current = true;
@@ -77,8 +103,10 @@ function FigureScreenOffset({ pushDown }: { pushDown: number }) {
 
 function FigureOrbitControls({
   setDragging,
+  offsetX,
 }: {
   setDragging: (v: boolean) => void;
+  offsetX: number;
 }) {
   const camera = useThree((s) => s.camera);
   if (!camera) return null;
@@ -93,7 +121,7 @@ function FigureOrbitControls({
       dampingFactor={0.08}
       rotateSpeed={0.65}
       autoRotate={false}
-      target={[0, -0.08, 0]}
+      target={[offsetX * 0.45, -0.08, 0]}
       minDistance={0.92}
       maxDistance={1.75}
       minPolarAngle={Math.PI * 0.22}
@@ -110,12 +138,13 @@ function FigureModel({
 }: ModelProps & { figureScreenOffset: number }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
+  const offsetX = useFigureFitX();
 
   return (
     <>
       <Bounds fit margin={0.5} maxDuration={0}>
         <Center>
-          <group position={[0, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
+          <group position={[offsetX, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
             <FloatingFigure paused={dragging}>
               <Resize>
                 <primitive object={scene} />
@@ -124,8 +153,8 @@ function FigureModel({
           </group>
         </Center>
       </Bounds>
-      <FigureScreenOffset pushDown={figureScreenOffset} />
-      <FigureOrbitControls setDragging={setDragging} />
+      <FigureScreenOffset pushDown={figureScreenOffset} offsetX={offsetX} />
+      <FigureOrbitControls setDragging={setDragging} offsetX={offsetX} />
     </>
   );
 }

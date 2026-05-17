@@ -143,7 +143,7 @@ export default function GalacticWarpBackground({ lite = false }: GalacticWarpBac
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 70% 55% at 50% 48%, transparent 0%, rgba(12,12,12,0.35) 55%, #0C0C0C 100%)',
+            'radial-gradient(ellipse 90% 80% at 50% 45%, transparent 0%, rgba(12,12,12,0.2) 52%, transparent 82%)',
         }}
       />
     </div>

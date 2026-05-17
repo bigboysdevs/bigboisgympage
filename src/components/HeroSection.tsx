@@ -1,5 +1,7 @@
 import FadeIn from './FadeIn';
+import GalacticWarpBackground from './GalacticWarpBackground';
 import HeroFigureOnly from './HeroFigureOnly';
+import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 
 const TAGLINE =
   'Big Boys Gym — hierro, constancia y comunidad. Sin atajos.';
@@ -8,26 +10,37 @@ const TITLE_LINES = ['Big', 'Boys', 'GYM'] as const;
 
 /** Mismo estilo que el h1 original: gradiente .hero-heading en index.css */
 const TITLE_LINE_CLASS =
-  'hero-heading block bg-transparent font-black uppercase leading-[0.88] tracking-tight text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
+  'hero-heading font-black uppercase leading-[0.88] tracking-tight text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
 
 export default function HeroSection() {
+  const mode = useLogo3dPerformanceMode();
+
   return (
     <section
       id="inicio"
       className="relative flex min-h-screen flex-col overflow-visible scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible">
-        {/* Figura: capa inferior, solo ocupa la zona derecha en desktop */}
         <div
-          className="absolute inset-x-0 top-0 z-20 -mx-5 min-h-[clamp(520px,72vh,860px)] w-[calc(100%+2.5rem)] overflow-visible sm:-mx-8 sm:w-[calc(100%+4rem)] md:inset-x-auto md:right-0 md:top-6 md:mx-0 md:w-[min(100%,64%)] md:min-h-0 lg:top-8"
+          className="pointer-events-none absolute inset-0 z-0 min-h-[clamp(520px,72vh,860px)] overflow-hidden md:min-h-[clamp(600px,86vh,960px)]"
+          aria-hidden
         >
-          <HeroFigureOnly />
+          <GalacticWarpBackground lite={mode === 'lite'} />
         </div>
 
-        {/* Título encima del 3D (pointer-events-none: no bloquea rotar el modelo) */}
-        <div className="pointer-events-none relative z-40 flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
-          <FadeIn effect="inView" delay={0.15} y={32} className="pointer-events-none bg-transparent">
-            <h1 className="pointer-events-none flex flex-col text-left">
+        <div className="pointer-events-auto absolute inset-0 z-[25] -mx-5 overflow-visible sm:-mx-8 md:mx-0">
+          <HeroFigureOnly withBackdrop={false} />
+        </div>
+
+        <div className="hero-title-layer pointer-events-none relative z-[35] flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
+          <FadeIn
+            effect="inView"
+            delay={0.15}
+            y={32}
+            className="hero-title-layer pointer-events-none !bg-transparent shadow-none"
+            style={{ background: 'transparent', backgroundColor: 'transparent' }}
+          >
+            <h1 className="pointer-events-none flex w-fit flex-col bg-transparent text-left">
               {TITLE_LINES.map((line) => (
                 <span key={line} className={TITLE_LINE_CLASS}>
                   {line}
@@ -37,7 +50,6 @@ export default function HeroSection() {
           </FadeIn>
         </div>
 
-        {/* Tagline flotante sin barra negra */}
         <FadeIn
           effect="inView"
           delay={0.28}

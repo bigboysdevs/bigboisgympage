@@ -9,12 +9,12 @@ import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from './HeroLogo3D';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
-const FIGURE_ROOT_CLASS = 'relative isolate w-full overflow-visible';
+const FIGURE_ROOT_CLASS = 'relative h-full w-full overflow-visible';
 
 /** Altura explícita: el Canvas 3D necesita px reales (inherit falla en el grid). */
 /** Contenedor exterior: solo altura mínima; sin padding que empuje la figura. */
 const FIGURE_CANVAS_SLOT_CLASS =
-  'relative w-full min-h-[clamp(520px,72vh,860px)] overflow-visible md:min-h-[clamp(600px,86vh,960px)] lg:min-h-[clamp(640px,90vh,1000px)]';
+  'relative h-full min-h-[clamp(520px,72vh,860px)] w-full overflow-visible md:min-h-[clamp(600px,86vh,960px)] lg:min-h-[clamp(640px,90vh,1000px)]';
 
 /** Ventana de recorte (canvas): posición fija; no añadir offset de figura aquí. */
 const FIGURE_VIEWPORT_CLASS =
@@ -49,10 +49,12 @@ function TinyLoader() {
 
 interface HeroFigureOnlyProps {
   modelUrl?: string;
+  withBackdrop?: boolean;
 }
 
 export default function HeroFigureOnly({
   modelUrl = HERO_GLTF_URL,
+  withBackdrop = true,
 }: HeroFigureOnlyProps) {
   const mode = useLogo3dPerformanceMode();
 
@@ -69,7 +71,7 @@ export default function HeroFigureOnly({
     return (
       <div className={`${FIGURE_ROOT_CLASS} pointer-events-none`}>
         <div className={FIGURE_CANVAS_SLOT_CLASS}>
-          <FigureBackdrop lite />
+          {withBackdrop ? <FigureBackdrop lite /> : null}
           <div className={FIGURE_VIEWPORT_CLASS}>
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
@@ -86,7 +88,7 @@ export default function HeroFigureOnly({
   return (
     <div className={FIGURE_ROOT_CLASS}>
       <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
-        <FigureBackdrop lite={mode === 'lite'} />
+        {withBackdrop ? <FigureBackdrop lite={mode === 'lite'} /> : null}
         <Suspense fallback={<TinyLoader />}>
           <div className={FIGURE_VIEWPORT_CLASS}>
             <HeroLogo3D
