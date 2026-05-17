@@ -1,29 +1,38 @@
-import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Suspense, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import type { Group } from 'three';
+import type { Group, Vector3 } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
 
 /** Encuadre del GLB dentro de Bounds (fijo; no usar para bajar en pantalla). */
 const FIGURE_FIT_Y = -0.72;
 
-/** Desplaza el modelo a la derecha en desktop (canvas sigue a ancho completo). */
-const FIGURE_FIT_X_DESKTOP = 0.4;
-const FIGURE_FIT_X_MOBILE = 0.06;
+/**
+ * Encuadre fijado al cargar (no cambia con F12).
+ * Cámara un poco a la IZQUIERDA => la figura se ve a la DERECHA (junto al título).
+ */
+const FIGURE_MODEL_X_DESKTOP = 0.02;
+const FIGURE_VIEW_PAN_X_DESKTOP = -0.3;
+const FIGURE_MODEL_X_MOBILE = 0;
+const FIGURE_VIEW_PAN_X_MOBILE = -0.12;
 
-function useFigureFitX() {
-  const [x, setX] = useState(FIGURE_FIT_X_MOBILE);
+type LockedFigureLayout = { modelX: number; viewPanX: number };
 
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    const update = () => setX(mq.matches ? FIGURE_FIT_X_DESKTOP : FIGURE_FIT_X_MOBILE);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-
-  return x;
+function useLockedFigureLayout(): LockedFigureLayout {
+  const locked = useRef<LockedFigureLayout | null>(null);
+  if (locked.current === null && typeof window !== 'undefined') {
+    const desktop = window.matchMedia('(min-width: 768px)').matches;
+    locked.current = desktop
+      ? { modelX: FIGURE_MODEL_X_DESKTOP, viewPanX: FIGURE_VIEW_PAN_X_DESKTOP }
+      : { modelX: FIGURE_MODEL_X_MOBILE, viewPanX: FIGURE_VIEW_PAN_X_MOBILE };
+  }
+  return (
+    locked.current ?? {
+      modelX: FIGURE_MODEL_X_DESKTOP,
+      viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
+    }
+  );
 }
 
 /**
@@ -35,7 +44,7 @@ export const HERO_FIGURE_RAISE = '16cm';
 /** ~16cm en pantalla (empírico a fov/distancia del hero). */
 export const HERO_FIGURE_SCREEN_RAISE = 0.29;
 
-const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.5;
+const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.52;
 
 export const HERO_FIGURE_SCREEN_OFFSET =
   HERO_FIGURE_SCREEN_OFFSET_BASE - HERO_FIGURE_SCREEN_RAISE;
@@ -72,41 +81,73 @@ interface ModelProps {
   url: string;
 }
 
-/** Tras el fit de Bounds, empuja la figura hacia abajo sin mover el canvas. */
+type CameraSnapshot = {
+  position: Vector3;
+  target: Vector3;
+};
+
+/** Aplica offset una vez y restaura cámara al redimensionar (F12) para que no se mueva la figura. */
 function FigureScreenOffset({
   pushDown,
-  offsetX,
+  viewPanX,
+  orbitTargetX,
+  orbitTargetY,
 }: {
   pushDown: number;
-  offsetX: number;
+  viewPanX: number;
+  orbitTargetX: number;
+  orbitTargetY: number;
 }) {
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
+  const size = useThree((s) => s.size);
   const applied = useRef(false);
   const frames = useRef(0);
+  const snapshot = useRef<CameraSnapshot | null>(null);
+
+  const restoreCamera = () => {
+    if (!snapshot.current) return;
+    const orbit = controls as OrbitControlsImpl | undefined;
+    if (!orbit?.target) return;
+    camera.position.copy(snapshot.current.position);
+    orbit.target.copy(snapshot.current.target);
+    orbit.update();
+  };
 
   useFrame(() => {
     const orbit = controls as OrbitControlsImpl | undefined;
     if (applied.current || !orbit?.target) return;
     frames.current += 1;
     if (frames.current < 4) return;
-    camera.position.x += offsetX * 0.35;
+
+    camera.position.x += viewPanX;
     camera.position.y += pushDown;
-    orbit.target.x += offsetX * 0.45;
-    orbit.target.y += pushDown * 0.88;
+    orbit.target.x = orbitTargetX;
+    orbit.target.y = orbitTargetY + pushDown * 0.88;
     orbit.update();
+
+    snapshot.current = {
+      position: camera.position.clone(),
+      target: orbit.target.clone(),
+    };
     applied.current = true;
   });
+
+  useLayoutEffect(() => {
+    restoreCamera();
+  }, [size.width, size.height]);
 
   return null;
 }
 
 function FigureOrbitControls({
   setDragging,
-  offsetX,
+  orbitTargetX,
+  orbitTargetY,
 }: {
   setDragging: (v: boolean) => void;
-  offsetX: number;
+  orbitTargetX: number;
+  orbitTargetY: number;
 }) {
   const camera = useThree((s) => s.camera);
   if (!camera) return null;
@@ -121,7 +162,7 @@ function FigureOrbitControls({
       dampingFactor={0.08}
       rotateSpeed={0.65}
       autoRotate={false}
-      target={[offsetX * 0.45, -0.08, 0]}
+      target={[orbitTargetX, orbitTargetY, 0]}
       minDistance={0.92}
       maxDistance={1.75}
       minPolarAngle={Math.PI * 0.22}
@@ -138,13 +179,15 @@ function FigureModel({
 }: ModelProps & { figureScreenOffset: number }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
-  const offsetX = useFigureFitX();
+  const { modelX, viewPanX } = useLockedFigureLayout();
+  const orbitTargetX = modelX + viewPanX * 0.92;
+  const orbitTargetY = -0.08;
 
   return (
     <>
-      <Bounds fit margin={0.5} maxDuration={0}>
+      <Bounds fit observe={false} margin={0.54} maxDuration={0}>
         <Center>
-          <group position={[offsetX, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
+          <group position={[modelX, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
             <FloatingFigure paused={dragging}>
               <Resize>
                 <primitive object={scene} />
@@ -153,8 +196,17 @@ function FigureModel({
           </group>
         </Center>
       </Bounds>
-      <FigureScreenOffset pushDown={figureScreenOffset} offsetX={offsetX} />
-      <FigureOrbitControls setDragging={setDragging} offsetX={offsetX} />
+      <FigureScreenOffset
+        pushDown={figureScreenOffset}
+        viewPanX={viewPanX}
+        orbitTargetX={orbitTargetX}
+        orbitTargetY={orbitTargetY}
+      />
+      <FigureOrbitControls
+        setDragging={setDragging}
+        orbitTargetX={orbitTargetX}
+        orbitTargetY={orbitTargetY}
+      />
     </>
   );
 }
