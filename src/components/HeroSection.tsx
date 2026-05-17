@@ -24,10 +24,10 @@ export default function HeroSection() {
           <HeroFigureOnly />
         </div>
 
-        {/* Título encima del 3D: mismas letras, tamaño y gradiente .hero-heading */}
-        <div className="relative z-40 flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
-          <FadeIn effect="inView" delay={0.15} y={32} className="bg-transparent">
-            <h1 className="flex flex-col text-left">
+        {/* Título encima del 3D (pointer-events-none: no bloquea rotar el modelo) */}
+        <div className="pointer-events-none relative z-40 flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
+          <FadeIn effect="inView" delay={0.15} y={32} className="pointer-events-none bg-transparent">
+            <h1 className="pointer-events-none flex flex-col text-left">
               {TITLE_LINES.map((line) => (
                 <span key={line} className={TITLE_LINE_CLASS}>
                   {line}

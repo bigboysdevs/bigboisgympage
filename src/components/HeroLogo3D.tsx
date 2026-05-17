@@ -146,7 +146,7 @@ export default function HeroLogo3D({
   return (
     <div
       className="absolute inset-x-0 -top-24 bottom-0 h-[calc(100%+6rem)] w-full cursor-grab overflow-visible active:cursor-grabbing md:-top-28 md:h-[calc(100%+7rem)] lg:-top-32 lg:h-[calc(100%+8rem)]"
-      style={{ touchAction: 'pan-y' }}
+      style={{ touchAction: 'none' }}
       aria-label="Modelo 3D Big Boys Gym — clic y arrastra para girar"
     >
       <Canvas
