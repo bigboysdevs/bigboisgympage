@@ -24,7 +24,7 @@ export default function AboutSection() {
 
           <AnimatedText
             text={FILOSOFIA}
-            className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[560px]"
+            className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[560px] [overflow-wrap:normal] [word-break:normal]"
             style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
           />
         </div>

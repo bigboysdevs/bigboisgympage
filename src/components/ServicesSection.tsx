@@ -38,7 +38,7 @@ export default function ServicesSection() {
       className="flex flex-col px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] scroll-mt-8"
       style={{ backgroundColor: '#FFFFFF' }}
     >
-      <FadeIn delay={0} y={40}>
+      <FadeIn effect="inView" delay={0} y={40}>
         <h2
           className="font-black uppercase leading-none tracking-tight text-center w-full mb-16 sm:mb-20 md:mb-28"
           style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0C0C0C' }}
@@ -51,6 +51,7 @@ export default function ServicesSection() {
         {services.map((service, i) => (
           <FadeIn
             key={service.number}
+            effect="inView"
             delay={i * 0.1}
             y={30}
             className="flex flex-col items-center w-full max-w-5xl"
