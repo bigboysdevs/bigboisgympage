@@ -17,7 +17,7 @@ export default function SiteLayout() {
       >
         <Navbar />
       </header>
-      <main className="relative" style={{ backgroundColor: '#0C0C0C', overflowX: 'clip' }}>
+      <main className="relative overflow-visible bg-[#0C0C0C]">
         <Outlet />
       </main>
       <FooterLegalSection />

@@ -5,6 +5,23 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { Group } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
 
+/** Encuadre del GLB dentro de Bounds (fijo; no usar para bajar en pantalla). */
+const FIGURE_FIT_Y = -0.72;
+
+/**
+ * Cuánto bajar la figura en pantalla (solo cámara, la ventana canvas no se mueve).
+ * Valores mayores = figura más abajo.
+ */
+export const HERO_FIGURE_RAISE = '13cm';
+
+/** ~13cm en pantalla (empírico a fov/distancia del hero). */
+export const HERO_FIGURE_SCREEN_RAISE = 0.23;
+
+const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.5;
+
+export const HERO_FIGURE_SCREEN_OFFSET =
+  HERO_FIGURE_SCREEN_OFFSET_BASE - HERO_FIGURE_SCREEN_RAISE;
+
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
 
 /** Oscilación suave arriba/abajo (efecto flotando en el aire). */
@@ -33,26 +50,29 @@ function FloatingFigure({
   return <group ref={group}>{children}</group>;
 }
 
-/** Ajuste de cámara una sola vez tras el fit (sin reajustes al scroll). */
-function HeadroomAfterFit() {
+interface ModelProps {
+  url: string;
+}
+
+/** Tras el fit de Bounds, empuja la figura hacia abajo sin mover el canvas. */
+function FigureScreenOffset({ pushDown }: { pushDown: number }) {
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
   const applied = useRef(false);
+  const frames = useRef(0);
 
   useFrame(() => {
     const orbit = controls as OrbitControlsImpl | undefined;
-    if (applied.current || !orbit?.target) return;
-    camera.position.y += 0.14;
-    orbit.target.y += 0.08;
+    if (applied.current || !orbit?.target || pushDown === 0) return;
+    frames.current += 1;
+    if (frames.current < 4) return;
+    camera.position.y += pushDown;
+    orbit.target.y += pushDown * 0.88;
     orbit.update();
     applied.current = true;
   });
 
   return null;
-}
-
-interface ModelProps {
-  url: string;
 }
 
 function FigureOrbitControls({
@@ -73,9 +93,9 @@ function FigureOrbitControls({
       dampingFactor={0.08}
       rotateSpeed={0.65}
       autoRotate={false}
-      target={[0, 0.14, 0]}
-      minDistance={1.1}
-      maxDistance={2.2}
+      target={[0, -0.08, 0]}
+      minDistance={0.92}
+      maxDistance={1.75}
       minPolarAngle={Math.PI * 0.22}
       maxPolarAngle={Math.PI * 0.78}
       onStart={() => setDragging(true)}
@@ -84,7 +104,10 @@ function FigureOrbitControls({
   );
 }
 
-function FigureModel({ url }: ModelProps) {
+function FigureModel({
+  url,
+  figureScreenOffset,
+}: ModelProps & { figureScreenOffset: number }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
 
@@ -92,7 +115,7 @@ function FigureModel({ url }: ModelProps) {
     <>
       <Bounds fit margin={0.5} maxDuration={0}>
         <Center>
-          <group position={[0, -0.88, 0]} rotation={FIGURE_ROTATION}>
+          <group position={[0, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
             <FloatingFigure paused={dragging}>
               <Resize>
                 <primitive object={scene} />
@@ -101,7 +124,7 @@ function FigureModel({ url }: ModelProps) {
           </group>
         </Center>
       </Bounds>
-      <HeadroomAfterFit />
+      <FigureScreenOffset pushDown={figureScreenOffset} />
       <FigureOrbitControls setDragging={setDragging} />
     </>
   );
@@ -110,24 +133,26 @@ function FigureModel({ url }: ModelProps) {
 export interface HeroLogo3DProps {
   modelUrl?: string;
   performanceMode: boolean;
+  figureScreenOffset?: number;
 }
 
 export default function HeroLogo3D({
   modelUrl = HERO_GLTF_URL,
   performanceMode,
+  figureScreenOffset = HERO_FIGURE_SCREEN_OFFSET,
 }: HeroLogo3DProps) {
   const dpr: [number, number] = performanceMode ? [1, 1.25] : [1, 2];
 
   return (
     <div
-      className="absolute inset-0 h-full w-full cursor-grab overflow-visible active:cursor-grabbing"
+      className="absolute inset-x-0 -top-24 bottom-0 h-[calc(100%+6rem)] w-full cursor-grab overflow-visible active:cursor-grabbing md:-top-28 md:h-[calc(100%+7rem)] lg:-top-32 lg:h-[calc(100%+8rem)]"
       style={{ touchAction: 'pan-y' }}
       aria-label="Modelo 3D Big Boys Gym — clic y arrastra para girar"
     >
       <Canvas
         className="!bg-transparent h-full w-full"
         style={{ background: 'transparent', overflow: 'visible' }}
-        camera={{ position: [0, 0.28, 1.68], fov: 40 }}
+        camera={{ position: [0, 0.04, 1.48], fov: 34 }}
         dpr={dpr}
         gl={{
           alpha: true,
@@ -146,7 +171,7 @@ export default function HeroLogo3D({
         <directionalLight position={[-5, 2, -4]} intensity={0.42} />
         <pointLight position={[0, 1.5, 2]} intensity={0.35} color="#ffffff" distance={8} />
         <Suspense fallback={null}>
-          <FigureModel url={modelUrl} />
+          <FigureModel url={modelUrl} figureScreenOffset={figureScreenOffset} />
         </Suspense>
       </Canvas>
     </div>

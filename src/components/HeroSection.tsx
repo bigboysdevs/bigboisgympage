@@ -14,11 +14,11 @@ export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen flex-col overflow-x-clip scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
+      className="relative flex min-h-screen flex-col overflow-visible scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
     >
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 sm:px-8 md:px-10">
-        <div className="grid flex-1 grid-cols-1 items-center gap-6 md:grid-cols-[minmax(0,42%)_minmax(0,1fr)] md:gap-4 lg:grid-cols-[minmax(0,40%)_minmax(0,1fr)] lg:gap-8">
-          <div className="relative z-20 flex flex-col justify-center pt-1 md:py-6 md:pr-2 lg:pr-4">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-visible px-5 sm:px-8 md:px-10">
+        <div className="grid flex-1 grid-cols-1 items-start gap-4 overflow-visible md:grid-cols-[minmax(0,38%)_minmax(0,1fr)] md:gap-2 lg:grid-cols-[minmax(0,36%)_minmax(0,1fr)] lg:gap-6">
+          <div className="relative z-20 flex flex-col justify-start pt-0 md:pt-1 md:pr-2 lg:pr-3">
             <FadeIn effect="inView" delay={0.15} y={32} className="bg-transparent">
               <h1 className="flex flex-col text-left">
                 {TITLE_LINES.map((line) => (
@@ -44,7 +44,7 @@ export default function HeroSection() {
             </FadeIn>
           </div>
 
-          <div className="relative z-10 -mx-5 w-[calc(100%+2.5rem)] sm:-mx-8 sm:w-[calc(100%+4rem)] md:mx-0 md:w-full">
+          <div className="relative z-10 -mx-5 w-[calc(100%+2.5rem)] overflow-visible sm:-mx-8 sm:w-[calc(100%+4rem)] md:mx-0 md:w-full">
             <HeroFigureOnly />
           </div>
         </div>
