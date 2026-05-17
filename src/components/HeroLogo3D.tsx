@@ -13,24 +13,40 @@ const FIGURE_FIT_Y = -0.72;
  * Cámara un poco a la IZQUIERDA => la figura se ve a la DERECHA (junto al título).
  */
 const FIGURE_MODEL_X_DESKTOP = 0.02;
-const FIGURE_VIEW_PAN_X_DESKTOP = -0.3;
-const FIGURE_MODEL_X_MOBILE = 0;
-const FIGURE_VIEW_PAN_X_MOBILE = -0.12;
+const FIGURE_VIEW_PAN_X_DESKTOP = -0.18;
+const FIGURE_BOUNDS_MARGIN_DESKTOP = 0.54;
 
-type LockedFigureLayout = { modelX: number; viewPanX: number };
+const FIGURE_MODEL_X_MOBILE = 0;
+const FIGURE_VIEW_PAN_X_MOBILE = 0.3;
+const FIGURE_BOUNDS_MARGIN_MOBILE = 1.02;
+
+type LockedFigureLayout = {
+  modelX: number;
+  viewPanX: number;
+  boundsMargin: number;
+};
 
 function useLockedFigureLayout(): LockedFigureLayout {
   const locked = useRef<LockedFigureLayout | null>(null);
   if (locked.current === null && typeof window !== 'undefined') {
     const desktop = window.matchMedia('(min-width: 768px)').matches;
     locked.current = desktop
-      ? { modelX: FIGURE_MODEL_X_DESKTOP, viewPanX: FIGURE_VIEW_PAN_X_DESKTOP }
-      : { modelX: FIGURE_MODEL_X_MOBILE, viewPanX: FIGURE_VIEW_PAN_X_MOBILE };
+      ? {
+          modelX: FIGURE_MODEL_X_DESKTOP,
+          viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
+          boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+        }
+      : {
+          modelX: FIGURE_MODEL_X_MOBILE,
+          viewPanX: FIGURE_VIEW_PAN_X_MOBILE,
+          boundsMargin: FIGURE_BOUNDS_MARGIN_MOBILE,
+        };
   }
   return (
     locked.current ?? {
       modelX: FIGURE_MODEL_X_DESKTOP,
       viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
+      boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
     }
   );
 }
@@ -179,13 +195,13 @@ function FigureModel({
 }: ModelProps & { figureScreenOffset: number }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
-  const { modelX, viewPanX } = useLockedFigureLayout();
+  const { modelX, viewPanX, boundsMargin } = useLockedFigureLayout();
   const orbitTargetX = modelX + viewPanX * 0.92;
   const orbitTargetY = -0.08;
 
   return (
     <>
-      <Bounds fit observe={false} margin={0.54} maxDuration={0}>
+      <Bounds fit observe={false} margin={boundsMargin} maxDuration={0}>
         <Center>
           <group position={[modelX, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
             <FloatingFigure paused={dragging}>
