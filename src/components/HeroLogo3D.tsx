@@ -12,10 +12,10 @@ const FIGURE_FIT_Y = -0.72;
  * Cuánto bajar la figura en pantalla (solo cámara, la ventana canvas no se mueve).
  * Valores mayores = figura más abajo.
  */
-export const HERO_FIGURE_RAISE = '15cm';
+export const HERO_FIGURE_RAISE = '16cm';
 
-/** ~15cm en pantalla (empírico a fov/distancia del hero). */
-export const HERO_FIGURE_SCREEN_RAISE = 0.27;
+/** ~16cm en pantalla (empírico a fov/distancia del hero). */
+export const HERO_FIGURE_SCREEN_RAISE = 0.29;
 
 const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.5;
 
@@ -43,8 +43,8 @@ function FloatingFigure({
   useFrame((state) => {
     if (reducedMotion || paused || !group.current) return;
     const t = state.clock.elapsedTime;
-    group.current.position.y = Math.sin(t * 0.9) * 0.028;
-    group.current.rotation.z = Math.sin(t * 0.65) * 0.008;
+    group.current.position.y = Math.sin(t * 0.75) * 0.012;
+    group.current.rotation.z = Math.sin(t * 0.55) * 0.003;
   });
 
   return <group ref={group}>{children}</group>;
