@@ -6,6 +6,7 @@ import ServicesSection from './components/ServicesSection';
 import ProjectsSection from './components/ProjectsSection';
 import TiendaSection from './components/TiendaSection';
 import InvertedBlendCursor from './components/InvertedBlendCursor';
+import FloatingRadioPlayer from './components/FloatingRadioPlayer';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <TiendaSection />
       </main>
       <InvertedBlendCursor />
+      <FloatingRadioPlayer />
     </>
   );
 }

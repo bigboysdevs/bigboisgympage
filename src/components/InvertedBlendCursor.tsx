@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-const SIZE = 46;
+/** Diámetro del círculo del cursor (mix-blend-difference). */
+const SIZE = 80;
 const HALF = SIZE / 2;
 
 const spring = { stiffness: 420, damping: 34, mass: 0.12 };
