@@ -26,8 +26,8 @@ function FloatingFigure({
   useFrame((state) => {
     if (reducedMotion || paused || !group.current) return;
     const t = state.clock.elapsedTime;
-    group.current.position.y = Math.sin(t * 1.15) * 0.07;
-    group.current.rotation.z = Math.sin(t * 0.75) * 0.018;
+    group.current.position.y = Math.sin(t * 0.9) * 0.028;
+    group.current.rotation.z = Math.sin(t * 0.65) * 0.008;
   });
 
   return <group ref={group}>{children}</group>;

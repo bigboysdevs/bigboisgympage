@@ -14,6 +14,18 @@ const FIGURE_ROOT_CLASS =
 const FIGURE_CANVAS_SLOT_CLASS =
   'relative w-full h-[clamp(520px,88vh,1100px)] overflow-visible';
 
+/** Galaxia solo en la zona baja para no tapar el titulo de fondo. */
+function FigureBackdrop({ lite }: { lite?: boolean }) {
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-0 bottom-0 top-[22%] z-0 overflow-hidden sm:top-[20%] md:top-[18%]"
+      aria-hidden
+    >
+      <GalacticWarpBackground lite={lite} />
+    </div>
+  );
+}
+
 function TinyLoader() {
   return (
     <div
@@ -46,11 +58,11 @@ export default function HeroFigureOnly({
     return (
       <div className={FIGURE_ROOT_CLASS}>
         <div className={FIGURE_CANVAS_SLOT_CLASS}>
-          <GalacticWarpBackground lite />
+          <FigureBackdrop lite />
           <img
             src={HERO_FIGURE_FALLBACK_PNG}
             alt="Big Boys Gym"
-            className="relative z-10 h-full w-full object-contain object-center scale-110 animate-figure-float"
+            className="relative z-10 h-full w-full scale-110 object-contain object-center animate-figure-float"
             draggable={false}
           />
         </div>
@@ -61,7 +73,7 @@ export default function HeroFigureOnly({
   return (
     <div className={FIGURE_ROOT_CLASS}>
       <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
-        <GalacticWarpBackground lite={mode === 'lite'} />
+        <FigureBackdrop lite={mode === 'lite'} />
         <Suspense fallback={<TinyLoader />}>
           <div className="relative z-10 h-full w-full">
             <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
