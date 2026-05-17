@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 const SCROLL_LINKS = [
   { label: 'Inicio', id: 'inicio' as const, href: '/#inicio' },
   { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '/#entrenamientos' },
-  { label: 'Rutinas', id: 'rutinas' as const, href: '/#rutinas' },
+  { label: 'Espacios', id: 'espacios' as const, href: '/#espacios' },
 ] as const;
 
 type ScrollSectionId = (typeof SCROLL_LINKS)[number]['id'];

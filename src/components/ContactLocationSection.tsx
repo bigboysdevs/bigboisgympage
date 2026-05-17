@@ -38,7 +38,7 @@ export default function ContactLocationSection() {
   return (
     <section
       id="contacto"
-      className="relative scroll-mt-8 border-t border-[#D7E2EA]/10 px-5 py-20 sm:px-8 sm:py-28 md:px-10 md:py-32"
+      className="relative z-20 scroll-mt-8 border-t border-[#D7E2EA]/10 px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28 md:px-10 md:pt-36 md:pb-32"
       style={{ backgroundColor: '#0C0C0C' }}
       aria-labelledby="contacto-heading"
     >

@@ -15,10 +15,10 @@ export const IBIZA_GLOBAL_RADIO_PAGE =
 export const GYM_CONTACT = {
   name: 'Big Boys GYM',
   addressLines: ['Cl. 67 #4255 42-1 A', 'Manizales, Caldas'],
-  phoneDisplay: '+57 300 000 0000',
-  phoneHref: 'tel:+573000000000',
-  email: 'contacto@bigboysgym.com',
-  whatsappHref: 'https://wa.me/573000000000?text=Hola%20Big%20Boys%20Gym',
+  phoneDisplay: '+57 317 1184925',
+  phoneHref: 'tel:+573171184925',
+  email: 'bigboysdevs@gmail.com',
+  whatsappHref: 'https://wa.me/573171184925?text=Hola%20Big%20Boys%20Gym',
   mapsPlaceUrl:
     'https://www.google.com/maps/place/Big+Boys+GYM/@5.0460668,-75.5046687,179m/data=!3m1!1e3!4m6!3m5!1s0x8e47654202262e67:0xc1d7d3f3a4ab48b8!8m2!3d5.0461215!4d-75.5047532!16s%2Fg%2F11ckttmm9l',
   mapsEmbedUrl:

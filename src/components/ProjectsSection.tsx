@@ -2,51 +2,7 @@ import { useRef } from 'react';
 import { useScroll } from 'framer-motion';
 import ProjectCard from './ProjectCard';
 import FadeIn from './FadeIn';
-
-const programs = [
-  {
-    number: '01',
-    category: 'Plan 10 semanas',
-    name: 'Hypertrophy Engine',
-    href: '#entrenamientos',
-    images: {
-      col1: [
-        'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=85',
-        'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=85',
-      ],
-      col2:
-        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1400&q=85',
-    },
-  },
-  {
-    number: '02',
-    category: 'Plan 8 semanas',
-    name: 'MetCon Assault',
-    href: '#entrenamientos',
-    images: {
-      col1: [
-        'https://images.unsplash.com/photo-1434682880608-969413d07d4b?auto=format&fit=crop&w=900&q=85',
-        'https://images.unsplash.com/photo-1599058945522-734d051e8e27?auto=format&fit=crop&w=900&q=85',
-      ],
-      col2:
-        'https://images.unsplash.com/photo-1540497077382-69212b239b72?auto=format&fit=crop&w=1400&q=85',
-    },
-  },
-  {
-    number: '03',
-    category: 'Plan competición',
-    name: 'Total Strength',
-    href: '#entrenamientos',
-    images: {
-      col1: [
-        'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=85',
-        'https://images.unsplash.com/photo-1517963879433-6ad2b056d17b?auto=format&fit=crop&w=900&q=85',
-      ],
-      col2:
-        'https://images.unsplash.com/photo-1526506118085-60ce8714f8c8?auto=format&fit=crop&w=1400&q=85',
-    },
-  },
-];
+import { GYM_SPACES } from '@/models/gymSpaces';
 
 export default function ProjectsSection() {
   const containerRef = useRef<HTMLElement>(null);
@@ -57,31 +13,37 @@ export default function ProjectsSection() {
 
   return (
     <section
-      id="rutinas"
+      id="espacios"
       ref={containerRef}
-      className="relative px-5 sm:px-8 md:px-10 rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-10 scroll-mt-8"
+      className="relative z-10 -mt-10 scroll-mt-8 rounded-t-[40px] px-5 sm:-mt-12 sm:rounded-t-[50px] sm:px-8 md:-mt-14 md:rounded-t-[60px] md:px-10"
       style={{ backgroundColor: '#0C0C0C' }}
     >
       <div className="flex flex-col items-center py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={40}>
           <h2
-            className="hero-heading font-black uppercase leading-none tracking-tight text-center w-full"
+            className="hero-heading w-full text-center font-black uppercase leading-none tracking-tight"
             style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
           >
-            Programas destacados
+            Espacios GYM
           </h2>
+          <p className="mx-auto mt-6 max-w-xl text-center font-light leading-relaxed text-[#D7E2EA]/65">
+            Conoce las zonas del box — cada espacio pensado para un tipo de entrenamiento.
+          </p>
         </FadeIn>
       </div>
 
-      {programs.map((project, index) => (
-        <ProjectCard
-          key={project.number}
-          project={project}
-          index={index}
-          totalCards={programs.length}
-          progress={scrollYProgress}
-        />
-      ))}
+      <div className="relative">
+        {GYM_SPACES.map((space, index) => (
+          <ProjectCard
+            key={space.number}
+            project={space}
+            index={index}
+            totalCards={GYM_SPACES.length}
+            progress={scrollYProgress}
+          />
+        ))}
+        <div className="h-[100vh] min-h-[640px] shrink-0" aria-hidden />
+      </div>
     </section>
   );
 }

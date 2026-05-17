@@ -1,5 +1,5 @@
 import { Instagram } from 'lucide-react';
-import { GYM_CONTACT } from '../models/branding';
+import { GYM_CONTACT, HERO_FIGURE_FALLBACK_PNG } from '../models/branding';
 
 const LEGAL_ITEMS = [
   {
@@ -86,7 +86,7 @@ export default function FooterLegalSection() {
       id="legal"
       className="relative border-t border-[#D7E2EA]/10 px-5 py-14 sm:px-8 sm:py-16 md:px-10 md:py-20"
       style={{ backgroundColor: '#080808' }}
-      aria-labelledby="footer-heading"
+      aria-label="Pie de página"
     >
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(220,38,38,0.06),transparent_55%)]"
@@ -94,39 +94,25 @@ export default function FooterLegalSection() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="flex flex-col items-center gap-10 text-center sm:gap-12">
-          <div>
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-red-500/90">
-              Comunidad
-            </p>
-            <h2
-              id="footer-heading"
-              className="hero-heading font-black uppercase tracking-tight"
-              style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)' }}
-            >
-              Síguenos
-            </h2>
+        <div className="grid gap-10 sm:grid-cols-[auto_1fr] lg:grid-cols-[auto_minmax(0,1fr)_minmax(220px,280px)] lg:items-start lg:gap-x-10">
+          <div className="flex shrink-0 justify-center sm:row-span-2 sm:justify-start lg:row-span-1 lg:pt-1">
+            <img
+              src={HERO_FIGURE_FALLBACK_PNG}
+              alt="Big Boys Gym"
+              className="h-16 w-auto object-contain opacity-90 sm:h-20 lg:h-24"
+              width={96}
+              height={96}
+            />
           </div>
 
-          <a
-            href={GYM_CONTACT.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#D7E2EA]/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold uppercase tracking-widest text-[#D7E2EA] transition-all duration-200 hover:border-transparent hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:shadow-[0_0_32px_rgba(225,48,108,0.25)] sm:px-10 sm:py-4 sm:text-base"
-          >
-            <Instagram
-              className="h-5 w-5 transition-transform duration-200 group-hover:scale-110"
-              aria-hidden
-            />
-            Instagram
-            <span className="sr-only"> — @bigboys.gym en Instagram</span>
-          </a>
-
           <nav
-            className="w-full max-w-2xl border-t border-[#D7E2EA]/10 pt-10"
+            className="min-w-0 sm:col-start-2 lg:col-start-2 lg:pr-4"
             aria-label="Información legal"
           >
-            <ul className="space-y-3 text-left">
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#D7E2EA]/45">
+              Información legal
+            </p>
+            <ul className="space-y-3">
               {LEGAL_ITEMS.map(({ id, title, body }) => (
                 <li key={id}>
                   <details className="group rounded-2xl border border-[#D7E2EA]/10 bg-white/[0.02] open:bg-white/[0.04]">
@@ -150,10 +136,42 @@ export default function FooterLegalSection() {
             </ul>
           </nav>
 
-          <p className="max-w-xl text-xs font-light leading-relaxed text-[#D7E2EA]/40">
-            © {year} {GYM_CONTACT.name}. Todos los derechos reservados. Manizales, Colombia.
-          </p>
+          <aside
+            className="flex flex-col items-center border-t border-[#D7E2EA]/10 pt-10 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:items-end lg:justify-center lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
+            aria-labelledby="footer-community-heading"
+          >
+            <div className="flex w-full max-w-xs flex-col items-center lg:max-w-none lg:items-end">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-red-500/90">
+                Comunidad
+              </p>
+              <h2
+                id="footer-community-heading"
+                className="hero-heading text-center font-black uppercase tracking-tight lg:text-right"
+                style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)' }}
+              >
+                Síguenos
+              </h2>
+
+              <a
+                href={GYM_CONTACT.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full border-2 border-[#D7E2EA]/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold uppercase tracking-widest text-[#D7E2EA] transition-all duration-200 hover:border-transparent hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:shadow-[0_0_32px_rgba(225,48,108,0.25)] sm:w-auto sm:px-10 lg:justify-end"
+              >
+                <Instagram
+                  className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
+                  aria-hidden
+                />
+                Instagram
+                <span className="sr-only"> — @bigboys.gym en Instagram</span>
+              </a>
+            </div>
+          </aside>
         </div>
+
+        <p className="mt-12 border-t border-[#D7E2EA]/10 pt-8 text-center text-xs font-light leading-relaxed text-[#D7E2EA]/40">
+          © {year} {GYM_CONTACT.name}. Todos los derechos reservados. {GYM_CONTACT.addressLines[1]}.
+        </p>
       </div>
     </footer>
   );
