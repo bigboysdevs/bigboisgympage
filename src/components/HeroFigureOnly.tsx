@@ -7,9 +7,12 @@ import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
-/** Altura fija en viewport para el canvas (flujo de documento = scroll con la página). */
-const FIGURE_SLOT_CLASS =
-  'relative isolate h-[56svh] w-full sm:h-[60svh]';
+/** Sin “ventana”: altura fluida, desborda arriba/abajo si hace falta. */
+const FIGURE_ROOT_CLASS =
+  'relative isolate w-full overflow-visible pointer-events-none';
+
+const FIGURE_CANVAS_SLOT_CLASS =
+  'relative w-full h-[clamp(520px,88vh,1100px)] overflow-visible';
 
 function TinyLoader() {
   return (
@@ -30,37 +33,37 @@ interface HeroFigureOnlyProps {
   modelUrl?: string;
 }
 
-/**
- * Únicamente la figura 3D (o PNG si el perfil es estático): encaja donde antes iba el retrato del hero.
- * Sin ventana, sin panel negro, sin scanlines.
- */
 export default function HeroFigureOnly({
   modelUrl = HERO_GLTF_URL,
 }: HeroFigureOnlyProps) {
   const mode = useLogo3dPerformanceMode();
 
   if (mode === 'deciding') {
-    return <div className={FIGURE_SLOT_CLASS} aria-hidden />;
+    return <div className={FIGURE_ROOT_CLASS} aria-hidden />;
   }
 
   if (mode === 'static') {
     return (
-      <div className={FIGURE_SLOT_CLASS}>
-        <img
-          src={HERO_FIGURE_FALLBACK_PNG}
-          alt="Big Boys Gym"
-          className="h-full w-full object-contain object-center"
-          draggable={false}
-        />
+      <div className={FIGURE_ROOT_CLASS}>
+        <div className={FIGURE_CANVAS_SLOT_CLASS}>
+          <img
+            src={HERO_FIGURE_FALLBACK_PNG}
+            alt="Big Boys Gym"
+            className="h-full w-full object-contain object-center scale-110"
+            draggable={false}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={FIGURE_SLOT_CLASS}>
-      <Suspense fallback={<TinyLoader />}>
-        <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
-      </Suspense>
+    <div className={FIGURE_ROOT_CLASS}>
+      <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
+        <Suspense fallback={<TinyLoader />}>
+          <HeroLogo3D modelUrl={modelUrl} performanceMode={mode === 'lite'} />
+        </Suspense>
+      </div>
     </div>
   );
 }
