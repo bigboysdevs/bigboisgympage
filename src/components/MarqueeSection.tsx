@@ -1,31 +1,27 @@
 import { useEffect, useRef } from 'react';
 
-const IMAGES = [
-  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1599058945522-734d051e8e27?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1540497077382-69212b239b72?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1517963879433-6ad2b056d17b?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1526506118085-60ce8714f8c8?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1434682880608-969413d07d4b?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1599058945522-734d051e8e27?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1540497077382-69212b239b72?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=840&h=540&q=80',
-  'https://images.unsplash.com/photo-1526506118085-60ce8714f8c8?auto=format&fit=crop&w=840&h=540&q=80',
-];
+/** Fotos reales del gym en `public/gallery/`. Añade más archivos ahí y enlázalos aquí. */
+const GYM_GALLERY = [
+  '/gallery/362dad12-6e49-4136-affe-ba1ca9700caf.jpg',
+  '/gallery/70a73709-9078-4c5b-9ada-25f8df250fd0.jpg',
+  '/gallery/24ec4dca-b6de-4cb2-b9c1-1dc7fec68472.jpg',
+  '/gallery/5fb53f6c-3da1-4d64-9c05-76b44d2a5a41.jpg',
+  '/gallery/e9faccdf-4785-4f78-8d11-7403e03ec843.jpg',
+  '/gallery/image3.jpg',
+  '/gallery/Image%202.jpg',
+  '/gallery/image.jpg',
+] as const;
 
-const ROW_1 = IMAGES.slice(0, 11);
-const ROW_2 = IMAGES.slice(11);
+function rotateGallery<T>(items: readonly T[], shift: number): T[] {
+  const n = items.length;
+  if (n === 0) return [];
+  const s = ((shift % n) + n) % n;
+  return [...items.slice(s), ...items.slice(0, s)];
+}
+
+/** Fila 1: orden original. Fila 2: mismo set rotado (mitad del array) — secuencia distinta. */
+const ROW_1 = [...GYM_GALLERY];
+const ROW_2 = rotateGallery(GYM_GALLERY, Math.ceil(GYM_GALLERY.length / 2));
 
 export default function MarqueeSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -84,9 +80,10 @@ export default function MarqueeSection() {
               >
                 <img
                   src={src}
-                  alt=""
+                  alt="Big Boys Gym — galería"
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             ))}
@@ -110,9 +107,10 @@ export default function MarqueeSection() {
               >
                 <img
                   src={src}
-                  alt=""
+                  alt="Big Boys Gym — galería"
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             ))}
