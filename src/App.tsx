@@ -4,7 +4,7 @@ import MarqueeSection from './components/MarqueeSection';
 import AboutSection from './components/AboutSection';
 import ServicesSection from './components/ServicesSection';
 import ProjectsSection from './components/ProjectsSection';
-import TiendaSection from './components/TiendaSection';
+import ContactLocationSection from './components/ContactLocationSection';
 import InvertedBlendCursor from './components/InvertedBlendCursor';
 import FloatingRadioPlayer from './components/FloatingRadioPlayer';
 
@@ -23,7 +23,7 @@ export default function App() {
         <AboutSection />
         <ServicesSection />
         <ProjectsSection />
-        <TiendaSection />
+        <ContactLocationSection />
       </main>
       <InvertedBlendCursor />
       <FloatingRadioPlayer />

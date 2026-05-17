@@ -6,21 +6,22 @@ const SCROLL_LINKS = [
   { label: 'Inicio', id: 'inicio' as const, href: '#inicio' },
   { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '#entrenamientos' },
   { label: 'Rutinas', id: 'rutinas' as const, href: '#rutinas' },
+  { label: 'Contacto', id: 'contacto' as const, href: '#contacto' },
 ] as const;
 
 type ScrollSectionId = (typeof SCROLL_LINKS)[number]['id'];
 
-const tiendaHref = '#tienda';
+const contactoHref = '#contacto';
 
 function sectionDocumentTop(el: HTMLElement): number {
   return el.getBoundingClientRect().top + window.scrollY;
 }
 
-const tiendaButtonClass =
+const contactoButtonClass =
   'inline-flex items-center justify-center rounded-full uppercase tracking-widest font-semibold ' +
-  'border-2 border-amber-400/90 bg-amber-500/15 text-amber-100 px-5 py-2.5 text-xs sm:text-sm ' +
-  'shadow-[0_0_24px_rgba(251,191,36,0.12)] transition-colors duration-200 ' +
-  'hover:bg-amber-500/30 hover:border-amber-300 active:bg-amber-500/40';
+  'border-2 border-red-500/80 bg-red-600/15 text-[#fafafa] px-5 py-2.5 text-xs sm:text-sm ' +
+  'shadow-[0_0_24px_rgba(220,38,38,0.15)] transition-colors duration-200 ' +
+  'hover:bg-red-600/35 hover:border-red-400 active:bg-red-700/40';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,15 +32,6 @@ export default function Navbar() {
     const header = document.getElementById('site-header');
     const headerH = header?.offsetHeight ?? 80;
     const anchor = window.scrollY + headerH + 12;
-    const tiendaEl = document.getElementById('tienda');
-
-    if (tiendaEl) {
-      const tiendaTop = sectionDocumentTop(tiendaEl);
-      if (anchor >= tiendaTop - 40) {
-        setActiveSection(null);
-        return;
-      }
-    }
 
     let next: ScrollSectionId = 'inicio';
     for (let i = SCROLL_LINKS.length - 1; i >= 0; i--) {
@@ -92,12 +84,12 @@ export default function Navbar() {
         </a>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <a href={tiendaHref} className={tiendaButtonClass}>
-            Tienda
+          <a href={contactoHref} className={contactoButtonClass}>
+            Contacto
           </a>
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#D7E2EA]/30 bg-[#0C0C0C]/35 text-[#D7E2EA] backdrop-blur-[2px] hover:bg-[#0C0C0C]/55 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#D7E2EA]/30 bg-[#0C0C0C]/35 text-[#D7E2EA] backdrop-blur-[2px] hover:border-red-500/50 hover:bg-[#0C0C0C]/55 transition-colors"
             aria-expanded={menuOpen}
             aria-controls={panelId}
             onClick={() => setMenuOpen((o) => !o)}
