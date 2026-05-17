@@ -49,7 +49,7 @@ export default function HeroFigureOnly({
           <img
             src={HERO_FIGURE_FALLBACK_PNG}
             alt="Big Boys Gym"
-            className="h-full w-full object-contain object-center scale-110"
+            className="h-full w-full object-contain object-center scale-110 animate-figure-float"
             draggable={false}
           />
         </div>

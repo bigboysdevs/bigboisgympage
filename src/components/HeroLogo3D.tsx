@@ -1,10 +1,31 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useMemo, useRef, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import type { Group } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
 
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
+
+/** Oscilación suave arriba/abajo (efecto flotando en el aire). */
+function FloatingFigure({ children }: { children: ReactNode }) {
+  const group = useRef<Group>(null);
+  const reducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+
+  useFrame((state) => {
+    if (reducedMotion || !group.current) return;
+    const t = state.clock.elapsedTime;
+    group.current.position.y = Math.sin(t * 1.15) * 0.07;
+    group.current.rotation.z = Math.sin(t * 0.75) * 0.018;
+  });
+
+  return <group ref={group}>{children}</group>;
+}
 
 /** Ajuste de cámara una sola vez tras el fit (sin reajustes al scroll). */
 function HeadroomAfterFit() {
@@ -33,13 +54,14 @@ function FigureModel({ url }: ModelProps) {
 
   return (
     <>
-      {/* Sin `observe`: no re-encuadra al hacer scroll (evita saltos de cámara). */}
       <Bounds fit margin={0.5} maxDuration={0}>
         <Center>
           <group position={[0, -0.88, 0]} rotation={FIGURE_ROTATION}>
-            <Resize>
-              <primitive object={scene} />
-            </Resize>
+            <FloatingFigure>
+              <Resize>
+                <primitive object={scene} />
+              </Resize>
+            </FloatingFigure>
           </group>
         </Center>
       </Bounds>
