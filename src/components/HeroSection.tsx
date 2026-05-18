@@ -22,7 +22,7 @@ export default function HeroSection() {
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible">
         <div
-          className="pointer-events-none absolute inset-0 z-0 min-h-[clamp(520px,72vh,860px)] overflow-hidden md:min-h-[clamp(600px,86vh,960px)]"
+          className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 min-h-[clamp(520px,72vh,860px)] overflow-hidden left-[42%] w-[58%] sm:left-[40%] sm:w-[60%] md:min-h-[clamp(600px,86vh,960px)]"
           aria-hidden
         >
           <GalacticWarpBackground lite={mode === 'lite'} />
@@ -32,7 +32,7 @@ export default function HeroSection() {
           <HeroFigureOnly withBackdrop={false} />
         </div>
 
-        <div className="hero-title-layer pointer-events-none relative z-[35] flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
+        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
           <FadeIn
             effect="inView"
             delay={0.15}

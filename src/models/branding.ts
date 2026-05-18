@@ -7,6 +7,9 @@ export const GYM_LOGO_TRANSPARENT_PNG = '/big-boys-gym-logo-transparent.png';
 /** Alias para fallback del hero en modo estático. */
 export const HERO_FIGURE_FALLBACK_PNG = GYM_LOGO_TRANSPARENT_PNG;
 
+/** Rayo hero — `public/brand/image.png` (detrás del título BIG / BOYS / GYM) */
+export const HERO_LIGHTNING_IMAGE = '/brand/image.png';
+
 /** Emisión en directo — Ibiza Global Radio (misma emisora que radio-espana.es). */
 export const IBIZA_GLOBAL_RADIO_STREAM =
   'https://listenssl.ibizaglobalradio.com:8024/ibizaglobalradio.mp3';
