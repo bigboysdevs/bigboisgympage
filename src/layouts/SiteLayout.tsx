@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import FooterLegalSection from '@/components/FooterLegalSection';
 import InvertedBlendCursor from '@/components/InvertedBlendCursor';
 import FloatingRadioPlayer from '@/components/FloatingRadioPlayer';
-import PageLightningBackdrop from '@/components/PageLightningBackdrop';
+import PageLightningScroll from '@/components/PageLightningScroll';
 
 export default function SiteLayout() {
   return (
@@ -19,7 +19,7 @@ export default function SiteLayout() {
         <Navbar />
       </header>
       <div className="site-page-shell">
-        <PageLightningBackdrop />
+        <PageLightningScroll />
         <main className="relative z-[10] overflow-visible bg-transparent">
           <Outlet />
         </main>
