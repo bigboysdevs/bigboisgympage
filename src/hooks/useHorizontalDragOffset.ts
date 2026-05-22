@@ -1,4 +1,5 @@
 import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import { normalizeDragOffset } from '../utils/marqueeLoop';
 
 type DragAxis = 'x' | 'y' | null;
 
@@ -53,14 +54,20 @@ export function useHorizontalDragOffset() {
     }
   }, []);
 
-  const endDrag = useCallback((e: ReactPointerEvent<HTMLElement>) => {
-    const drag = dragRef.current;
-    if (!drag || drag.pointerId !== e.pointerId) return;
-    dragRef.current = null;
-    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    }
-  }, []);
+  const endDrag = useCallback(
+    (e: ReactPointerEvent<HTMLElement>, loopWidth?: number) => {
+      const drag = dragRef.current;
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      dragRef.current = null;
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+      if (loopWidth && loopWidth > 0) {
+        offsetRef.current = normalizeDragOffset(offsetRef.current, loopWidth);
+      }
+    },
+    [],
+  );
 
   const getOffset = useCallback(() => offsetRef.current, []);
 

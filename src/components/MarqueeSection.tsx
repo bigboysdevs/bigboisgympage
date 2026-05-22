@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
+import { wrapMarqueeOffset } from '../utils/marqueeLoop';
 
 /** Fotos reales del gym en `public/gallery/`. */
 const GYM_GALLERY = [
@@ -34,18 +35,60 @@ type MarqueeRowProps = {
 
 function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const loopWidthRef = useRef(0);
   const drag = useHorizontalDragOffset();
+
+  const measureLoop = useCallback(() => {
+    const track = trackRef.current;
+    if (!track || track.children.length < items.length) return;
+    const style = getComputedStyle(track);
+    const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+    let width = 0;
+    for (let i = 0; i < items.length; i++) {
+      const child = track.children[i] as HTMLElement;
+      width += child.offsetWidth + (i < items.length - 1 ? gap : 0);
+    }
+    if (width > 0) loopWidthRef.current = width;
+  }, [items.length]);
 
   const applyTransform = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
-    const x = scrollBase + drag.getOffset() * direction;
+
+    const dragPart = drag.getOffset() * direction;
+    const loop = loopWidthRef.current;
+    const dragLooped = loop > 0 ? wrapMarqueeOffset(dragPart, loop) : dragPart;
+    const x = scrollBase + dragLooped;
     el.style.transform = `translateX(${x}px)`;
   }, [direction, drag, scrollBase]);
 
   useEffect(() => {
     applyTransform();
   }, [applyTransform]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    measureLoop();
+    applyTransform();
+
+    const ro = new ResizeObserver(() => {
+      measureLoop();
+      applyTransform();
+    });
+    ro.observe(track);
+
+    const onImgLoad = () => {
+      measureLoop();
+      applyTransform();
+    };
+    track.querySelectorAll('img').forEach((img) => {
+      if (!img.complete) img.addEventListener('load', onImgLoad, { once: true });
+    });
+
+    return () => ro.disconnect();
+  }, [applyTransform, measureLoop, items]);
 
   const dragHandlers = {
     onPointerDown: drag.onPointerDown,
@@ -54,11 +97,11 @@ function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
       applyTransform();
     },
     onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerUp(e);
+      drag.onPointerUp(e, loopWidthRef.current);
       applyTransform();
     },
     onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerCancel(e);
+      drag.onPointerCancel(e, loopWidthRef.current);
       applyTransform();
     },
   };
@@ -68,7 +111,7 @@ function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
       <div
         ref={trackRef}
         role="region"
-        aria-label="Galería desplazable — arrastra horizontalmente"
+        aria-label="Galería — arrastra en horizontal (carrete infinito)"
         className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
         style={{ willChange: 'transform', touchAction: 'pan-y' }}
         {...dragHandlers}
@@ -123,8 +166,8 @@ export default function MarqueeSection() {
       aria-label="Galería de entrenamiento"
     >
       <p className="sr-only">
-        Puedes arrastrar las filas de fotos con el dedo o el ratón. Al bajar la página, la galería
-        sigue animándose con el scroll.
+        Al bajar o subir la página las filas se mueven con el scroll. Puedes arrastrar las fotos en
+        horizontal en un carrete infinito.
       </p>
       <div className="relative flex flex-col gap-3 sm:gap-4 md:gap-5">
         <MarqueeRow items={ROW_1} direction={1} scrollBase={scrollBase} />
