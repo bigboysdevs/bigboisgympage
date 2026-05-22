@@ -29,11 +29,12 @@ const SCROLL_FACTOR = 0.3;
 
 type MarqueeRowProps = {
   items: readonly string[];
-  direction: 1 | -1;
+  /** Scroll de página: fila 2 va en sentido contrario a la 1 */
+  scrollDirection: 1 | -1;
   scrollBase: number;
 };
 
-function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
+function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const loopWidthRef = useRef(0);
   const drag = useHorizontalDragOffset();
@@ -55,12 +56,13 @@ function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
     const el = trackRef.current;
     if (!el) return;
 
-    const dragPart = drag.getOffset() * direction;
+    const scrollX = scrollDirection === 1 ? scrollBase : -scrollBase;
+    const dragRaw = drag.getOffset();
     const loop = loopWidthRef.current;
-    const dragLooped = loop > 0 ? wrapMarqueeOffset(dragPart, loop) : dragPart;
-    const x = scrollBase + dragLooped;
+    const dragLooped = loop > 0 ? wrapMarqueeOffset(dragRaw, loop) : dragRaw;
+    const x = scrollX + dragLooped;
     el.style.transform = `translateX(${x}px)`;
-  }, [direction, drag, scrollBase]);
+  }, [scrollDirection, drag, scrollBase]);
 
   useEffect(() => {
     applyTransform();
@@ -170,8 +172,8 @@ export default function MarqueeSection() {
         horizontal en un carrete infinito.
       </p>
       <div className="relative flex flex-col gap-3 sm:gap-4 md:gap-5">
-        <MarqueeRow items={ROW_1} direction={1} scrollBase={scrollBase} />
-        <MarqueeRow items={ROW_2} direction={-1} scrollBase={scrollBase} />
+        <MarqueeRow items={ROW_1} scrollDirection={1} scrollBase={scrollBase} />
+        <MarqueeRow items={ROW_2} scrollDirection={-1} scrollBase={scrollBase} />
       </div>
     </section>
   );
