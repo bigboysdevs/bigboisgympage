@@ -19,12 +19,18 @@ export default function ProjectCard({ project, index, totalCards, progress }: Pr
   const rangeEnd = 1;
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
   const scale = useTransform(progress, [rangeStart, rangeEnd], [1, targetScale]);
+  const isFirst = index === 0;
   const isLast = index === totalCards - 1;
   const stackOffset = index * STACK_GAP_PX + (isLast ? 20 : 0);
 
   return (
     <div
-      className="projects-card-pin relative sticky top-[7.25rem] z-[1] flex min-h-[100vh] w-full items-center justify-center py-8 sm:top-[8rem] sm:py-10 md:top-[9rem] md:py-12"
+      className={[
+        'projects-card-pin relative sticky top-[7.25rem] z-[1] flex w-full sm:top-[8rem] md:top-[9rem]',
+        isFirst
+          ? 'min-h-0 items-start justify-start py-2 sm:py-4'
+          : 'min-h-[100vh] items-center justify-center py-8 sm:py-10 md:py-12',
+      ].join(' ')}
       style={{ zIndex: index + 1 }}
     >
       <motion.div

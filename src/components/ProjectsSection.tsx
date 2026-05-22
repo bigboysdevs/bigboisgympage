@@ -18,7 +18,7 @@ export default function ProjectsSection() {
       className="relative z-10 -mt-10 scroll-mt-8 rounded-t-[40px] px-5 sm:-mt-12 sm:rounded-t-[50px] sm:px-8 md:-mt-14 md:rounded-t-[60px] md:px-10"
       style={{ backgroundColor: '#0C0C0C' }}
     >
-      <div className="flex flex-col items-center py-20 sm:py-24 md:py-32">
+      <div className="flex flex-col items-center px-0 pt-16 pb-6 sm:pt-20 sm:pb-8 md:pt-24 md:pb-10">
         <FadeIn delay={0} y={40}>
           <h2
             className="hero-heading w-full text-center font-black uppercase leading-none tracking-tight"
@@ -32,7 +32,7 @@ export default function ProjectsSection() {
         </FadeIn>
       </div>
 
-      <div className="projects-cards relative pt-4 sm:pt-8 md:pt-10">
+      <div className="projects-cards relative">
         {GYM_SPACES.map((space, index) => (
           <ProjectCard
             key={space.number}
