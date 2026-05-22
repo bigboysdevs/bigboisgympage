@@ -32,7 +32,7 @@ export default function ProjectsSection() {
         </FadeIn>
       </div>
 
-      <div className="relative">
+      <div className="projects-cards relative pt-4 sm:pt-8 md:pt-10">
         {GYM_SPACES.map((space, index) => (
           <ProjectCard
             key={space.number}
@@ -42,7 +42,11 @@ export default function ProjectsSection() {
             progress={scrollYProgress}
           />
         ))}
-        <div className="h-[100vh] min-h-[640px] shrink-0" aria-hidden />
+        <div
+          className="h-[min(92vh,820px)] min-h-[480px] shrink-0 sm:min-h-[560px]"
+          aria-hidden
+        />
+        <div className="h-20 shrink-0 sm:h-28 md:h-32" aria-hidden />
       </div>
     </section>
   );

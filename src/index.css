@@ -130,6 +130,15 @@
   z-index: 10;
 }
 
+/* Stack sticky Espacios GYM: ancla relativa para que las tarjetas no suban al viewport */
+.projects-cards {
+  position: relative;
+}
+
+.projects-card-pin {
+  position: sticky;
+}
+
 .page-lightning-scroll {
   position: fixed;
   left: 0;

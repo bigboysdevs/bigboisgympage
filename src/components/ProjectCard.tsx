@@ -12,21 +12,30 @@ interface ProjectCardProps {
   progress: MotionValue<number>;
 }
 
+const STACK_GAP_PX = 36;
+
 export default function ProjectCard({ project, index, totalCards, progress }: ProjectCardProps) {
   const rangeStart = index / totalCards;
   const rangeEnd = 1;
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
   const scale = useTransform(progress, [rangeStart, rangeEnd], [1, targetScale]);
+  const isLast = index === totalCards - 1;
+  const stackOffset = index * STACK_GAP_PX + (isLast ? 20 : 0);
 
   return (
-    <div className="sticky top-24 flex h-[85vh] items-start justify-center md:top-32">
+    <div
+      className="projects-card-pin relative sticky top-[7.25rem] z-[1] flex min-h-[100vh] w-full items-center justify-center py-8 sm:top-[8rem] sm:py-10 md:top-[9rem] md:py-12"
+      style={{ zIndex: index + 1 }}
+    >
       <motion.div
         style={{
           scale,
-          top: `${index * 28}px`,
+          marginTop: stackOffset,
           backgroundColor: '#0C0C0C',
+          transformOrigin: 'center top',
+          zIndex: index + 1,
         }}
-        className="absolute flex w-full max-w-[1760px] origin-top flex-col gap-6 rounded-[40px] border-2 border-[#D7E2EA] p-4 sm:gap-8 sm:rounded-[50px] sm:p-6 md:gap-10 md:rounded-[60px] md:p-8"
+        className="relative flex w-full max-w-[1760px] flex-col gap-6 rounded-[40px] border-2 border-[#D7E2EA] p-4 sm:gap-8 sm:rounded-[50px] sm:p-6 md:gap-10 md:rounded-[60px] md:p-8"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <div className="flex items-center gap-6 sm:gap-8 md:gap-10">
