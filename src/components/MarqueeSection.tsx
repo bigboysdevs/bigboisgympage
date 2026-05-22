@@ -58,11 +58,10 @@ export default function MarqueeSection() {
   return (
     <section
       ref={sectionRef}
-      className="w-full overflow-hidden pt-24 sm:pt-32 md:pt-40 pb-10"
-      style={{ backgroundColor: '#0C0C0C' }}
+      className="relative z-[10] w-full overflow-hidden bg-transparent pt-24 sm:pt-32 md:pt-40 pb-10"
       aria-label="Galería de entrenamiento"
     >
-      <div className="flex flex-col gap-3">
+      <div className="relative flex flex-col gap-3">
         <div className="overflow-hidden w-full">
           <div
             ref={row1Ref}

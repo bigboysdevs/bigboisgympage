@@ -38,16 +38,15 @@ export default function ContactLocationSection() {
   return (
     <section
       id="contacto"
-      className="relative z-20 scroll-mt-8 border-t border-[#D7E2EA]/10 px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28 md:px-10 md:pt-36 md:pb-32"
-      style={{ backgroundColor: '#0C0C0C' }}
+      className="relative z-[10] scroll-mt-8 overflow-hidden border-t border-[#D7E2EA]/10 bg-transparent px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28 md:px-10 md:pt-36 md:pb-32"
       aria-labelledby="contacto-heading"
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(220,38,38,0.08),transparent_60%)]"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(220,38,38,0.08),transparent_60%)]"
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative z-[1] mx-auto max-w-6xl">
         <FadeIn delay={0} y={36} className="mb-14 sm:mb-16 md:mb-20">
           <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-red-500/90 sm:text-left">
             Visítanos

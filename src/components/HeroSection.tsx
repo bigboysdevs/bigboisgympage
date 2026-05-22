@@ -1,7 +1,5 @@
 import FadeIn from './FadeIn';
-import GalacticWarpBackground from './GalacticWarpBackground';
 import HeroFigureOnly from './HeroFigureOnly';
-import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 
 const TAGLINE =
   'Big Boys Gym — hierro, constancia y comunidad. Sin atajos.';
@@ -13,21 +11,12 @@ const TITLE_LINE_CLASS =
   'hero-heading font-black uppercase leading-[0.88] tracking-tight text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
 
 export default function HeroSection() {
-  const mode = useLogo3dPerformanceMode();
-
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen flex-col overflow-visible scroll-mt-8 pt-[4.75rem] md:pt-[5.25rem]"
+      className="relative z-[10] flex min-h-screen flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] md:pt-[5.25rem]"
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible">
-        <div
-          className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 min-h-[clamp(520px,72vh,860px)] overflow-hidden left-[42%] w-[58%] sm:left-[40%] sm:w-[60%] md:min-h-[clamp(600px,86vh,960px)]"
-          aria-hidden
-        >
-          <GalacticWarpBackground lite={mode === 'lite'} />
-        </div>
-
         <div className="pointer-events-auto absolute inset-0 z-[36] touch-none -mx-5 overflow-visible sm:-mx-8 md:z-[25] md:mx-0 md:touch-auto">
           <HeroFigureOnly withBackdrop={false} />
         </div>
