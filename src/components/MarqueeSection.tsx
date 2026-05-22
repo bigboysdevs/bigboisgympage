@@ -164,14 +164,14 @@ export default function MarqueeSection() {
   return (
     <section
       ref={sectionRef}
-      className="marquee-gallery relative z-[10] w-full overflow-hidden bg-transparent pt-24 pb-10 sm:pt-32 md:pt-40"
+      className="marquee-gallery relative z-[10] -mt-1 w-full overflow-hidden bg-transparent pt-2 pb-10 sm:-mt-2 sm:pt-3 md:pt-4"
       aria-label="Galería de entrenamiento"
     >
       <p className="sr-only">
         Al bajar o subir la página las filas se mueven con el scroll. Puedes arrastrar las fotos en
         horizontal en un carrete infinito.
       </p>
-      <div className="relative flex flex-col gap-3 sm:gap-4 md:gap-5">
+      <div className="relative flex flex-col gap-1 sm:gap-1.5 md:gap-2">
         <MarqueeRow items={ROW_1} scrollDirection={1} scrollBase={scrollBase} />
         <MarqueeRow items={ROW_2} scrollDirection={-1} scrollBase={scrollBase} />
       </div>

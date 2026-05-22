@@ -1,9 +1,6 @@
 import FadeIn from './FadeIn';
 import HeroFigureOnly from './HeroFigureOnly';
 
-const TAGLINE =
-  'Big Boys Gym — hierro, constancia y comunidad. Sin atajos.';
-
 const TITLE_LINES = ['Big', 'Boys', 'GYM'] as const;
 
 /** Mismo estilo que el h1 original: gradiente .hero-heading en index.css */
@@ -21,7 +18,7 @@ export default function HeroSection() {
           <HeroFigureOnly withBackdrop={false} />
         </div>
 
-        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-36 pt-0 sm:px-8 sm:pb-40 md:px-10 md:pb-44 md:pt-1 md:pr-2 lg:pr-3">
+        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-4 pt-0 sm:px-8 sm:pb-5 md:px-10 md:pb-6 md:pt-1 md:pr-2 lg:pr-3">
           <FadeIn
             effect="inView"
             delay={0.15}
@@ -38,20 +35,6 @@ export default function HeroSection() {
             </h1>
           </FadeIn>
         </div>
-
-        <FadeIn
-          effect="inView"
-          delay={0.28}
-          y={12}
-          className="pointer-events-none absolute bottom-6 left-5 z-40 bg-transparent sm:bottom-8 sm:left-8 md:bottom-10 md:left-10"
-        >
-          <p
-            className="max-w-[280px] bg-transparent font-light uppercase leading-snug tracking-wide text-[#D7E2EA]/90 sm:max-w-xs md:max-w-sm"
-            style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.125rem)' }}
-          >
-            {TAGLINE}
-          </p>
-        </FadeIn>
       </div>
     </section>
   );
