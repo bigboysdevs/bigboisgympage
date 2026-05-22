@@ -89,9 +89,9 @@ export const MusicToggleButton = ({
       aria-pressed={isPlaying}
       title="Ibiza Global Radio"
       initial={{ padding: '14px 14px' }}
-      whileHover={{ padding: '18px 22px' }}
-      whileTap={{ padding: '18px 22px' }}
-      transition={{ duration: 1, bounce: 0.6, type: 'spring' }}
+      whileHover={{ padding: '16px 18px' }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ duration: 0.35, bounce: 0.4, type: 'spring' }}
       className={[
         'cursor-pointer rounded-full border-2 bg-[#0a0a0a] p-2 transition-colors',
         error
