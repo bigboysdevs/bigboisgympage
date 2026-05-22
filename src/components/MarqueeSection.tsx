@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
 
-/** Fotos reales del gym en `public/gallery/`. Añade más archivos ahí y enlázalos aquí. */
+/** Fotos reales del gym en `public/gallery/`. */
 const GYM_GALLERY = [
   '/gallery/362dad12-6e49-4136-affe-ba1ca9700caf.jpg',
   '/gallery/70a73709-9078-4c5b-9ada-25f8df250fd0.jpg',
@@ -19,30 +20,90 @@ function rotateGallery<T>(items: readonly T[], shift: number): T[] {
   return [...items.slice(s), ...items.slice(0, s)];
 }
 
-/** Fila 1: orden original. Fila 2: mismo set rotado (mitad del array) — secuencia distinta. */
 const ROW_1 = [...GYM_GALLERY];
 const ROW_2 = rotateGallery(GYM_GALLERY, Math.ceil(GYM_GALLERY.length / 2));
 
+const SCROLL_BASE_OFFSET = -200;
+const SCROLL_FACTOR = 0.3;
+
+type MarqueeRowProps = {
+  items: readonly string[];
+  direction: 1 | -1;
+  scrollBase: number;
+};
+
+function MarqueeRow({ items, direction, scrollBase }: MarqueeRowProps) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const drag = useHorizontalDragOffset();
+
+  const applyTransform = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const x = scrollBase + drag.getOffset() * direction;
+    el.style.transform = `translateX(${x}px)`;
+  }, [direction, drag, scrollBase]);
+
+  useEffect(() => {
+    applyTransform();
+  }, [applyTransform]);
+
+  const dragHandlers = {
+    onPointerDown: drag.onPointerDown,
+    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
+      drag.onPointerMove(e);
+      applyTransform();
+    },
+    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
+      drag.onPointerUp(e);
+      applyTransform();
+    },
+    onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => {
+      drag.onPointerCancel(e);
+      applyTransform();
+    },
+  };
+
+  return (
+    <div className="marquee-gallery__track overflow-hidden w-full">
+      <div
+        ref={trackRef}
+        role="region"
+        aria-label="Galería desplazable — arrastra horizontalmente"
+        className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
+        style={{ willChange: 'transform', touchAction: 'pan-y' }}
+        {...dragHandlers}
+      >
+        {[...items, ...items, ...items].map((src, i) => (
+          <div
+            key={`${src}-${i}`}
+            className="marquee-gallery__card flex-shrink-0 overflow-hidden rounded-2xl sm:rounded-3xl"
+          >
+            <img
+              src={src}
+              alt="Big Boys Gym — galería"
+              className="pointer-events-none h-full w-full select-none object-cover"
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MarqueeSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const row1Ref = useRef<HTMLDivElement>(null);
-  const row2Ref = useRef<HTMLDivElement>(null);
+  const [scrollBase, setScrollBase] = useState(SCROLL_BASE_OFFSET);
 
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
-
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionTop = window.scrollY + rect.top;
       const scrolled = window.scrollY - sectionTop + window.innerHeight;
-      const offset = scrolled * 0.3;
-
-      if (row1Ref.current) {
-        row1Ref.current.style.transform = `translateX(${offset - 200}px)`;
-      }
-      if (row2Ref.current) {
-        row2Ref.current.style.transform = `translateX(${-(offset - 200)}px)`;
-      }
+      setScrollBase(scrolled * SCROLL_FACTOR + SCROLL_BASE_OFFSET);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -58,63 +119,16 @@ export default function MarqueeSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-[10] w-full overflow-hidden bg-transparent pt-24 sm:pt-32 md:pt-40 pb-10"
+      className="marquee-gallery relative z-[10] w-full overflow-hidden bg-transparent pt-24 pb-10 sm:pt-32 md:pt-40"
       aria-label="Galería de entrenamiento"
     >
-      <div className="relative flex flex-col gap-3">
-        <div className="overflow-hidden w-full">
-          <div
-            ref={row1Ref}
-            className="flex gap-3"
-            style={{
-              willChange: 'transform',
-              transform: 'translateX(-200px)',
-            }}
-          >
-            {[...ROW_1, ...ROW_1, ...ROW_1].map((src, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 rounded-2xl overflow-hidden"
-                style={{ width: '420px', height: '270px' }}
-              >
-                <img
-                  src={src}
-                  alt="Big Boys Gym — galería"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="overflow-hidden w-full">
-          <div
-            ref={row2Ref}
-            className="flex gap-3"
-            style={{
-              willChange: 'transform',
-              transform: 'translateX(200px)',
-            }}
-          >
-            {[...ROW_2, ...ROW_2, ...ROW_2].map((src, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 rounded-2xl overflow-hidden"
-                style={{ width: '420px', height: '270px' }}
-              >
-                <img
-                  src={src}
-                  alt="Big Boys Gym — galería"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+      <p className="sr-only">
+        Puedes arrastrar las filas de fotos con el dedo o el ratón. Al bajar la página, la galería
+        sigue animándose con el scroll.
+      </p>
+      <div className="relative flex flex-col gap-3 sm:gap-4 md:gap-5">
+        <MarqueeRow items={ROW_1} direction={1} scrollBase={scrollBase} />
+        <MarqueeRow items={ROW_2} direction={-1} scrollBase={scrollBase} />
       </div>
     </section>
   );

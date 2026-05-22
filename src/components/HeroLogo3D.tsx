@@ -192,10 +192,12 @@ function FigureOrbitControls({
   setDragging,
   orbitTargetX,
   orbitTargetY,
+  enableRotate,
 }: {
   setDragging: (v: boolean) => void;
   orbitTargetX: number;
   orbitTargetY: number;
+  enableRotate: boolean;
 }) {
   const camera = useThree((s) => s.camera);
   if (!camera) return null;
@@ -204,7 +206,7 @@ function FigureOrbitControls({
     <OrbitControls
       makeDefault
       enablePan={false}
-      enableRotate
+      enableRotate={enableRotate}
       enableZoom={false}
       enableDamping
       dampingFactor={0.08}
@@ -228,7 +230,8 @@ function FigureOrbitControls({
 function FigureModel({
   url,
   figureScreenOffset,
-}: ModelProps & { figureScreenOffset: number }) {
+  enableRotate,
+}: ModelProps & { figureScreenOffset: number; enableRotate: boolean }) {
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
   const layout = useLockedFigureLayout();
@@ -260,6 +263,7 @@ function FigureModel({
         setDragging={setDragging}
         orbitTargetX={orbitTargetX}
         orbitTargetY={orbitTargetY}
+        enableRotate={enableRotate}
       />
     </>
   );
@@ -269,20 +273,30 @@ export interface HeroLogo3DProps {
   modelUrl?: string;
   performanceMode: boolean;
   figureScreenOffset?: number;
+  enableRotate?: boolean;
 }
 
 export default function HeroLogo3D({
   modelUrl = HERO_GLTF_URL,
   performanceMode,
   figureScreenOffset = HERO_FIGURE_SCREEN_OFFSET,
+  enableRotate = true,
 }: HeroLogo3DProps) {
   const dpr: [number, number] = performanceMode ? [1, 1.25] : [1, 2];
 
   return (
     <div
-      className="absolute inset-x-0 -top-24 bottom-0 h-[calc(100%+6rem)] w-full max-md:translate-x-0 cursor-grab overflow-visible active:cursor-grabbing md:-top-28 md:h-[calc(100%+7rem)] lg:-top-32 lg:h-[calc(100%+8rem)]"
-      style={{ touchAction: 'none' }}
-      aria-label="Modelo 3D Big Boys Gym — clic y arrastra para girar"
+      className={`absolute inset-x-0 -top-24 bottom-0 h-[calc(100%+6rem)] w-full max-md:translate-x-0 overflow-visible md:-top-28 md:h-[calc(100%+7rem)] lg:-top-32 lg:h-[calc(100%+8rem)] ${
+        enableRotate
+          ? 'cursor-grab active:cursor-grabbing'
+          : 'pointer-events-none cursor-default'
+      }`}
+      style={{ touchAction: enableRotate ? 'none' : 'pan-y' }}
+      aria-label={
+        enableRotate
+          ? 'Modelo 3D Big Boys Gym — clic y arrastra para girar'
+          : 'Modelo 3D Big Boys Gym'
+      }
     >
       <Canvas
         className="!bg-transparent h-full w-full"
@@ -298,7 +312,8 @@ export default function HeroLogo3D({
           gl.setClearColor(0x000000, 0);
           scene.background = null;
           const canvas = gl.domElement;
-          canvas.style.touchAction = 'none';
+          canvas.style.touchAction = enableRotate ? 'none' : 'pan-y';
+          canvas.style.pointerEvents = enableRotate ? 'auto' : 'none';
           canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
         }}
       >
@@ -307,7 +322,11 @@ export default function HeroLogo3D({
         <directionalLight position={[-5, 2, -4]} intensity={0.42} />
         <pointLight position={[0, 1.5, 2]} intensity={0.35} color="#ffffff" distance={8} />
         <Suspense fallback={null}>
-          <FigureModel url={modelUrl} figureScreenOffset={figureScreenOffset} />
+          <FigureModel
+            url={modelUrl}
+            figureScreenOffset={figureScreenOffset}
+            enableRotate={enableRotate}
+          />
         </Suspense>
       </Canvas>
     </div>

@@ -17,7 +17,7 @@ export default function HeroSection() {
       className="relative z-[10] flex min-h-screen flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] md:pt-[5.25rem]"
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible">
-        <div className="pointer-events-auto absolute inset-0 z-[36] flex touch-none -mx-5 justify-center overflow-visible sm:-mx-8 md:z-[25] md:mx-0 md:block md:justify-end md:touch-auto">
+        <div className="hero-figure-layer pointer-events-none absolute inset-0 z-[22] flex -mx-5 justify-center overflow-visible sm:-mx-8 md:z-[25] md:pointer-events-auto md:mx-0 md:block md:touch-none md:justify-end">
           <HeroFigureOnly withBackdrop={false} />
         </div>
 

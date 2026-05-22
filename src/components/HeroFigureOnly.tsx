@@ -3,6 +3,7 @@ import {
   HERO_FIGURE_FALLBACK_PNG,
   HERO_GLTF_URL,
 } from '../models/branding';
+import { useHeroFigureInteraction } from '../hooks/useHeroFigureInteraction';
 import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 import GalacticWarpBackground from './GalacticWarpBackground';
 import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from './HeroLogo3D';
@@ -57,6 +58,7 @@ export default function HeroFigureOnly({
   withBackdrop = true,
 }: HeroFigureOnlyProps) {
   const mode = useLogo3dPerformanceMode();
+  const canRotateFigure = useHeroFigureInteraction();
 
   if (mode === 'deciding') {
     return (
@@ -87,14 +89,19 @@ export default function HeroFigureOnly({
 
   return (
     <div className={FIGURE_ROOT_CLASS}>
-      <div className={`${FIGURE_CANVAS_SLOT_CLASS} pointer-events-auto`}>
+      <div
+        className={`${FIGURE_CANVAS_SLOT_CLASS} ${
+          canRotateFigure ? 'pointer-events-auto' : 'pointer-events-none'
+        }`}
+      >
         {withBackdrop ? <FigureBackdrop lite={mode === 'lite'} /> : null}
         <Suspense fallback={<TinyLoader />}>
-          <div className={`${FIGURE_VIEWPORT_CLASS} touch-none pointer-events-auto`}>
+          <div className={FIGURE_VIEWPORT_CLASS}>
             <HeroLogo3D
               modelUrl={modelUrl}
               performanceMode={mode === 'lite'}
               figureScreenOffset={HERO_FIGURE_SCREEN_OFFSET}
+              enableRotate={canRotateFigure}
             />
           </div>
         </Suspense>

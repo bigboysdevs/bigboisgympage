@@ -42,10 +42,30 @@
 }
 
 @media (max-width: 767px) {
-  #inicio .pointer-events-auto.absolute.inset-0 {
+  #inicio .hero-figure-layer {
     left: 0;
     right: 0;
     width: 100%;
+    pointer-events: none !important;
+    touch-action: pan-y;
+  }
+
+  #inicio .hero-figure-layer canvas {
+    pointer-events: none !important;
+    touch-action: pan-y !important;
+  }
+}
+
+/* Galería: tarjetas proporcionales + arrastre horizontal */
+.marquee-gallery__card {
+  width: min(72vw, 360px);
+  height: clamp(200px, 48vw, 270px);
+}
+
+@media (min-width: 640px) {
+  .marquee-gallery__card {
+    width: min(55vw, 420px);
+    height: clamp(220px, 32vw, 270px);
   }
 }
 
