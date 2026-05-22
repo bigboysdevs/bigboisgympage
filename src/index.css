@@ -41,6 +41,14 @@
   background-color: transparent;
 }
 
+@media (max-width: 767px) {
+  #inicio .pointer-events-auto.absolute.inset-0 {
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+
 .contact-btn {
   background: linear-gradient(
     135deg,

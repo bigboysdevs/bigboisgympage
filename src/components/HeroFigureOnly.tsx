@@ -18,11 +18,11 @@ const FIGURE_CANVAS_SLOT_CLASS =
 
 /** Ventana de recorte (canvas): posición fija; no añadir offset de figura aquí. */
 const FIGURE_VIEWPORT_CLASS =
-  'relative z-10 h-[clamp(440px,62vh,780px)] w-full overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(520px,78vh,880px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(560px,82vh,920px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
+  'relative z-10 h-[clamp(440px,62vh,780px)] w-full max-md:translate-x-0 overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(520px,78vh,880px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(560px,82vh,920px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
 
 /** Solo desplaza la figura dentro de la ventana (PNG). Resta HERO_FIGURE_RAISE para subir. */
 const FIGURE_CONTENT_OFFSET_CLASS =
-  `translate-y-[calc(7rem-${HERO_FIGURE_RAISE})] md:translate-y-[calc(8rem-${HERO_FIGURE_RAISE})] lg:translate-y-[calc(9rem-${HERO_FIGURE_RAISE})]`;
+  `max-md:translate-x-0 translate-y-[calc(7rem-${HERO_FIGURE_RAISE})] max-md:object-[68%_center] md:translate-y-[calc(8rem-${HERO_FIGURE_RAISE})] md:object-right lg:translate-y-[calc(9rem-${HERO_FIGURE_RAISE})]`;
 
 function FigureBackdrop({ lite }: { lite?: boolean }) {
   return (
@@ -76,7 +76,7 @@ export default function HeroFigureOnly({
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
               alt="Big Boys Gym"
-              className={`absolute inset-0 scale-[1.22] object-contain object-center ${FIGURE_CONTENT_OFFSET_CLASS} md:scale-[1.28] md:object-right animate-figure-float`}
+              className={`absolute inset-0 max-md:scale-[1.05] object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
               draggable={false}
             />
           </div>
