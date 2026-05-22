@@ -9,9 +9,9 @@ export default function AboutSection() {
   return (
     <section
       id="filosofia"
-      className="relative z-[10] flex min-h-screen flex-col items-center justify-center overflow-hidden bg-transparent px-5 py-20 scroll-mt-8 sm:px-8 md:px-10"
+      className="relative z-[10] flex min-h-screen flex-col justify-center overflow-hidden bg-transparent px-5 py-20 scroll-mt-8 sm:px-8 md:px-10"
     >
-      <div className="relative flex flex-col items-center gap-16 sm:gap-20 md:gap-24 max-w-4xl w-full">
+      <div className="relative ml-auto mr-[clamp(1.5rem,8vw,9rem)] flex w-full max-w-4xl flex-col items-center gap-16 sm:gap-20 md:gap-24">
         <div className="flex flex-col items-center gap-10 sm:gap-14 md:gap-16 w-full">
           <FadeIn delay={0} y={40}>
             <h2
