@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import FooterLegalSection from '@/components/FooterLegalSection';
 import InvertedBlendCursor from '@/components/InvertedBlendCursor';
 import FloatingRadioPlayer from '@/components/FloatingRadioPlayer';
+import FloatingScrollProgress from '@/components/FloatingScrollProgress';
 import PageGalacticBackdrop from '@/components/PageGalacticBackdrop';
 import PageLightningScroll from '@/components/PageLightningScroll';
 
@@ -30,6 +31,7 @@ export default function SiteLayout() {
         </div>
       </div>
       <InvertedBlendCursor />
+      <FloatingScrollProgress />
       <FloatingRadioPlayer />
     </>
   );
