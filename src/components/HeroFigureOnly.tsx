@@ -12,14 +12,13 @@ const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
 const FIGURE_ROOT_CLASS = 'relative h-full w-full overflow-visible';
 
-/** Altura explícita: el Canvas 3D necesita px reales (inherit falla en el grid). */
-/** Contenedor exterior: solo altura mínima; sin padding que empuje la figura. */
+/** Desktop: alturas originales. Móvil: sin marco, ocupa todo el hero. */
 const FIGURE_CANVAS_SLOT_CLASS =
-  'relative h-full min-h-[clamp(560px,78vh,920px)] w-full overflow-visible md:min-h-[clamp(640px,90vh,1000px)] lg:min-h-[clamp(680px,94vh,1040px)]';
+  'relative h-full min-h-[clamp(560px,78vh,920px)] w-full overflow-visible max-md:min-h-0 max-md:max-h-none max-md:h-full md:min-h-[clamp(640px,90vh,1000px)] lg:min-h-[clamp(680px,94vh,1040px)]';
 
-/** Ventana del canvas: sin recorte inferior para que se vean pesas y piernas. */
+/** Desktop: ventana original. Móvil: altura completa sin recorte. */
 const FIGURE_VIEWPORT_CLASS =
-  'relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:translate-x-0 overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
+  'relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:h-full max-md:min-h-0 max-md:max-h-none max-md:translate-x-0 max-md:overflow-visible overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
 
 /** Solo desplaza la figura dentro de la ventana (PNG). Resta HERO_FIGURE_RAISE para subir. */
 const FIGURE_CONTENT_OFFSET_CLASS =
@@ -78,7 +77,7 @@ export default function HeroFigureOnly({
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
               alt="Big Boys Gym"
-              className={`absolute inset-0 max-md:scale-[1.05] object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
+              className={`absolute inset-0 max-md:scale-[1.14] object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
               draggable={false}
             />
           </div>

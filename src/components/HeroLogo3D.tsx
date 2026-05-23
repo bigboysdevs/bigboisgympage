@@ -20,12 +20,30 @@ const FIGURE_BOUNDS_MARGIN_DESKTOP = 0.54;
 const FIGURE_MODEL_X_MOBILE = 0.1;
 /** Cámara a la izquierda => figura a la derecha, sin salir del viewport. */
 const FIGURE_VIEW_PAN_X_MOBILE = -0.28;
-const FIGURE_BOUNDS_MARGIN_MOBILE = 0.68;
+/** Móvil: más cerca (menos margen, cámara más próxima) pero sin recortar en el canvas. */
+const FIGURE_BOUNDS_MARGIN_MOBILE = 0.52;
+
+const FIGURE_CAMERA_Z_DESKTOP = 1.48;
+const FIGURE_CAMERA_Z_MOBILE = 1.36;
+const FIGURE_CAMERA_FOV_DESKTOP = 34;
+const FIGURE_CAMERA_FOV_MOBILE = 34;
+const FIGURE_ORBIT_MIN_DESKTOP = 0.92;
+const FIGURE_ORBIT_MAX_DESKTOP = 1.75;
+const FIGURE_ORBIT_MIN_MOBILE = 0.92;
+const FIGURE_ORBIT_MAX_MOBILE = 1.75;
+const FIGURE_FIT_Y_MOBILE = -0.72;
+/** Menos empuje vertical en móvil = figura más centrada, sin hueco negro abajo. */
+export const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.06;
 
 type LockedFigureLayout = {
   modelX: number;
   viewPanX: number;
   boundsMargin: number;
+  fitY: number;
+  cameraZ: number;
+  cameraFov: number;
+  minOrbitDistance: number;
+  maxOrbitDistance: number;
   profile: 'desktop' | 'mobile';
 };
 
@@ -38,12 +56,22 @@ function useLockedFigureLayout(): LockedFigureLayout {
           modelX: FIGURE_MODEL_X_DESKTOP,
           viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
           boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+          fitY: FIGURE_FIT_Y,
+          cameraZ: FIGURE_CAMERA_Z_DESKTOP,
+          cameraFov: FIGURE_CAMERA_FOV_DESKTOP,
+          minOrbitDistance: FIGURE_ORBIT_MIN_DESKTOP,
+          maxOrbitDistance: FIGURE_ORBIT_MAX_DESKTOP,
           profile: 'desktop',
         }
       : {
           modelX: FIGURE_MODEL_X_MOBILE,
           viewPanX: FIGURE_VIEW_PAN_X_MOBILE,
           boundsMargin: FIGURE_BOUNDS_MARGIN_MOBILE,
+          fitY: FIGURE_FIT_Y_MOBILE,
+          cameraZ: FIGURE_CAMERA_Z_MOBILE,
+          cameraFov: FIGURE_CAMERA_FOV_MOBILE,
+          minOrbitDistance: FIGURE_ORBIT_MIN_MOBILE,
+          maxOrbitDistance: FIGURE_ORBIT_MAX_MOBILE,
           profile: 'mobile',
         };
   }
@@ -52,6 +80,11 @@ function useLockedFigureLayout(): LockedFigureLayout {
       modelX: FIGURE_MODEL_X_DESKTOP,
       viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
       boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+      fitY: FIGURE_FIT_Y,
+      cameraZ: FIGURE_CAMERA_Z_DESKTOP,
+      cameraFov: FIGURE_CAMERA_FOV_DESKTOP,
+      minOrbitDistance: FIGURE_ORBIT_MIN_DESKTOP,
+      maxOrbitDistance: FIGURE_ORBIT_MAX_DESKTOP,
       profile: 'desktop',
     }
   );
@@ -200,11 +233,15 @@ function FigureOrbitControls({
   orbitTargetX,
   orbitTargetY,
   enableRotate,
+  minDistance,
+  maxDistance,
 }: {
   setDragging: (v: boolean) => void;
   orbitTargetX: number;
   orbitTargetY: number;
   enableRotate: boolean;
+  minDistance: number;
+  maxDistance: number;
 }) {
   const camera = useThree((s) => s.camera);
   if (!camera) return null;
@@ -220,8 +257,8 @@ function FigureOrbitControls({
       rotateSpeed={0.85}
       autoRotate={false}
       target={[orbitTargetX, orbitTargetY, 0]}
-      minDistance={0.92}
-      maxDistance={1.75}
+      minDistance={minDistance}
+      maxDistance={maxDistance}
       minPolarAngle={Math.PI * 0.22}
       maxPolarAngle={Math.PI * 0.78}
       touches={{
@@ -242,15 +279,25 @@ function FigureModel({
   const { scene } = useGLTF(url);
   const [dragging, setDragging] = useState(false);
   const layout = useLockedFigureLayout();
-  const { modelX, viewPanX, boundsMargin, profile } = layout;
+  const {
+    modelX,
+    viewPanX,
+    boundsMargin,
+    fitY,
+    minOrbitDistance,
+    maxOrbitDistance,
+    profile,
+  } = layout;
   const orbitTargetX = modelX + viewPanX * 0.92;
   const orbitTargetY = -0.08;
+  const pushDown =
+    profile === 'mobile' ? FIGURE_SCREEN_OFFSET_PUSH_MOBILE : figureScreenOffset;
 
   return (
     <>
       <Bounds fit observe={false} margin={boundsMargin} maxDuration={0}>
         <Center>
-          <group position={[modelX, FIGURE_FIT_Y, 0]} rotation={FIGURE_ROTATION}>
+          <group position={[modelX, fitY, 0]} rotation={FIGURE_ROTATION}>
             <FloatingFigure paused={dragging}>
               <Resize>
                 <primitive object={scene} />
@@ -260,7 +307,7 @@ function FigureModel({
         </Center>
       </Bounds>
       <FigureScreenOffset
-        pushDown={figureScreenOffset}
+        pushDown={pushDown}
         viewPanX={viewPanX}
         orbitTargetX={orbitTargetX}
         orbitTargetY={orbitTargetY}
@@ -271,6 +318,8 @@ function FigureModel({
         orbitTargetX={orbitTargetX}
         orbitTargetY={orbitTargetY}
         enableRotate={enableRotate}
+        minDistance={minOrbitDistance}
+        maxDistance={maxOrbitDistance}
       />
     </>
   );
@@ -290,10 +339,11 @@ export default function HeroLogo3D({
   enableRotate = true,
 }: HeroLogo3DProps) {
   const dpr: [number, number] = performanceMode ? [1, 1.25] : [1, 2];
+  const { cameraZ, cameraFov } = useLockedFigureLayout();
 
   return (
     <div
-      className={`absolute inset-x-0 -top-24 bottom-[-2rem] h-[calc(100%+8rem)] w-full max-md:translate-x-0 overflow-visible md:-top-28 md:bottom-[-2.5rem] md:h-[calc(100%+9rem)] lg:-top-32 lg:bottom-[-3rem] lg:h-[calc(100%+10rem)] ${
+      className={`absolute inset-x-0 -top-24 bottom-[-2rem] h-[calc(100%+8rem)] w-full max-md:inset-0 max-md:top-0 max-md:h-full max-md:bottom-0 max-md:translate-x-0 overflow-visible md:-top-28 md:bottom-[-2.5rem] md:h-[calc(100%+9rem)] lg:-top-32 lg:bottom-[-3rem] lg:h-[calc(100%+10rem)] ${
         enableRotate
           ? 'cursor-grab active:cursor-grabbing'
           : 'pointer-events-none cursor-default'
@@ -308,7 +358,7 @@ export default function HeroLogo3D({
       <Canvas
         className="!bg-transparent h-full w-full"
         style={{ background: 'transparent', overflow: 'visible' }}
-        camera={{ position: [0, 0.04, 1.48], fov: 34 }}
+        camera={{ position: [0, 0.04, cameraZ], fov: cameraFov }}
         dpr={dpr}
         gl={{
           alpha: true,

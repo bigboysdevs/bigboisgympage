@@ -103,8 +103,16 @@
     left: 0;
     right: 0;
     width: 100%;
+    height: 100%;
+    max-height: none;
     pointer-events: none !important;
     touch-action: pan-y;
+  }
+
+  #inicio .hero-figure-layer > * {
+    width: 100%;
+    height: 100%;
+    max-height: none;
   }
 
   #inicio .hero-figure-layer canvas {
