@@ -17,23 +17,23 @@ const FIGURE_MODEL_X_DESKTOP = 0.02;
 const FIGURE_VIEW_PAN_X_DESKTOP = -0.18;
 const FIGURE_BOUNDS_MARGIN_DESKTOP = 0.54;
 
-const FIGURE_MODEL_X_MOBILE = 0.1;
-/** Cámara a la izquierda => figura a la derecha, sin salir del viewport. */
-const FIGURE_VIEW_PAN_X_MOBILE = -0.28;
-/** Móvil: más cerca (menos margen, cámara más próxima) pero sin recortar en el canvas. */
-const FIGURE_BOUNDS_MARGIN_MOBILE = 0.52;
+const FIGURE_MODEL_X_MOBILE = 0.14;
+/** Cámara a la izquierda => figura grande a la derecha (estilo referencia móvil). */
+const FIGURE_VIEW_PAN_X_MOBILE = -0.36;
+/** Móvil: zoom dramático; el CSS responsive ajusta escala por pantalla. */
+const FIGURE_BOUNDS_MARGIN_MOBILE = 0.42;
 
 const FIGURE_CAMERA_Z_DESKTOP = 1.48;
-const FIGURE_CAMERA_Z_MOBILE = 1.36;
+const FIGURE_CAMERA_Z_MOBILE = 1.26;
 const FIGURE_CAMERA_FOV_DESKTOP = 34;
-const FIGURE_CAMERA_FOV_MOBILE = 34;
+const FIGURE_CAMERA_FOV_MOBILE = 36;
 const FIGURE_ORBIT_MIN_DESKTOP = 0.92;
 const FIGURE_ORBIT_MAX_DESKTOP = 1.75;
 const FIGURE_ORBIT_MIN_MOBILE = 0.92;
 const FIGURE_ORBIT_MAX_MOBILE = 1.75;
-const FIGURE_FIT_Y_MOBILE = -0.72;
-/** Menos empuje vertical en móvil = figura más centrada, sin hueco negro abajo. */
-export const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.06;
+const FIGURE_FIT_Y_MOBILE = -0.66;
+/** Empuje vertical en móvil: figura anclada abajo-derecha. */
+export const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.11;
 
 type LockedFigureLayout = {
   modelX: number;

@@ -16,13 +16,13 @@ const FIGURE_ROOT_CLASS = 'relative h-full w-full overflow-visible';
 const FIGURE_CANVAS_SLOT_CLASS =
   'relative h-full min-h-[clamp(560px,78vh,920px)] w-full overflow-visible max-md:min-h-0 max-md:max-h-none max-md:h-full md:min-h-[clamp(640px,90vh,1000px)] lg:min-h-[clamp(680px,94vh,1040px)]';
 
-/** Desktop: ventana original. Móvil: altura completa sin recorte. */
+/** Desktop: ventana original. Móvil: capa responsive (.hero-figure-viewport en CSS). */
 const FIGURE_VIEWPORT_CLASS =
-  'relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:h-full max-md:min-h-0 max-md:max-h-none max-md:translate-x-0 max-md:overflow-visible overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
+  'hero-figure-viewport relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:absolute max-md:inset-0 max-md:h-full max-md:min-h-0 max-md:max-h-none max-md:translate-x-0 max-md:overflow-visible overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
 
 /** Solo desplaza la figura dentro de la ventana (PNG). Resta HERO_FIGURE_RAISE para subir. */
 const FIGURE_CONTENT_OFFSET_CLASS =
-  `max-md:translate-x-0 translate-y-[calc(7rem-${HERO_FIGURE_RAISE})] max-md:object-[68%_center] md:translate-y-[calc(8rem-${HERO_FIGURE_RAISE})] md:object-right lg:translate-y-[calc(9rem-${HERO_FIGURE_RAISE})]`;
+  `max-md:translate-x-0 max-md:translate-y-0 md:translate-y-[calc(8rem-${HERO_FIGURE_RAISE})] md:object-right lg:translate-y-[calc(9rem-${HERO_FIGURE_RAISE})]`;
 
 function FigureBackdrop({ lite }: { lite?: boolean }) {
   return (
@@ -77,7 +77,7 @@ export default function HeroFigureOnly({
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
               alt="Big Boys Gym"
-              className={`absolute inset-0 max-md:scale-[1.14] object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
+              className={`hero-figure-fallback absolute inset-0 object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
               draggable={false}
             />
           </div>

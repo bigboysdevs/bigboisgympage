@@ -11,10 +11,10 @@ export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative z-[20] flex min-h-[100svh] flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] md:pt-[5.25rem]"
+      className="relative z-[20] flex min-h-[100svh] flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] max-md:overflow-hidden md:pt-[5.25rem]"
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible max-md:min-h-[calc(100svh-4.75rem)]">
-        <div className="hero-figure-layer pointer-events-none absolute inset-0 z-[22] flex -mx-5 justify-center overflow-visible max-md:h-full max-md:w-full max-md:items-stretch sm:-mx-8 md:z-[25] md:pointer-events-auto md:mx-0 md:block md:touch-none md:justify-end">
+        <div className="hero-figure-layer pointer-events-none absolute inset-0 z-[22] flex -mx-5 justify-center overflow-visible max-md:h-full max-md:w-full max-md:items-end max-md:justify-center sm:-mx-8 md:z-[25] md:pointer-events-auto md:mx-0 md:block md:touch-none md:justify-end">
           <HeroFigureOnly withBackdrop={false} />
         </div>
 

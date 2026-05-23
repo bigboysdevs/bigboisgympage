@@ -119,6 +119,43 @@
     pointer-events: none !important;
     touch-action: pan-y !important;
   }
+
+  /*
+   * Figura hero móvil: zoom + anclaje abajo-derecha como la referencia.
+   * Escala con svh/svw para iPhone SE, Pro Max, Android altos, etc.
+   */
+  #inicio .hero-figure-viewport {
+    transform: scale(clamp(1.12, calc(100svh / 620), 1.46));
+    transform-origin: clamp(58%, calc(52% + 8vw), 68%) clamp(88%, calc(82% + 4svh), 96%);
+  }
+
+  #inicio .hero-figure-fallback {
+    object-fit: cover;
+    object-position: clamp(62%, calc(56% + 10vw), 74%) clamp(78%, calc(72% + 6svh), 92%);
+    transform: scale(clamp(1.08, calc(100svh / 680), 1.28));
+    transform-origin: clamp(58%, calc(52% + 8vw), 68%) clamp(88%, calc(82% + 4svh), 96%);
+  }
+
+  /* Pantallas bajas (iPhone SE, etc.) */
+  @media (max-height: 680px) {
+    #inicio .hero-figure-viewport {
+      transform: scale(clamp(1.02, calc(100svh / 560), 1.22));
+      transform-origin: 64% 90%;
+    }
+
+    #inicio .hero-figure-fallback {
+      transform: scale(clamp(1, calc(100svh / 600), 1.14));
+      transform-origin: 64% 90%;
+    }
+  }
+
+  /* Phablets / móviles anchos */
+  @media (min-width: 430px) {
+    #inicio .hero-figure-viewport {
+      transform: scale(clamp(1.18, calc(100svw / 360), 1.52));
+      transform-origin: 56% 94%;
+    }
+  }
 }
 
 /* Galería: tarjetas proporcionales + arrastre horizontal */
