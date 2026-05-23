@@ -292,6 +292,7 @@
   pointer-events: none;
   overflow: visible;
   perspective: 1200px;
+  will-change: transform;
 }
 
 .page-lightning-scroll__bolt {
