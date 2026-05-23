@@ -153,7 +153,7 @@ export default function MarqueeSection() {
   return (
     <section
       ref={sectionRef}
-      className="marquee-gallery relative z-[10] -mt-1 w-full overflow-hidden bg-transparent pt-2 pb-10 sm:-mt-2 sm:pt-3 md:pt-4"
+      className="marquee-gallery relative z-[10] mt-[clamp(2.5rem,9vh,6.5rem)] w-full overflow-hidden bg-transparent pb-10 pt-2 sm:pt-3 md:pt-4"
       aria-label="Galería de entrenamiento"
     >
       <p className="sr-only">

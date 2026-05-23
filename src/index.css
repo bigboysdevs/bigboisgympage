@@ -45,6 +45,29 @@
   background-color: transparent;
 }
 
+/* BIG/BOYS: a mitad de camino entre arriba y donde estaba GYM */
+#inicio .relative.flex.min-h-0 > .hero-title-layer {
+  padding-top: calc(11vw * 0.41);
+}
+
+@media (min-width: 640px) {
+  #inicio .relative.flex.min-h-0 > .hero-title-layer {
+    padding-top: calc(13vw * 0.41);
+  }
+}
+
+@media (min-width: 768px) {
+  #inicio .relative.flex.min-h-0 > .hero-title-layer {
+    padding-top: calc(14vw * 0.41);
+  }
+}
+
+@media (min-width: 1024px) {
+  #inicio .relative.flex.min-h-0 > .hero-title-layer {
+    padding-top: calc(15vw * 0.41);
+  }
+}
+
 /* Título hero — estilo fachada del gym (BIG BOYS: amarillo neón + borde negro) */
 .hero-facade-title {
   display: inline-block;

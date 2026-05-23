@@ -73,6 +73,13 @@ export const HERO_FIGURE_SCREEN_OFFSET =
 
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
 
+/** Iluminación del logo 3D (valores moderados para no quemar highlights). */
+const LOGO_LIGHT_AMBIENT = 1.05;
+const LOGO_LIGHT_KEY = 2.05;
+const LOGO_LIGHT_FILL = 0.95;
+const LOGO_LIGHT_RIM = 1.05;
+const LOGO_TONE_EXPOSURE = 1.55;
+
 /** Oscilación suave arriba/abajo (efecto flotando en el aire). */
 function FloatingFigure({
   children,
@@ -286,7 +293,7 @@ export default function HeroLogo3D({
 
   return (
     <div
-      className={`absolute inset-x-0 -top-24 bottom-0 h-[calc(100%+6rem)] w-full max-md:translate-x-0 overflow-visible md:-top-28 md:h-[calc(100%+7rem)] lg:-top-32 lg:h-[calc(100%+8rem)] ${
+      className={`absolute inset-x-0 -top-24 bottom-[-2rem] h-[calc(100%+8rem)] w-full max-md:translate-x-0 overflow-visible md:-top-28 md:bottom-[-2.5rem] md:h-[calc(100%+9rem)] lg:-top-32 lg:bottom-[-3rem] lg:h-[calc(100%+10rem)] ${
         enableRotate
           ? 'cursor-grab active:cursor-grabbing'
           : 'pointer-events-none cursor-default'
@@ -310,6 +317,7 @@ export default function HeroLogo3D({
         }}
         onCreated={({ gl, scene }) => {
           gl.setClearColor(0x000000, 0);
+          gl.toneMappingExposure = LOGO_TONE_EXPOSURE;
           scene.background = null;
           const canvas = gl.domElement;
           canvas.style.touchAction = enableRotate ? 'none' : 'pan-y';
@@ -317,10 +325,10 @@ export default function HeroLogo3D({
           canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
         }}
       >
-        <ambientLight intensity={0.52} />
-        <directionalLight position={[6, 8, 5]} intensity={1.18} />
-        <directionalLight position={[-5, 2, -4]} intensity={0.42} />
-        <pointLight position={[0, 1.5, 2]} intensity={0.35} color="#ffffff" distance={8} />
+        <ambientLight intensity={LOGO_LIGHT_AMBIENT} />
+        <directionalLight position={[6, 8, 5]} intensity={LOGO_LIGHT_KEY} />
+        <directionalLight position={[-5, 2, -4]} intensity={LOGO_LIGHT_FILL} />
+        <pointLight position={[0, 1.5, 2]} intensity={LOGO_LIGHT_RIM} color="#ffffff" distance={8} />
         <Suspense fallback={null}>
           <FigureModel
             url={modelUrl}

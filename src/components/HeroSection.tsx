@@ -1,7 +1,7 @@
 import FadeIn from './FadeIn';
 import HeroFigureOnly from './HeroFigureOnly';
 
-const TITLE_LINES = ['Big', 'Boys', 'GYM'] as const;
+const TITLE_LINES = ['Big', 'Boys'] as const;
 
 /** Estilo fachada del gym — amarillo neón, borde negro, inclinado (.hero-facade-title) */
 const TITLE_LINE_CLASS =
@@ -11,7 +11,7 @@ export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative z-[10] flex min-h-screen flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] md:pt-[5.25rem]"
+      className="relative z-[20] flex min-h-[100svh] flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] md:pt-[5.25rem]"
     >
       <div className="relative flex min-h-0 flex-1 flex-col overflow-visible">
         <div className="hero-figure-layer pointer-events-none absolute inset-0 z-[22] flex -mx-5 justify-center overflow-visible sm:-mx-8 md:z-[25] md:pointer-events-auto md:mx-0 md:block md:touch-none md:justify-end">

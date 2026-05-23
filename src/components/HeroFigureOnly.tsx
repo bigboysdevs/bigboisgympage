@@ -15,11 +15,11 @@ const FIGURE_ROOT_CLASS = 'relative h-full w-full overflow-visible';
 /** Altura explícita: el Canvas 3D necesita px reales (inherit falla en el grid). */
 /** Contenedor exterior: solo altura mínima; sin padding que empuje la figura. */
 const FIGURE_CANVAS_SLOT_CLASS =
-  'relative h-full min-h-[clamp(520px,72vh,860px)] w-full overflow-visible md:min-h-[clamp(600px,86vh,960px)] lg:min-h-[clamp(640px,90vh,1000px)]';
+  'relative h-full min-h-[clamp(560px,78vh,920px)] w-full overflow-visible md:min-h-[clamp(640px,90vh,1000px)] lg:min-h-[clamp(680px,94vh,1040px)]';
 
-/** Ventana de recorte (canvas): posición fija; no añadir offset de figura aquí. */
+/** Ventana del canvas: sin recorte inferior para que se vean pesas y piernas. */
 const FIGURE_VIEWPORT_CLASS =
-  'relative z-10 h-[clamp(440px,62vh,780px)] w-full max-md:translate-x-0 overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(520px,78vh,880px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(560px,82vh,920px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
+  'relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:translate-x-0 overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
 
 /** Solo desplaza la figura dentro de la ventana (PNG). Resta HERO_FIGURE_RAISE para subir. */
 const FIGURE_CONTENT_OFFSET_CLASS =
