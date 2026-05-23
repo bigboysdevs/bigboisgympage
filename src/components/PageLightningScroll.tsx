@@ -79,12 +79,12 @@ export default function PageLightningScroll() {
   return (
     <div ref={rootRef} className="page-lightning-scroll" aria-hidden>
       <div ref={boltRef} className="page-lightning-scroll__bolt">
-        <img
-          src={HERO_LIGHTNING_IMAGE}
-          alt=""
+        <div
           className="page-lightning-scroll__img"
-          decoding="async"
-          fetchPriority="high"
+          style={{
+            WebkitMaskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+            maskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+          }}
         />
       </div>
     </div>

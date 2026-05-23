@@ -17,12 +17,12 @@ export default function PageLightningBackdrop() {
         maskImage,
       }}
     >
-      <img
-        src={HERO_LIGHTNING_IMAGE}
-        alt=""
+      <div
         className="page-lightning-bg__img"
-        decoding="async"
-        fetchPriority="low"
+        style={{
+          WebkitMaskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+          maskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+        }}
       />
     </div>
   );

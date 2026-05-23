@@ -3,9 +3,9 @@ import HeroFigureOnly from './HeroFigureOnly';
 
 const TITLE_LINES = ['Big', 'Boys', 'GYM'] as const;
 
-/** Mismo estilo que el h1 original: gradiente .hero-heading en index.css */
+/** Estilo fachada del gym — amarillo neón, borde negro, inclinado (.hero-facade-title) */
 const TITLE_LINE_CLASS =
-  'hero-heading font-black uppercase leading-[0.88] tracking-tight text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
+  'hero-facade-title text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
 
 export default function HeroSection() {
   return (
@@ -18,7 +18,7 @@ export default function HeroSection() {
           <HeroFigureOnly withBackdrop={false} />
         </div>
 
-        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-4 pt-0 sm:px-8 sm:pb-5 md:px-10 md:pb-6 md:pt-1 md:pr-2 lg:pr-3">
+        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-4 sm:px-8 sm:pb-5 md:px-10 md:pb-6 md:pr-2 lg:pr-3">
           <FadeIn
             effect="inView"
             delay={0.15}

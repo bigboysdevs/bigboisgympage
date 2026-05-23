@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --hero-facade-yellow: #ffe800;
+  }
+
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5.75rem;
@@ -39,6 +43,36 @@
 .hero-title-layer h1 {
   background: none;
   background-color: transparent;
+}
+
+/* Título hero — estilo fachada del gym (BIG BOYS: amarillo neón + borde negro) */
+.hero-facade-title {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  font-family: 'Anton', 'Kanit', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  color: var(--hero-facade-yellow);
+  transform: skewX(-7deg);
+  transform-origin: left center;
+  -webkit-text-stroke: clamp(2px, 0.32vw, 5px) #0a0a0a;
+  paint-order: stroke fill;
+  text-shadow:
+    -2px -2px 0 #0a0a0a,
+    2px -2px 0 #0a0a0a,
+    -2px 2px 0 #0a0a0a,
+    2px 2px 0 #0a0a0a,
+    0 -3px 0 #0a0a0a,
+    0 3px 0 #0a0a0a,
+    -3px 0 0 #0a0a0a,
+    3px 0 0 #0a0a0a,
+    0 0 14px rgba(255, 232, 0, 0.75),
+    0 0 32px rgba(255, 210, 0, 0.42),
+    0 0 56px rgba(255, 190, 0, 0.22);
 }
 
 @media (max-width: 767px) {
@@ -131,10 +165,18 @@
   width: 100%;
   height: 100%;
   min-height: 100%;
-  object-fit: contain;
-  object-position: center top;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 0 52px rgba(245, 196, 0, 0.4));
+  background-color: var(--hero-facade-yellow);
+  -webkit-mask-image: url('/brand/image.png');
+  mask-image: url('/brand/image.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center top;
+  mask-position: center top;
+  filter: drop-shadow(0 0 14px rgba(255, 232, 0, 0.75))
+    drop-shadow(0 0 32px rgba(255, 210, 0, 0.42))
+    drop-shadow(0 0 56px rgba(255, 190, 0, 0.22));
 }
 
 @media (max-width: 640px) {
@@ -197,11 +239,16 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: 16% top;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 0 56px rgba(245, 196, 0, 0.55))
-    drop-shadow(0 0 100px rgba(245, 160, 0, 0.28));
+  background-color: var(--hero-facade-yellow);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 16% top;
+  mask-position: 16% top;
+  filter: drop-shadow(0 0 14px rgba(255, 232, 0, 0.75))
+    drop-shadow(0 0 32px rgba(255, 210, 0, 0.42))
+    drop-shadow(0 0 56px rgba(255, 190, 0, 0.22));
 }
 
 @media (max-width: 640px) {
@@ -212,7 +259,8 @@
   }
 
   .page-lightning-scroll__img {
-    object-position: 12% top;
+    -webkit-mask-position: 12% top;
+    mask-position: 12% top;
   }
 }
 
