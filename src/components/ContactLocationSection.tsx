@@ -131,7 +131,7 @@ export default function ContactLocationSection() {
                   href={GYM_CONTACT.mapsPlaceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center px-2 text-[10px] font-medium uppercase tracking-wider text-red-400/90 transition-colors hover:text-red-300 lg:min-h-0 lg:px-0"
+                  className="text-[10px] font-medium uppercase tracking-wider text-red-400/90 transition-colors hover:text-red-300"
                 >
                   Abrir en Maps
                 </a>

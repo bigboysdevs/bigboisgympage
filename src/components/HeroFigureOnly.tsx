@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
 import {
   HERO_FIGURE_FALLBACK_PNG,
   HERO_GLTF_URL,
@@ -7,11 +7,6 @@ import { useHeroFigureInteraction } from '../hooks/useHeroFigureInteraction';
 import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 import GalacticWarpBackground from './GalacticWarpBackground';
 import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from '@/models/heroLogo3dLayout';
-import { preloadHeroGltf } from '@/utils/preloadHeroGltf';
-import {
-  HERO_FALLBACK_SIZES,
-  NAV_LOGO_SRCSET,
-} from '@/utils/responsiveImages';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
@@ -64,11 +59,6 @@ export default function HeroFigureOnly({
   const mode = useLogo3dPerformanceMode();
   const canRotateFigure = useHeroFigureInteraction();
 
-  // MOBILE: precarga GLB solo cuando el hero montará WebGL (ahorra ~1 MB en modo static).
-  useEffect(() => {
-    if (mode === 'lite' || mode === 'full') preloadHeroGltf(modelUrl);
-  }, [mode, modelUrl]);
-
   if (mode === 'deciding') {
     return (
       <div
@@ -86,13 +76,8 @@ export default function HeroFigureOnly({
           <div className={FIGURE_VIEWPORT_CLASS}>
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
-              srcSet={NAV_LOGO_SRCSET}
-              sizes={HERO_FALLBACK_SIZES}
               alt="Big Boys Gym"
               className={`hero-figure-fallback absolute inset-0 object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
-              width={876}
-              height={1024}
-              decoding="async"
               draggable={false}
             />
           </div>

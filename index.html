@@ -13,9 +13,9 @@
     />
     <link rel="canonical" href="https://bigboysgym.com/" />
     <title>Big Boys Gym — Entrena sin excusas</title>
-    <!-- MOBILE: preload del logo según viewport; GLB se precarga solo si el hero usará WebGL. -->
-    <link rel="preload" href="/big-boys-gym-logo-transparent-mobile.png" as="image" type="image/png" media="(max-width: 1023px)" />
-    <link rel="preload" href="/big-boys-gym-logo-transparent.png" as="image" type="image/png" media="(min-width: 1024px)" />
+    <!-- PERF: fuentes self-hosted vía @fontsource en index.css (sin CSS bloqueante de Google Fonts). -->
+    <link rel="preload" href="/big-boys-gym-logo-transparent.png" as="image" type="image/png" />
+    <link rel="preload" href="/models/logo-BigBoysGYM-v01-opt.glb" as="fetch" crossorigin="anonymous" />
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
     <meta property="og:title" content="Big Boys Gym" />
     <meta

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { GYM_GALLERY } from '@/models/gymGallery';
 import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
 import { wrapMarqueeOffset } from '../utils/marqueeLoop';
-import { GALLERY_IMG_SIZES, galleryImageSrcSet } from '@/utils/responsiveImages';
 
 function rotateGallery<T>(items: readonly T[], shift: number): T[] {
   const n = items.length;
@@ -105,7 +104,7 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
         role="region"
         aria-label="Galería — arrastra en horizontal (carrete infinito)"
         className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
-        style={{ touchAction: 'pan-y' }}
+        style={{ willChange: 'transform', touchAction: 'pan-y' }}
         {...dragHandlers}
       >
         {[...items, ...items, ...items].map((src, i) => (
@@ -115,12 +114,8 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
           >
             <img
               src={src}
-              srcSet={galleryImageSrcSet(src)}
-              sizes={GALLERY_IMG_SIZES}
               alt="Big Boys Gym — galería"
               className="pointer-events-none h-full w-full select-none object-cover"
-              width={360}
-              height={270}
               loading="lazy"
               decoding="async"
               draggable={false}

@@ -172,10 +172,6 @@
   height: clamp(200px, 48vw, 270px);
 }
 
-.marquee-gallery__row {
-  will-change: transform;
-}
-
 @media (min-width: 640px) {
   .marquee-gallery__card {
     width: min(55vw, 420px);
@@ -346,23 +342,6 @@
   .page-lightning-scroll__img {
     -webkit-mask-position: 88% top;
     mask-position: 88% top;
-  }
-}
-
-/* MOBILE: evitar scroll horizontal, reducir capas GPU permanentes (< 1024px). */
-@media (max-width: 1023px) {
-  html,
-  body {
-    overflow-x: hidden;
-  }
-
-  .marquee-gallery__row {
-    will-change: auto;
-  }
-
-  .page-lightning-scroll,
-  .page-lightning-scroll__bolt {
-    will-change: auto;
   }
 }
 

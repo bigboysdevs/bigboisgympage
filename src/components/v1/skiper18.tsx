@@ -8,7 +8,6 @@ import {
   type TouchEvent,
 } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { GALLERY_IMG_SIZES, galleryImageSrcSet } from '@/utils/responsiveImages';
 
 export type ImageCursorTrailProps = {
   items: readonly string[];
@@ -28,12 +27,6 @@ type TrailImage = {
 };
 
 const IMAGE_LIFETIME_MS = 1100;
-const TOUCH_SPAWN_INTERVAL_MS = 120;
-const TOUCH_DISTANCE_PX = 48;
-
-function isFinePointer(): boolean {
-  return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-}
 
 /**
  * Rastro de imágenes al mover el cursor (inspirado en Skiper UI skiper18 / befreaky.co).
@@ -52,8 +45,6 @@ export function ImageCursorTrail({
   const imageIndexRef = useRef(0);
   const idRef = useRef(0);
   const timeoutsRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
-  const lastTouchSpawnRef = useRef(0);
-  const touchMaxImages = Math.min(maxNumberOfImages, 4);
 
   const scheduleRemoval = useCallback((id: number) => {
     const existing = timeoutsRef.current.get(id);
@@ -68,7 +59,7 @@ export function ImageCursorTrail({
   }, []);
 
   const spawnAt = useCallback(
-    (clientX: number, clientY: number, minDistance: number, maxImages: number) => {
+    (clientX: number, clientY: number) => {
       const container = containerRef.current;
       if (!container || items.length === 0) return;
 
@@ -79,7 +70,7 @@ export function ImageCursorTrail({
       if (lastPosRef.current) {
         const dx = x - lastPosRef.current.x;
         const dy = y - lastPosRef.current.y;
-        if (Math.hypot(dx, dy) < minDistance) return;
+        if (Math.hypot(dx, dy) < distance) return;
       }
 
       lastPosRef.current = { x, y };
@@ -92,43 +83,38 @@ export function ImageCursorTrail({
 
       setTrailImages((prev) => {
         const next = [...prev, { id, src, x, y, rotation }];
-        if (next.length > maxImages) {
-          const dropped = next.slice(0, next.length - maxImages);
+        if (next.length > maxNumberOfImages) {
+          const dropped = next.slice(0, next.length - maxNumberOfImages);
           dropped.forEach((img) => {
             const t = timeoutsRef.current.get(img.id);
             if (t) clearTimeout(t);
             timeoutsRef.current.delete(img.id);
           });
-          return next.slice(-maxImages);
+          return next.slice(-maxNumberOfImages);
         }
         return next;
       });
 
       scheduleRemoval(id);
     },
-    [items, scheduleRemoval],
+    [distance, items, maxNumberOfImages, scheduleRemoval],
   );
 
   const handleMouseMove = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      // MOBILE: omitir mousemove en dispositivos táctiles (solo touch handler).
-      if (!isFinePointer()) return;
-      spawnAt(event.clientX, event.clientY, distance, maxNumberOfImages);
+      spawnAt(event.clientX, event.clientY);
     },
-    [distance, maxNumberOfImages, spawnAt],
+    [spawnAt],
   );
 
   const handleTouchMove = useCallback(
     (event: TouchEvent<HTMLDivElement>) => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const now = performance.now();
-      if (now - lastTouchSpawnRef.current < TOUCH_SPAWN_INTERVAL_MS) return;
-      lastTouchSpawnRef.current = now;
       const touch = event.touches[0];
-      if (touch) spawnAt(touch.clientX, touch.clientY, TOUCH_DISTANCE_PX, touchMaxImages);
+      if (touch) spawnAt(touch.clientX, touch.clientY);
     },
-    [spawnAt, touchMaxImages],
+    [spawnAt],
   );
 
   useEffect(() => {
@@ -152,12 +138,8 @@ export function ImageCursorTrail({
             <motion.img
               key={img.id}
               src={img.src}
-              srcSet={galleryImageSrcSet(img.src)}
-              sizes={GALLERY_IMG_SIZES}
               alt=""
               draggable={false}
-              loading="lazy"
-              decoding="async"
               className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-md object-cover shadow-[0_12px_40px_rgba(0,0,0,0.45)] ${imgClass}`}
               style={{
                 left: img.x,
