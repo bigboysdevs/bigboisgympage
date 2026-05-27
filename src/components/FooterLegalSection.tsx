@@ -102,6 +102,8 @@ export default function FooterLegalSection() {
               className="h-16 w-auto object-contain opacity-90 sm:h-20 lg:h-24"
               width={96}
               height={96}
+              loading="lazy"
+              decoding="async"
             />
           </div>
 

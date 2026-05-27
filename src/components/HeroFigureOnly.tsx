@@ -6,7 +6,7 @@ import {
 import { useHeroFigureInteraction } from '../hooks/useHeroFigureInteraction';
 import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
 import GalacticWarpBackground from './GalacticWarpBackground';
-import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from './HeroLogo3D';
+import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from '@/models/heroLogo3dLayout';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 

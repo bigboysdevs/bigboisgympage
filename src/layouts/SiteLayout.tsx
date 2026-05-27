@@ -1,13 +1,16 @@
+import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import SeoHead from '@/components/SeoHead';
 import ScrollToHash from '@/components/ScrollToHash';
 import Navbar from '@/components/Navbar';
 import FooterLegalSection from '@/components/FooterLegalSection';
 import InvertedBlendCursor from '@/components/InvertedBlendCursor';
-import FloatingRadioPlayer from '@/components/FloatingRadioPlayer';
 import FloatingScrollProgress from '@/components/FloatingScrollProgress';
 import PageGalacticBackdrop from '@/components/PageGalacticBackdrop';
 import PageLightningScroll from '@/components/PageLightningScroll';
+
+// PERF: Howler + UI de radio fuera del camino crítico de la home.
+const FloatingRadioPlayer = lazy(() => import('@/components/FloatingRadioPlayer'));
 
 export default function SiteLayout() {
   return (
@@ -32,7 +35,9 @@ export default function SiteLayout() {
       </div>
       <InvertedBlendCursor />
       <FloatingScrollProgress />
-      <FloatingRadioPlayer />
+      <Suspense fallback={null}>
+        <FloatingRadioPlayer />
+      </Suspense>
     </>
   );
 }

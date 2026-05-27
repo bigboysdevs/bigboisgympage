@@ -1,5 +1,5 @@
-/** Modelo 3D oficial (copiado desde Downloads → `public/models/`). */
-export const HERO_GLTF_URL = '/models/logo-BigBoysGYM-v01.glb';
+/** Modelo 3D optimizado (WebP 2048 + Draco). Original: `logo-BigBoysGYM-v01.glb`. */
+export const HERO_GLTF_URL = '/models/logo-BigBoysGYM-v01-opt.glb';
 
 /** Logo completo con fondo transparente — navbar, footer, hero estático y SEO. */
 export const GYM_LOGO_TRANSPARENT_PNG = '/big-boys-gym-logo-transparent.png';

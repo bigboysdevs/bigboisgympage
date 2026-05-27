@@ -1,10 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HERO_LIGHTNING_IMAGE } from '@/models/branding';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /** 2 vueltas completas: al llegar a Filosofía el rayo vuelve a la orientación inicial (scaleX(-1)). */
 const SCROLL_ROTATION_TURNS = 2;
@@ -33,9 +29,20 @@ export default function PageLightningScroll() {
       '(prefers-reduced-motion: reduce)',
     ).matches;
 
-    let ctx: gsap.Context | undefined;
+    let cancelled = false;
+    let ctx: { revert: () => void } | undefined;
+    let refreshOnLoad: (() => void) | undefined;
 
-    const setup = () => {
+    const setup = async () => {
+      // PERF: GSAP + ScrollTrigger fuera del bundle inicial; el rayo CSS ya es visible.
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]);
+      if (cancelled) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
       const inicio = document.getElementById('inicio');
       const filosofia = document.getElementById('filosofia');
       if (!inicio || !filosofia) return;
@@ -81,18 +88,22 @@ export default function PageLightningScroll() {
       }, rootRef);
 
       ScrollTrigger.refresh();
+      refreshOnLoad = () => ScrollTrigger.refresh();
+      window.addEventListener('load', refreshOnLoad, { passive: true });
+      window.addEventListener('resize', refreshOnLoad, { passive: true });
     };
 
-    const refreshOnLoad = () => ScrollTrigger.refresh();
-    const t = window.setTimeout(setup, 80);
-
-    window.addEventListener('load', refreshOnLoad, { passive: true });
-    window.addEventListener('resize', refreshOnLoad, { passive: true });
+    const t = window.setTimeout(() => {
+      void setup();
+    }, 80);
 
     return () => {
+      cancelled = true;
       window.clearTimeout(t);
-      window.removeEventListener('load', refreshOnLoad);
-      window.removeEventListener('resize', refreshOnLoad);
+      if (refreshOnLoad) {
+        window.removeEventListener('load', refreshOnLoad);
+        window.removeEventListener('resize', refreshOnLoad);
+      }
       ctx?.revert();
     };
   }, [pathname]);

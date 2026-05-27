@@ -19,6 +19,7 @@ export default function PlanImage({ src, fallbackSrc, alt, className, style }: P
       className={className}
       style={style}
       loading="lazy"
+      decoding="async"
       onError={() => {
         if (currentSrc !== fallbackSrc) setCurrentSrc(fallbackSrc);
       }}

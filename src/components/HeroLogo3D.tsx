@@ -5,6 +5,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { TOUCH } from 'three';
 import type { Group, Vector3 } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
+import { HERO_FIGURE_SCREEN_OFFSET } from '@/models/heroLogo3dLayout';
 
 /** Encuadre del GLB dentro de Bounds (fijo; no usar para bajar en pantalla). */
 const FIGURE_FIT_Y = -0.72;
@@ -33,7 +34,7 @@ const FIGURE_ORBIT_MIN_MOBILE = 0.92;
 const FIGURE_ORBIT_MAX_MOBILE = 1.75;
 const FIGURE_FIT_Y_MOBILE = -0.66;
 /** Empuje vertical en móvil: figura anclada abajo-derecha. */
-export const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.11;
+const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.11;
 
 type LockedFigureLayout = {
   modelX: number;
@@ -89,20 +90,6 @@ function useLockedFigureLayout(): LockedFigureLayout {
     }
   );
 }
-
-/**
- * Cuánto bajar la figura en pantalla (solo cámara, la ventana canvas no se mueve).
- * Valores mayores = figura más abajo.
- */
-export const HERO_FIGURE_RAISE = '16cm';
-
-/** ~16cm en pantalla (empírico a fov/distancia del hero). */
-export const HERO_FIGURE_SCREEN_RAISE = 0.29;
-
-const HERO_FIGURE_SCREEN_OFFSET_BASE = 0.52;
-
-export const HERO_FIGURE_SCREEN_OFFSET =
-  HERO_FIGURE_SCREEN_OFFSET_BASE - HERO_FIGURE_SCREEN_RAISE;
 
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
 
@@ -276,7 +263,8 @@ function FigureModel({
   figureScreenOffset,
   enableRotate,
 }: ModelProps & { figureScreenOffset: number; enableRotate: boolean }) {
-  const { scene } = useGLTF(url);
+  // PERF: GLB comprimido con Draco + texturas WebP 2048 (≈1 MB vs 16 MB original).
+  const { scene } = useGLTF(url, true);
   const [dragging, setDragging] = useState(false);
   const layout = useLockedFigureLayout();
   const {
@@ -391,4 +379,3 @@ export default function HeroLogo3D({
   );
 }
 
-useGLTF.preload(HERO_GLTF_URL);
