@@ -4,6 +4,9 @@ export const HERO_GLTF_URL = '/models/logo-BigBoysGYM-v01-opt.glb';
 /** Logo completo con fondo transparente — navbar, footer, hero estático y SEO. */
 export const GYM_LOGO_TRANSPARENT_PNG = '/big-boys-gym-logo-transparent.png';
 
+/** MOBILE: variante 240px del logo (~88 KB) para viewport < 1024px. */
+export const GYM_LOGO_MOBILE_PNG = '/big-boys-gym-logo-transparent-mobile.png';
+
 /** Alias para fallback del hero en modo estático. */
 export const HERO_FIGURE_FALLBACK_PNG = GYM_LOGO_TRANSPARENT_PNG;
 

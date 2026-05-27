@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { ctaNavClass } from '@/lib/ctaStyles';
 import { GYM_LOGO_TRANSPARENT_PNG } from '@/models/branding';
+import { NAV_LOGO_SIZES, NAV_LOGO_SRCSET } from '@/utils/responsiveImages';
 
 /** Enlaces de sección — solo en el drawer del menú hamburguesa. */
 const SCROLL_LINKS = [
@@ -97,6 +98,8 @@ export default function Navbar() {
         >
           <img
             src={GYM_LOGO_TRANSPARENT_PNG}
+            srcSet={NAV_LOGO_SRCSET}
+            sizes={NAV_LOGO_SIZES}
             alt=""
             className="h-11 w-auto max-w-[min(52vw,200px)] object-contain object-left sm:h-12 md:h-[52px]"
             width={120}
@@ -109,7 +112,7 @@ export default function Navbar() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             to="/tienda"
-            className={[ctaNavClass, isTienda ? 'border-red-400 bg-red-600/35' : ''].join(' ')}
+            className={[ctaNavClass, 'min-h-11 min-w-[2.75rem] lg:min-h-0 lg:min-w-0', isTienda ? 'border-red-400 bg-red-600/35' : ''].join(' ')}
             aria-current={isTienda ? 'page' : undefined}
           >
             Tienda

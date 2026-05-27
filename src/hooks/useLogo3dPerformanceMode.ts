@@ -32,6 +32,10 @@ function readProfile(): Exclude<FigurePerformanceMode, 'deciding'> {
   const et = conn?.effectiveType;
   if (et === 'slow-2g' || et === '2g') return 'static';
 
+  // MOBILE: RAM ≤ 2 GB → fallback PNG (misma figura; evita WebGL en dispositivos muy limitados).
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  if (nav.deviceMemory !== undefined && nav.deviceMemory <= 2) return 'static';
+
   if (
     window.matchMedia('(hover: none)').matches ||
     window.matchMedia('(max-width: 900px)').matches ||

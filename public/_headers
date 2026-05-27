@@ -1,3 +1,9 @@
+/gallery/mobile/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/big-boys-gym-logo-transparent-mobile.png
+  Cache-Control: public, max-age=31536000, immutable
+
 /models/*
   Cache-Control: public, max-age=31536000, immutable
 

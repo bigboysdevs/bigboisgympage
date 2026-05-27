@@ -1,5 +1,6 @@
 import { Instagram } from 'lucide-react';
 import { GYM_CONTACT, GYM_LOGO_TRANSPARENT_PNG } from '../models/branding';
+import { NAV_LOGO_SIZES, NAV_LOGO_SRCSET } from '@/utils/responsiveImages';
 
 const LEGAL_ITEMS = [
   {
@@ -98,6 +99,8 @@ export default function FooterLegalSection() {
           <div className="flex shrink-0 justify-center sm:row-span-2 sm:justify-start lg:row-span-1 lg:pt-1">
             <img
               src={GYM_LOGO_TRANSPARENT_PNG}
+              srcSet={NAV_LOGO_SRCSET}
+              sizes={NAV_LOGO_SIZES}
               alt="Big Boys Gym"
               className="h-16 w-auto object-contain opacity-90 sm:h-20 lg:h-24"
               width={96}

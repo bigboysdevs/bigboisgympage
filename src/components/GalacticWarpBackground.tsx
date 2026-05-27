@@ -37,7 +37,15 @@ export default function GalacticWarpBackground({ lite = false }: GalacticWarpBac
     if (!ctx) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const starCount = lite ? 90 : reducedMotion ? 120 : 220;
+    const isMobileViewport = window.matchMedia('(max-width: 1023px)').matches;
+    // MOBILE: menos estrellas y DPR más bajo en viewport pequeño (lite ya activo en móvil).
+    const starCount = lite
+      ? isMobileViewport
+        ? 60
+        : 90
+      : reducedMotion
+        ? 120
+        : 220;
     const speed = lite ? 0.0045 : reducedMotion ? 0 : 0.0075;
     const stars = createStars(starCount);
 
@@ -49,7 +57,8 @@ export default function GalacticWarpBackground({ lite = false }: GalacticWarpBac
       const parent = canvas.parentElement;
       if (!parent) return;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
+      const mobileCap = isMobileViewport ? 1.25 : lite ? 1.5 : 2;
+      const dpr = Math.min(window.devicePixelRatio || 1, mobileCap);
       width = parent.clientWidth;
       height = parent.clientHeight;
       canvas.width = Math.floor(width * dpr);
