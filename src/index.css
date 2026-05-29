@@ -30,6 +30,80 @@
     margin: 0;
     padding: 0;
   }
+
+  html.entry-splash-active,
+  html.entry-splash-active body {
+    overflow: hidden;
+  }
+}
+
+/* Prefondo de entrada — nombre + rayo sobre negro */
+.entry-splash {
+  opacity: 1;
+  visibility: visible;
+  transition-property: opacity, visibility;
+  transition-timing-function: ease;
+}
+
+.entry-splash__content {
+  --splash-bolt-w: clamp(200px, 46vw, 400px);
+  --splash-bolt-h: clamp(320px, 88vh, 720px);
+  --splash-bolt-top: 50%;
+  /* Más pull = rayo más hacia la izquierda (junto al nombre) */
+  --splash-bolt-pull: 52%;
+}
+
+@media (min-width: 640px) {
+  .entry-splash__content {
+    --splash-bolt-w: clamp(240px, 40vw, 440px);
+    --splash-bolt-h: clamp(380px, 92vh, 780px);
+    --splash-bolt-pull: 54%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .entry-splash__content {
+    --splash-bolt-w: clamp(280px, 34vw, 480px);
+    --splash-bolt-h: clamp(420px, 94vh, 820px);
+    --splash-bolt-pull: 56%;
+  }
+}
+
+.entry-splash__bolt {
+  left: 100%;
+  top: var(--splash-bolt-top);
+  width: var(--splash-bolt-w);
+  height: var(--splash-bolt-h);
+  margin-left: -0.75rem;
+  transform: translate(calc(-1 * var(--splash-bolt-pull)), -50%);
+}
+
+.entry-splash--exiting {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.entry-splash__bolt-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hero-facade-yellow);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: right center;
+  mask-position: right center;
+  transform: scaleX(-1);
+  filter: drop-shadow(0 0 18px rgba(255, 232, 0, 0.65))
+    drop-shadow(0 0 40px rgba(255, 210, 0, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-splash {
+    transition-duration: 0.2s !important;
+  }
 }
 
 .hero-heading {
@@ -163,6 +237,89 @@
       transform: scale(clamp(1.18, calc(100svw / 360), 1.52));
       transform-origin: 56% 94%;
     }
+  }
+}
+
+/* Barra de marcas aliadas — marquee lento debajo del hero */
+.brand-partners-bar__viewport {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.brand-partners-bar__fade {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(2rem, 8vw, 5rem);
+}
+
+.brand-partners-bar__fade--left {
+  left: 0;
+  background: linear-gradient(90deg, #0a0a0a 0%, transparent 100%);
+}
+
+.brand-partners-bar__fade--right {
+  right: 0;
+  background: linear-gradient(270deg, #0a0a0a 0%, transparent 100%);
+}
+
+@keyframes brand-partners-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.brand-partners-bar__track {
+  animation: brand-partners-marquee 52s linear infinite;
+  will-change: transform;
+}
+
+.brand-partners-bar__link:hover .brand-partners-bar__logo {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-partners-bar__track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    gap: 0.5rem 0;
+  }
+
+  .brand-partners-bar__viewport {
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .brand-partners-bar__fade {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .brand-partners-bar__track {
+    will-change: auto;
   }
 }
 

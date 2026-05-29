@@ -1,4 +1,5 @@
 import HeroSection from '@/components/HeroSection';
+import BrandPartnersBar from '@/components/BrandPartnersBar';
 import MarqueeSection from '@/components/MarqueeSection';
 import AboutSection from '@/components/AboutSection';
 import ServicesSection from '@/components/ServicesSection';
@@ -9,6 +10,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <BrandPartnersBar />
       <MarqueeSection />
       <AboutSection />
       <ServicesSection />
