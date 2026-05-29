@@ -277,17 +277,7 @@
   background: linear-gradient(270deg, #0a0a0a 0%, transparent 100%);
 }
 
-@keyframes brand-partners-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 .brand-partners-bar__track {
-  animation: brand-partners-marquee 52s linear infinite;
   will-change: transform;
 }
 
@@ -297,13 +287,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .brand-partners-bar__track {
-    animation: none;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
     max-width: 72rem;
     margin-inline: auto;
     gap: 0.5rem 0;
+    cursor: grab;
   }
 
   .brand-partners-bar__viewport {

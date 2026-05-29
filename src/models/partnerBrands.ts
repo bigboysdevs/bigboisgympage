@@ -46,3 +46,6 @@ export const PARTNER_BRANDS: PartnerBrand[] = [
 ];
 
 export const BRAND_PARTNERS_BAR_TITLE = 'Conectando marcas con fans';
+
+/** Duración de una vuelta del carrete (misma velocidad que el CSS anterior: 52 s). */
+export const BRAND_PARTNERS_MARQUEE_MS = 52_000;
