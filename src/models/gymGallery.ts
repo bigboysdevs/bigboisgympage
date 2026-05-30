@@ -14,3 +14,6 @@ export const GYM_GALLERY = [
   '/gallery/gym-doormat-bulldog.jpeg',
   '/gallery/gym-painting-bodybuilder.jpeg',
 ] as const;
+
+/** Imagen dentro del texto «1992» — sección Desde 1992. */
+export const FILOSOFIA_YEAR_STAT_IMAGE = '/gallery/gym-painting-bodybuilder.jpeg';

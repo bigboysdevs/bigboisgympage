@@ -1,7 +1,6 @@
 import FadeIn from './FadeIn';
 import { ImageCursorTrail } from '@/components/v1/skiper18';
-import { GYM_GALLERY } from '@/models/gymGallery';
-import yearStatImage from '../assets/WhatsApp Image 2026-05-29 at 9.07.12 PM.jpeg';
+import { FILOSOFIA_YEAR_STAT_IMAGE, GYM_GALLERY } from '@/models/gymGallery';
 
 export default function AboutSection() {
   return (
@@ -33,7 +32,7 @@ export default function AboutSection() {
               className="filosofia-stat-year text-center font-black uppercase leading-[0.85] tracking-tighter"
               style={{
                 fontSize: 'clamp(5rem, 24vw, 16rem)',
-                backgroundImage: `url(${yearStatImage})`,
+                backgroundImage: `url(${FILOSOFIA_YEAR_STAT_IMAGE})`,
               }}
               aria-hidden
             >

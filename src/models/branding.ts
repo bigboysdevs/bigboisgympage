@@ -14,9 +14,6 @@ export const HERO_LIGHTNING_IMAGE = '/brand/image.png';
 export const IBIZA_GLOBAL_RADIO_STREAM =
   'https://listenssl.ibizaglobalradio.com:8024/ibizaglobalradio.mp3';
 
-export const IBIZA_GLOBAL_RADIO_PAGE =
-  'https://www.radio-espana.es/ibiza-global-radio';
-
 /** Datos de contacto y ubicación — Big Boys GYM, Manizales. */
 export const GYM_CONTACT = {
   name: 'Big Boys GYM',
