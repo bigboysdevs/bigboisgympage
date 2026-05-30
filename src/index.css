@@ -235,6 +235,48 @@
   transform: skewX(-7deg);
 }
 
+/* Navbar — logo 3D (misma altura que el PNG anterior: 44 / 48 / 52px) */
+.navbar-brand-figure {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  overflow: visible;
+}
+
+.navbar-brand-figure-root,
+.navbar-brand-figure-canvas,
+.navbar-brand-figure-viewport,
+.navbar-brand-canvas-wrap {
+  background: transparent !important;
+}
+
+.navbar-brand-canvas,
+.navbar-brand-canvas__gl {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.navbar-brand-figure-fallback {
+  transform: scale(1.55);
+  transform-origin: bottom center;
+}
+
+@media (min-width: 640px) {
+  .navbar-brand-figure {
+    width: 84px;
+    height: 84px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-brand-figure {
+    width: 96px;
+    height: 96px;
+  }
+}
+
 @media (min-width: 768px) {
   .hero-video-brand-anchor {
     transform: translateX(calc(-50% + clamp(1.25rem, 2.5vw, 2.5rem)));

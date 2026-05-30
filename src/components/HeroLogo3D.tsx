@@ -45,7 +45,15 @@ const FIGURE_VIDEO_FIT_Y = -0.58;
 const FIGURE_VIDEO_MIN_ORBIT = 1.15;
 const FIGURE_VIDEO_MAX_ORBIT = 2.35;
 
-type FigureVariant = 'hero' | 'video';
+/** Mismo encuadre que el hero en video, reducido en la navbar. */
+const FIGURE_NAV_BOUNDS_MARGIN = 1.12;
+const FIGURE_NAV_CAMERA_Z = 1.78;
+const FIGURE_NAV_FOV = 34;
+const FIGURE_NAV_FIT_Y = -0.58;
+const FIGURE_NAV_MIN_ORBIT = 1.15;
+const FIGURE_NAV_MAX_ORBIT = 2.35;
+
+type FigureVariant = 'hero' | 'video' | 'nav';
 
 type LockedFigureLayout = {
   modelX: number;
@@ -66,7 +74,22 @@ function useLockedFigureLayout(variant: FigureVariant): LockedFigureLayout {
   const key = `${variant}-${desktop ? 'd' : 'm'}`;
 
   if (locked.current === null || locked.current.key !== key) {
-    if (variant === 'video') {
+    if (variant === 'nav') {
+      locked.current = {
+        key: 'nav',
+        layout: {
+          modelX: 0,
+          viewPanX: 0,
+          boundsMargin: FIGURE_NAV_BOUNDS_MARGIN,
+          fitY: FIGURE_NAV_FIT_Y,
+          cameraZ: FIGURE_NAV_CAMERA_Z,
+          cameraFov: FIGURE_NAV_FOV,
+          minOrbitDistance: FIGURE_NAV_MIN_ORBIT,
+          maxOrbitDistance: FIGURE_NAV_MAX_ORBIT,
+          profile: 'desktop',
+        },
+      };
+    } else if (variant === 'video') {
       locked.current = {
         key,
         layout: {
@@ -304,9 +327,10 @@ function FigureModel({
     profile,
   } = layout;
   const orbitTargetX = modelX + viewPanX * 0.92;
-  const orbitTargetY = variant === 'video' ? -0.04 : -0.08;
+  const orbitTargetY =
+    variant === 'video' || variant === 'nav' ? -0.04 : -0.08;
   const pushDown =
-    variant === 'video'
+    variant === 'video' || variant === 'nav'
       ? 0
       : profile === 'mobile'
         ? FIGURE_SCREEN_OFFSET_PUSH_MOBILE
@@ -321,7 +345,7 @@ function FigureModel({
       <Bounds fit observe={false} margin={boundsMargin} maxDuration={0}>
         <Center>
           <group position={[modelX, fitY, 0]} rotation={FIGURE_ROTATION}>
-            <FloatingFigure paused={dragging}>
+            <FloatingFigure paused={dragging || variant === 'nav'}>
               <Resize>
                 <primitive object={scene} />
               </Resize>
@@ -353,7 +377,7 @@ export interface HeroLogo3DProps {
   performanceMode: boolean;
   figureScreenOffset?: number;
   enableRotate?: boolean;
-  variant?: 'hero' | 'video';
+  variant?: 'hero' | 'video' | 'nav';
 }
 
 export default function HeroLogo3D({
@@ -366,8 +390,11 @@ export default function HeroLogo3D({
   const dpr: [number, number] = performanceMode ? [1, 1.25] : [1, 2];
   const { cameraZ, cameraFov } = useLockedFigureLayout(variant);
   const isVideo = variant === 'video';
+  const isNav = variant === 'nav';
 
-  const wrapperClass = isVideo
+  const wrapperClass = isNav
+    ? 'navbar-brand-canvas-wrap relative h-full w-full overflow-visible pointer-events-none'
+    : isVideo
     ? `hero-video-canvas-wrap relative h-full w-full overflow-visible ${
         enableRotate
           ? 'cursor-grab active:cursor-grabbing'
@@ -390,7 +417,7 @@ export default function HeroLogo3D({
       }
     >
       <Canvas
-        className={`${isVideo ? 'hero-video-canvas' : ''} !bg-transparent h-full w-full`}
+        className={`${isVideo ? 'hero-video-canvas' : isNav ? 'navbar-brand-canvas' : ''} !bg-transparent h-full w-full`}
         style={{ background: 'transparent', overflow: 'visible' }}
         camera={{ position: [0, 0.04, cameraZ], fov: cameraFov }}
         dpr={dpr}
@@ -406,6 +433,7 @@ export default function HeroLogo3D({
           scene.background = null;
           const canvas = gl.domElement;
           if (isVideo) canvas.classList.add('hero-video-canvas__gl');
+          if (isNav) canvas.classList.add('navbar-brand-canvas__gl');
           canvas.style.background = 'transparent';
           canvas.style.backgroundColor = 'transparent';
           canvas.style.touchAction = enableRotate ? 'none' : 'pan-y';
