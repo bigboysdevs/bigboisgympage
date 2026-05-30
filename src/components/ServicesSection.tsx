@@ -1,74 +1,187 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useSpring,
+} from 'framer-motion';
 import FadeIn from './FadeIn';
-import { TRAINING_PLANS } from '@/models/trainingPlans';
+import TrainingPlanRow from './TrainingPlanRow';
+import { TRAINING_PLANS, type TrainingPlan } from '@/models/trainingPlans';
+import { GYM_GALLERY } from '@/models/gymGallery';
+
+const FALLBACK_IMAGE = GYM_GALLERY[0];
+
+function getPreviewMetrics(bounds: DOMRect) {
+  const isNarrow = bounds.width < 768;
+
+  return {
+    width: isNarrow ? Math.min(168, bounds.width * 0.42) : 240,
+    height: isNarrow ? Math.min(210, bounds.height * 0.26) : 300,
+    offsetX: isNarrow ? 18 : 32,
+    offsetY: isNarrow ? -52 : -80,
+    padding: 16,
+  };
+}
+
+function clampPreviewPosition(clientX: number, clientY: number, bounds: DOMRect) {
+  const metrics = getPreviewMetrics(bounds);
+  const rawX = clientX - bounds.left + metrics.offsetX;
+  const rawY = clientY - bounds.top + metrics.offsetY;
+  const minX = metrics.padding;
+  const minY = metrics.padding;
+  const maxX = bounds.width - metrics.width - metrics.padding;
+  const maxY = bounds.height - metrics.height - metrics.padding;
+
+  return {
+    x: Math.min(Math.max(rawX, minX), Math.max(minX, maxX)),
+    y: Math.min(Math.max(rawY, minY), Math.max(minY, maxY)),
+    width: metrics.width,
+    height: metrics.height,
+  };
+}
 
 export default function ServicesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const touchActiveRef = useRef(false);
+  const [hoveredPlan, setHoveredPlan] = useState<TrainingPlan | null>(null);
+  const [imageSize, setImageSize] = useState({ width: 240, height: 300 });
+
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const imageX = useSpring(pointerX, { stiffness: 280, damping: 28, mass: 0.45 });
+  const imageY = useSpring(pointerY, { stiffness: 280, damping: 28, mass: 0.45 });
+
+  const activatePlan = useCallback(
+    (plan: TrainingPlan, clientX: number, clientY: number) => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const bounds = section.getBoundingClientRect();
+      const inside =
+        clientX >= bounds.left &&
+        clientX <= bounds.right &&
+        clientY >= bounds.top &&
+        clientY <= bounds.bottom;
+
+      if (!inside) {
+        setHoveredPlan(null);
+        return;
+      }
+
+      const preview = clampPreviewPosition(clientX, clientY, bounds);
+      setHoveredPlan(plan);
+      setImageSize({ width: preview.width, height: preview.height });
+      pointerX.set(preview.x);
+      pointerY.set(preview.y);
+    },
+    [pointerX, pointerY],
+  );
+
+  const handlePointerHover = useCallback(
+    (plan: TrainingPlan, clientX: number, clientY: number) => {
+      if (touchActiveRef.current) return;
+      activatePlan(plan, clientX, clientY);
+    },
+    [activatePlan],
+  );
+
+  const handlePointerDown = useCallback(
+    (plan: TrainingPlan, clientX: number, clientY: number) => {
+      touchActiveRef.current = true;
+      activatePlan(plan, clientX, clientY);
+    },
+    [activatePlan],
+  );
+
+  const handlePointerDrag = useCallback(
+    (plan: TrainingPlan, clientX: number, clientY: number) => {
+      if (!touchActiveRef.current) return;
+      activatePlan(plan, clientX, clientY);
+    },
+    [activatePlan],
+  );
+
+  const handlePointerRelease = useCallback(() => {
+    touchActiveRef.current = false;
+    setHoveredPlan(null);
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const onSectionLeave = () => {
+      if (touchActiveRef.current) return;
+      setHoveredPlan(null);
+    };
+
+    section.addEventListener('mouseleave', onSectionLeave);
+    return () => section.removeEventListener('mouseleave', onSectionLeave);
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="entrenamientos"
-      className="relative z-[10] flex min-h-[min(100vh,920px)] w-full flex-col scroll-mt-8 rounded-t-[40px] px-5 py-20 sm:rounded-t-[50px] sm:px-8 sm:py-24 md:rounded-t-[60px] md:px-10 md:py-32"
-      style={{ backgroundColor: '#FFFFFF' }}
+      className="entrenamientos-section relative z-[10] scroll-mt-8"
+      aria-labelledby="entrenamientos-heading"
     >
-      <FadeIn effect="inView" delay={0} y={40}>
-        <h2
-          className="mb-16 w-full text-center font-black uppercase leading-none tracking-tight sm:mb-20 md:mb-28"
-          style={{ fontSize: 'clamp(3rem, 12vw, 160px)', color: '#0C0C0C' }}
-        >
-          Entrenamientos
-        </h2>
-      </FadeIn>
+      <div className="entrenamientos-section__inner">
+        <FadeIn effect="inView" delay={0} y={40}>
+          <h2 id="entrenamientos-heading" className="entrenamientos-section__heading">
+            Entrenamientos
+          </h2>
+        </FadeIn>
 
-      <div className="flex w-full flex-col items-center">
-        {TRAINING_PLANS.map((service, i) => (
-          <FadeIn
-            key={service.number}
-            effect="inView"
-            delay={i * 0.1}
-            y={30}
-            className="flex w-full max-w-5xl flex-col items-center"
-          >
-            {i > 0 && (
-              <div
-                className="w-full"
-                style={{ borderTop: '1px solid rgba(12, 12, 12, 0.15)' }}
+        <div className="entrenamientos-list">
+          {TRAINING_PLANS.map((plan, i) => (
+            <FadeIn key={plan.number} effect="inView" delay={i * 0.08} y={24}>
+              <TrainingPlanRow
+                plan={plan}
+                isActive={hoveredPlan?.number === plan.number}
+                onPointerHover={handlePointerHover}
+                onPointerDown={handlePointerDown}
+                onPointerDrag={handlePointerDrag}
+                onPointerRelease={handlePointerRelease}
               />
-            )}
-            <div className="flex w-full items-start gap-6 py-8 sm:gap-8 sm:py-10 md:gap-10 md:py-12">
-              <span
-                className="flex-shrink-0 font-black uppercase leading-none"
-                style={{ fontSize: 'clamp(3rem, 10vw, 140px)', color: '#0C0C0C' }}
-              >
-                {service.number}
-              </span>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
 
-              <div className="flex flex-col gap-2 pt-1 sm:gap-4 md:gap-5">
-                <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4">
-                  <span
-                    className="font-medium uppercase"
-                    style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', color: '#0C0C0C' }}
-                  >
-                    {service.name}
-                  </span>
-                  <span
-                    className="font-semibold tabular-nums"
-                    style={{ fontSize: 'clamp(1.1rem, 2.4vw, 2.25rem)', color: '#dc2626' }}
-                  >
-                    {service.price}
-                  </span>
-                </div>
-                <span
-                  className="max-w-2xl font-light leading-relaxed"
-                  style={{
-                    fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)',
-                    color: '#0C0C0C',
-                    opacity: 0.6,
-                  }}
-                >
-                  {service.description}
-                </span>
-              </div>
-            </div>
-          </FadeIn>
-        ))}
+      <div className="entrenamientos-hover-layer pointer-events-none absolute inset-0 z-20 overflow-hidden">
+        <AnimatePresence>
+          {hoveredPlan ? (
+            <motion.div
+              key={hoveredPlan.number}
+              className="entrenamientos-hover-image absolute overflow-hidden rounded-xl shadow-[0_24px_80px_rgba(0,0,0,0.75)]"
+              style={{
+                width: imageSize.width,
+                height: imageSize.height,
+                x: imageX,
+                y: imageY,
+              }}
+              initial={{ opacity: 0, scale: 0.86, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 2 }}
+              exit={{ opacity: 0, scale: 0.9, rotate: 6 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              aria-hidden
+            >
+              <img
+                src={hoveredPlan.image || FALLBACK_IMAGE}
+                alt=""
+                className="h-full w-full object-cover"
+                draggable={false}
+                onError={(e) => {
+                  e.currentTarget.src = FALLBACK_IMAGE;
+                }}
+              />
+              <div className="entrenamientos-hover-image__overlay" />
+              <p className="entrenamientos-hover-image__caption">{hoveredPlan.name}</p>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </section>
   );

@@ -719,3 +719,221 @@
     cursor: none !important;
   }
 }
+
+/* Entrenamientos — lista estilo broadcast / F1 */
+.entrenamientos-section {
+  background: #000;
+  border-radius: 40px 40px 0 0;
+  overflow: hidden;
+}
+
+.entrenamientos-hover-layer {
+  border-radius: inherit;
+}
+
+@media (min-width: 640px) {
+  .entrenamientos-section {
+    border-radius: 50px 50px 0 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .entrenamientos-section {
+    border-radius: 60px 60px 0 0;
+  }
+}
+
+.entrenamientos-section__inner {
+  width: 100%;
+  min-height: min(100vh, 920px);
+  padding: clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 2.5rem)
+    clamp(3.5rem, 8vw, 6rem);
+}
+
+.entrenamientos-section__heading {
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  text-align: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: #fff;
+  font-size: clamp(2.75rem, 11vw, 7.5rem);
+}
+
+.entrenamientos-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.entrenamientos-row {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1.35fr) minmax(0, 0.75fr) auto minmax(4.5rem, auto);
+  align-items: center;
+  gap: clamp(0.75rem, 2.5vw, 2.5rem);
+  padding: clamp(1.35rem, 3vw, 2.15rem) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: default;
+  transition: background-color 0.25s ease, opacity 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+.entrenamientos-row:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.entrenamientos-list:hover .entrenamientos-row {
+  opacity: 0.42;
+}
+
+.entrenamientos-list:hover .entrenamientos-row--active,
+.entrenamientos-row:hover {
+  opacity: 1;
+}
+
+.entrenamientos-row__tag {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.entrenamientos-row__title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  font-size: clamp(1.65rem, 4.8vw, 3.35rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.entrenamientos-row__flag {
+  flex-shrink: 0;
+  font-size: 0.72em;
+  line-height: 1;
+  opacity: 0.92;
+}
+
+.entrenamientos-row__meta {
+  font-size: clamp(0.82rem, 1.35vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+}
+
+.entrenamientos-row__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #dfff00;
+  white-space: nowrap;
+}
+
+.entrenamientos-row__badge-icon {
+  width: clamp(1rem, 1.6vw, 1.25rem);
+  height: clamp(1rem, 1.6vw, 1.25rem);
+  flex-shrink: 0;
+}
+
+.entrenamientos-row__price {
+  justify-self: end;
+  font-size: clamp(0.95rem, 1.55vw, 1.25rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+}
+
+.entrenamientos-hover-image {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #111;
+  isolation: isolate;
+}
+
+.entrenamientos-hover-image__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.08) 48%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.entrenamientos-hover-image__caption {
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 767px) {
+  .entrenamientos-list:hover .entrenamientos-row {
+    opacity: 1;
+  }
+
+  .entrenamientos-row--active {
+    opacity: 1 !important;
+  }
+
+  .entrenamientos-row {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    grid-template-areas:
+      'tag title'
+      'meta badge'
+      'price price';
+    gap: 0.55rem 0.85rem;
+    padding: 1.25rem 0;
+  }
+
+  .entrenamientos-row__tag {
+    grid-area: tag;
+  }
+
+  .entrenamientos-row__title {
+    grid-area: title;
+    white-space: normal;
+  }
+
+  .entrenamientos-row__meta {
+    grid-area: meta;
+  }
+
+  .entrenamientos-row__badge {
+    grid-area: badge;
+    justify-self: end;
+  }
+
+  .entrenamientos-row__price {
+    grid-area: price;
+    justify-self: start;
+    padding-top: 0.15rem;
+  }
+}
