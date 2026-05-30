@@ -50,8 +50,8 @@ export const TRAINING_PLANS: TrainingPlan[] = [
   },
   {
     number: '04',
-    name: "Children's gym",
-    displayName: "CHILDREN'S GYM",
+    name: 'Gym for Kids',
+    displayName: 'GYM FOR KIDS',
     tag: 'BB',
     meta: 'BOX · NIÑOS',
     badge: 'PRO',
