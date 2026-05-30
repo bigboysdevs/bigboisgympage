@@ -315,6 +315,11 @@
   color: transparent;
 }
 
+/* Filosofía — Desde 1992 */
+.filosofia-section {
+  min-height: auto;
+}
+
 /* Filosofía — año con foto dentro del texto (estilo Ethos Media) */
 .filosofia-stat-year {
   display: block;

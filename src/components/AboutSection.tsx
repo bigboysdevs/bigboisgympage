@@ -15,24 +15,24 @@ export default function AboutSection() {
         maxNumberOfImages={8}
         distance={20}
         imgClass="h-24 w-24 sm:h-32 sm:w-32"
-        className="flex min-h-screen w-full flex-col justify-center px-5 py-20 sm:px-8 md:px-10"
+        className="filosofia-section flex w-full flex-col justify-center px-5 py-10 sm:px-8 sm:py-12 md:px-10 md:py-14"
       >
-        <div className="relative ml-auto mr-[clamp(1.5rem,8vw,9rem)] flex w-full max-w-5xl flex-col items-center gap-6 sm:gap-8 md:gap-10">
-          <FadeIn delay={0} y={28}>
+        <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-3 sm:gap-4">
+          <FadeIn delay={0} y={16}>
             <h2
               id="filosofia-stat-label"
               className="filosofia-stat-label text-center font-black uppercase leading-none tracking-[0.12em] text-[#D7E2EA]"
-              style={{ fontSize: 'clamp(1.35rem, 4.5vw, 3.25rem)' }}
+              style={{ fontSize: 'clamp(1.75rem, 5.5vw, 4.25rem)' }}
             >
               Desde
             </h2>
           </FadeIn>
 
-          <FadeIn delay={0.1} y={48}>
+          <FadeIn delay={0.1} y={20}>
             <p
               className="filosofia-stat-year text-center font-black uppercase leading-[0.85] tracking-tighter"
               style={{
-                fontSize: 'clamp(5.5rem, 26vw, 20rem)',
+                fontSize: 'clamp(5rem, 24vw, 16rem)',
                 backgroundImage: `url(${yearStatImage})`,
               }}
               aria-hidden
