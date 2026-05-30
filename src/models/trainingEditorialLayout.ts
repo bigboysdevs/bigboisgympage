@@ -22,7 +22,7 @@ const EDITORIAL_WORDS: EditorialWords[] = [
   { sans: 'PLAN', serif: 'MENSUAL' },
   { sans: 'ALTO', serif: 'RENDIMIENTO' },
   { sans: 'HIPER', serif: 'TROFIA' },
-  { sans: 'BIG', serif: 'BOYS KITS' },
+  { sans: "CHILDREN'S", serif: 'GYM' },
 ];
 
 export function getMobileEditorialBlocks(): EditorialMobileBlock[] {

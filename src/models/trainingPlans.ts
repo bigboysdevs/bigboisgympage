@@ -50,13 +50,13 @@ export const TRAINING_PLANS: TrainingPlan[] = [
   },
   {
     number: '04',
-    name: 'Entrenamiento personalizado Big Boys Kits',
-    displayName: 'Big Boys Kits',
+    name: "Children's gym",
+    displayName: "CHILDREN'S GYM",
     tag: 'BB',
-    meta: '1:1 · KITS',
+    meta: 'BOX · NIÑOS',
     badge: 'PRO',
     price: '$500.000',
     description:
-      'Programa personalizado con el kit Big Boys: seguimiento cercano, plan de entrenamiento y todo lo que necesitas para avanzar con el sello del gym.',
+      'Espacio y entrenamiento pensados para niños: técnica, diversión y acompañamiento del equipo Big Boys en un ambiente seguro.',
   },
 ];
