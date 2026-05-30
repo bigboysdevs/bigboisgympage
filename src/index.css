@@ -133,7 +133,7 @@
   width: fit-content;
   max-width: min(calc(100% - 1rem), 26rem);
   margin-left: 50%;
-  transform: translateX(calc(-50% + clamp(1.25rem, 2.5vw, 2.5rem)));
+  transform: translateX(calc(-50% + clamp(2.5rem, 5.5vw, 4rem)));
 }
 
 .hero-video-brand-stack {
@@ -280,7 +280,7 @@
 
 @media (min-width: 768px) {
   .hero-video-brand-anchor {
-    transform: translateX(calc(-50% + clamp(1.25rem, 2.5vw, 2.5rem)));
+    transform: translateX(calc(-50% + clamp(2.5rem, 5.5vw, 4rem)));
   }
 
   .hero-video-figure-slot {
