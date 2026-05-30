@@ -1,5 +1,6 @@
 import { Instagram } from 'lucide-react';
 import { GYM_CONTACT, GYM_LOGO_TRANSPARENT_PNG } from '../models/branding';
+import { instagramButtonClass, instagramButtonSizeClass } from '@/lib/ctaStyles';
 
 const LEGAL_ITEMS = [
   {
@@ -158,7 +159,11 @@ export default function FooterLegalSection() {
                 href={GYM_CONTACT.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full border-2 border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-200 hover:border-transparent hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:shadow-[0_0_32px_rgba(225,48,108,0.25)] sm:w-auto sm:px-10 lg:justify-end"
+                className={[
+                  instagramButtonClass,
+                  instagramButtonSizeClass,
+                  'group mt-8 w-full sm:w-auto lg:justify-end',
+                ].join(' ')}
               >
                 <Instagram
                   className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
