@@ -9,7 +9,6 @@ const NavbarBrand = lazy(() => import('./NavbarBrand'));
 /** Enlaces de sección — solo en el drawer del menú hamburguesa. */
 const SCROLL_LINKS = [
   { label: 'Inicio', id: 'inicio' as const, href: '/#inicio' },
-  { label: 'Filosofía', id: 'filosofia' as const, href: '/#filosofia' },
   { label: 'Entrenamientos', id: 'entrenamientos' as const, href: '/#entrenamientos' },
   { label: 'Espacios', id: 'espacios' as const, href: '/#espacios' },
   { label: 'Contacto', id: 'contacto' as const, href: '/#contacto' },
