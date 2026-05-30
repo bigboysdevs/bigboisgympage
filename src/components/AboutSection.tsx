@@ -20,7 +20,7 @@ export default function AboutSection() {
           <FadeIn delay={0} y={16}>
             <h2
               id="filosofia-stat-label"
-              className="filosofia-stat-label text-center font-black uppercase leading-none tracking-[0.12em] text-[#D7E2EA]"
+              className="filosofia-stat-label text-center font-black uppercase leading-none tracking-[0.12em] text-white"
               style={{ fontSize: 'clamp(1.75rem, 5.5vw, 4.25rem)' }}
             >
               Desde

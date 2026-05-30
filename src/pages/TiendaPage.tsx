@@ -52,7 +52,7 @@ export default function TiendaPage() {
           >
             Tienda
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-center font-light leading-relaxed text-[#D7E2EA]/75 sm:mx-0 sm:max-w-lg sm:text-left">
+          <p className="mx-auto mt-5 max-w-xl text-center font-light leading-relaxed text-white/75 sm:mx-0 sm:max-w-lg sm:text-left">
             Ropa, accesorios y productos del gym. Pregunta por disponibilidad en recepción o por
             WhatsApp.
           </p>
@@ -61,7 +61,7 @@ export default function TiendaPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {PRODUCTOS.map((product, index) => (
             <FadeIn key={product.name} delay={0.05 * index} y={24}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#D7E2EA]/10 bg-white/[0.02] transition-colors hover:border-red-500/30">
+              <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors hover:border-red-500/30">
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#111]">
                   <img
                     src={product.image}
@@ -75,10 +75,10 @@ export default function TiendaPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#D7E2EA]/45">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
                     {product.category}
                   </p>
-                  <h2 className="font-semibold uppercase tracking-wide text-[#D7E2EA]">
+                  <h2 className="font-semibold uppercase tracking-wide text-white">
                     {product.name}
                   </h2>
                   <p className="mt-auto text-sm font-medium text-red-400/90">{product.price}</p>
@@ -89,7 +89,7 @@ export default function TiendaPage() {
         </div>
 
         <FadeIn delay={0.25} y={20} className="mt-16 flex flex-col items-center gap-6 sm:mt-20">
-          <div className="flex items-center gap-3 text-[#D7E2EA]/60">
+          <div className="flex items-center gap-3 text-white/60">
             <ShoppingBag className="h-5 w-5" strokeWidth={1.75} aria-hidden />
             <p className="text-center text-sm font-light sm:text-left">
               Catálogo en expansión — escríbenos para pedidos y tallas.

@@ -12,7 +12,7 @@ export const ctaPrimarySizeClass =
 /** CTA secundario — contorno claro, acento rojo al hover. */
 export const ctaSecondaryClass =
   'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-widest ' +
-  'border-2 border-[#D7E2EA]/35 bg-transparent text-[#D7E2EA] whitespace-nowrap ' +
+  'border-2 border-white/35 bg-transparent text-white whitespace-nowrap ' +
   'transition-colors duration-200 hover:border-red-500/70 hover:bg-red-600/10 hover:text-[#fafafa] ' +
   'active:bg-red-600/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400/80';
 

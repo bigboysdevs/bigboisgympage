@@ -17,7 +17,7 @@ export default function ProjectsSection() {
           >
             Espacios GYM
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-center font-light leading-relaxed text-[#D7E2EA]/65">
+          <p className="mx-auto mt-6 max-w-xl text-center font-light leading-relaxed text-white/65">
             Conoce las zonas del box — cada espacio pensado para un tipo de entrenamiento.
           </p>
         </FadeIn>

@@ -84,7 +84,7 @@ export default function FooterLegalSection() {
   return (
     <footer
       id="legal"
-      className="relative border-t border-[#D7E2EA]/10 px-5 py-14 sm:px-8 sm:py-16 md:px-10 md:py-20"
+      className="relative border-t border-white/10 px-5 py-14 sm:px-8 sm:py-16 md:px-10 md:py-20"
       style={{ backgroundColor: '#080808' }}
       aria-label="Pie de página"
     >
@@ -111,14 +111,14 @@ export default function FooterLegalSection() {
             className="min-w-0 sm:col-start-2 lg:col-start-2 lg:pr-4"
             aria-label="Información legal"
           >
-            <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#D7E2EA]/45">
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-white/45">
               Información legal
             </p>
             <ul className="space-y-3">
               {LEGAL_ITEMS.map(({ id, title, body }) => (
                 <li key={id}>
-                  <details className="group rounded-2xl border border-[#D7E2EA]/10 bg-white/[0.02] open:bg-white/[0.04]">
-                    <summary className="cursor-pointer list-none px-5 py-4 text-sm font-medium uppercase tracking-wider text-[#D7E2EA]/85 transition-colors hover:text-[#D7E2EA] [&::-webkit-details-marker]:hidden">
+                  <details className="group rounded-2xl border border-white/10 bg-white/[0.02] open:bg-white/[0.04]">
+                    <summary className="cursor-pointer list-none px-5 py-4 text-sm font-medium uppercase tracking-wider text-white/85 transition-colors hover:text-white [&::-webkit-details-marker]:hidden">
                       <span className="flex items-center justify-between gap-3">
                         {title}
                         <span
@@ -129,7 +129,7 @@ export default function FooterLegalSection() {
                         </span>
                       </span>
                     </summary>
-                    <div className="border-t border-[#D7E2EA]/10 px-5 py-4 text-left text-sm font-light leading-relaxed text-[#D7E2EA]/65">
+                    <div className="border-t border-white/10 px-5 py-4 text-left text-sm font-light leading-relaxed text-white/65">
                       {body}
                     </div>
                   </details>
@@ -139,7 +139,7 @@ export default function FooterLegalSection() {
           </nav>
 
           <aside
-            className="flex flex-col items-center border-t border-[#D7E2EA]/10 pt-10 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:items-end lg:justify-center lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
+            className="flex flex-col items-center border-t border-white/10 pt-10 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:items-end lg:justify-center lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
             aria-labelledby="footer-community-heading"
           >
             <div className="flex w-full max-w-xs flex-col items-center lg:max-w-none lg:items-end">
@@ -158,7 +158,7 @@ export default function FooterLegalSection() {
                 href={GYM_CONTACT.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full border-2 border-[#D7E2EA]/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold uppercase tracking-widest text-[#D7E2EA] transition-all duration-200 hover:border-transparent hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:shadow-[0_0_32px_rgba(225,48,108,0.25)] sm:w-auto sm:px-10 lg:justify-end"
+                className="group mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full border-2 border-white/20 bg-white/[0.03] px-8 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-200 hover:border-transparent hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#e6683c] hover:to-[#bc1888] hover:text-white hover:shadow-[0_0_32px_rgba(225,48,108,0.25)] sm:w-auto sm:px-10 lg:justify-end"
               >
                 <Instagram
                   className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
@@ -171,7 +171,7 @@ export default function FooterLegalSection() {
           </aside>
         </div>
 
-        <p className="mt-12 border-t border-[#D7E2EA]/10 pt-8 text-center text-xs font-light leading-relaxed text-[#D7E2EA]/40">
+        <p className="mt-12 border-t border-white/10 pt-8 text-center text-xs font-light leading-relaxed text-white/40">
           © {year} {GYM_CONTACT.name}. Todos los derechos reservados. {GYM_CONTACT.addressLines[1]}.
         </p>
       </div>

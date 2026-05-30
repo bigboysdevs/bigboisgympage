@@ -21,7 +21,7 @@ function sectionDocumentTop(el: HTMLElement): number {
 }
 
 const drawerLinkClass =
-  'text-[#D7E2EA] font-medium uppercase tracking-wider text-lg py-3 transition-opacity duration-200 hover:opacity-80';
+  'text-white font-medium uppercase tracking-wider text-lg py-3 transition-opacity duration-200 hover:opacity-80';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -110,7 +110,7 @@ export default function Navbar() {
           </Link>
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#D7E2EA]/30 bg-[#0C0C0C]/35 text-[#D7E2EA] backdrop-blur-[2px] hover:border-red-500/50 hover:bg-[#0C0C0C]/55 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/30 bg-[#0C0C0C]/35 text-white backdrop-blur-[2px] hover:border-red-500/50 hover:bg-[#0C0C0C]/55 transition-colors"
             aria-expanded={menuOpen}
             aria-controls={panelId}
             onClick={() => setMenuOpen((o) => !o)}
@@ -141,7 +141,7 @@ export default function Navbar() {
               role="dialog"
               aria-modal="true"
               aria-label="Menú de navegación"
-              className="fixed top-0 right-0 z-[100] flex h-full w-full max-w-sm flex-col border-l border-[#D7E2EA]/15 bg-[#0C0C0C] px-8 pb-10 pt-20 shadow-[-12px_0_40px_rgba(0,0,0,0.45)]"
+              className="fixed top-0 right-0 z-[100] flex h-full w-full max-w-sm flex-col border-l border-white/15 bg-[#0C0C0C] px-8 pb-10 pt-20 shadow-[-12px_0_40px_rgba(0,0,0,0.45)]"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -150,7 +150,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={closeMenu}
-                className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-lg border border-[#D7E2EA]/25 text-[#D7E2EA] hover:bg-white/5"
+                className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-lg border border-white/25 text-white hover:bg-white/5"
                 aria-label="Cerrar menú"
               >
                 <X className="h-6 w-6" aria-hidden />
@@ -160,7 +160,7 @@ export default function Navbar() {
                   to="/tienda"
                   className={[
                     drawerLinkClass,
-                    isTienda ? 'line-through decoration-[#D7E2EA] decoration-2 opacity-70' : '',
+                    isTienda ? 'line-through decoration-white decoration-2 opacity-70' : '',
                   ].join(' ')}
                   onClick={closeMenu}
                   aria-current={isTienda ? 'page' : undefined}
@@ -175,7 +175,7 @@ export default function Navbar() {
                       to={item.href}
                       className={[
                         drawerLinkClass,
-                        isActive ? 'line-through decoration-[#D7E2EA] decoration-2 opacity-70' : '',
+                        isActive ? 'line-through decoration-white decoration-2 opacity-70' : '',
                       ].join(' ')}
                       onClick={closeMenu}
                       aria-current={isActive ? 'location' : undefined}

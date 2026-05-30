@@ -162,13 +162,13 @@ export default function BrandPartnersBar() {
 
   return (
     <section
-      className="brand-partners-bar relative z-[15] w-full border-y border-[#D7E2EA]/10 bg-[#0a0a0a]/90 py-5 backdrop-blur-[2px] sm:py-6"
+      className="brand-partners-bar relative z-[15] w-full border-y border-white/10 bg-[#0a0a0a]/90 py-5 backdrop-blur-[2px] sm:py-6"
       aria-labelledby="brand-partners-heading"
     >
       <div className="mx-auto flex max-w-[100vw] flex-col items-center gap-4 sm:gap-5">
         <p
           id="brand-partners-heading"
-          className="px-5 text-center text-[10px] font-semibold uppercase tracking-[0.32em] text-[#D7E2EA]/55 sm:text-[11px] sm:tracking-[0.36em]"
+          className="px-5 text-center text-[10px] font-semibold uppercase tracking-[0.32em] text-white/55 sm:text-[11px] sm:tracking-[0.36em]"
         >
           {BRAND_PARTNERS_BAR_TITLE}
         </p>

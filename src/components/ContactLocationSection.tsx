@@ -17,16 +17,16 @@ function InfoRow({
   return (
     <div className="flex gap-4 sm:gap-5">
       <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#D7E2EA]/20 bg-white/[0.03]"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.03]"
         aria-hidden
       >
-        <Icon className="h-5 w-5 text-[#D7E2EA]/90" strokeWidth={1.75} />
+        <Icon className="h-5 w-5 text-white/90" strokeWidth={1.75} />
       </div>
       <div className="min-w-0 pt-0.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#D7E2EA]/45">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
           {label}
         </p>
-        <div className="mt-1 font-light leading-relaxed text-[#D7E2EA]">{children}</div>
+        <div className="mt-1 font-light leading-relaxed text-white">{children}</div>
       </div>
     </div>
   );
@@ -38,7 +38,7 @@ export default function ContactLocationSection() {
   return (
     <section
       id="contacto"
-      className="relative z-[10] scroll-mt-8 overflow-hidden border-t border-[#D7E2EA]/10 bg-transparent px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28 md:px-10 md:pt-36 md:pb-32"
+      className="relative z-[10] scroll-mt-8 overflow-hidden border-t border-white/10 bg-transparent px-5 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-28 md:px-10 md:pt-36 md:pb-32"
       aria-labelledby="contacto-heading"
     >
       <div
@@ -58,7 +58,7 @@ export default function ContactLocationSection() {
           >
             Contáctanos
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-center font-light leading-relaxed text-[#D7E2EA]/75 sm:mx-0 sm:max-w-lg sm:text-left">
+          <p className="mx-auto mt-5 max-w-xl text-center font-light leading-relaxed text-white/75 sm:mx-0 sm:max-w-lg sm:text-left">
             Pasa por el box, escríbenos o reserva tu primera sesión. Estamos para ayudarte a
             entrenar en serio.
           </p>
@@ -78,8 +78,8 @@ export default function ContactLocationSection() {
               <ul className="space-y-2">
                 {GYM_CONTACT.hours.map(({ label, value }) => (
                   <li key={label} className="flex justify-between gap-4 text-sm sm:text-base">
-                    <span className="uppercase tracking-wide text-[#D7E2EA]/55">{label}</span>
-                    <span className="text-right font-medium text-[#D7E2EA]">{value}</span>
+                    <span className="uppercase tracking-wide text-white/55">{label}</span>
+                    <span className="text-right font-medium text-white">{value}</span>
                   </li>
                 ))}
               </ul>
@@ -88,7 +88,7 @@ export default function ContactLocationSection() {
             <InfoRow icon={Phone} label="Teléfono">
               <a
                 href={GYM_CONTACT.phoneHref}
-                className="font-medium text-[#D7E2EA] transition-colors hover:text-red-400"
+                className="font-medium text-white transition-colors hover:text-red-400"
               >
                 {GYM_CONTACT.phoneDisplay}
               </a>
@@ -97,7 +97,7 @@ export default function ContactLocationSection() {
             <InfoRow icon={Mail} label="Correo">
               <a
                 href={mailto}
-                className="break-all font-medium text-[#D7E2EA] transition-colors hover:text-red-400"
+                className="break-all font-medium text-white transition-colors hover:text-red-400"
               >
                 {GYM_CONTACT.email}
               </a>
@@ -110,7 +110,7 @@ export default function ContactLocationSection() {
                 href={GYM_CONTACT.whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#D7E2EA]/25 px-6 py-3 text-xs font-medium uppercase tracking-widest text-[#D7E2EA] transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/10 sm:text-sm"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/25 px-6 py-3 text-xs font-medium uppercase tracking-widest text-white transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/10 sm:text-sm"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 WhatsApp
@@ -119,9 +119,9 @@ export default function ContactLocationSection() {
           </FadeIn>
 
           <FadeIn delay={0.16} y={32} className="min-h-[280px] lg:min-h-full">
-            <div className="flex h-full min-h-[280px] flex-col overflow-hidden rounded-[28px] border border-[#D7E2EA]/15 bg-[#141414] sm:rounded-[36px] lg:min-h-[420px]">
-              <div className="flex items-center justify-between gap-3 border-b border-[#D7E2EA]/10 px-5 py-4 sm:px-6">
-                <div className="flex items-center gap-2 text-[#D7E2EA]/80">
+            <div className="flex h-full min-h-[280px] flex-col overflow-hidden rounded-[28px] border border-white/15 bg-[#141414] sm:rounded-[36px] lg:min-h-[420px]">
+              <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4 sm:px-6">
+                <div className="flex items-center gap-2 text-white/80">
                   <Navigation className="h-4 w-4 text-red-500/90" aria-hidden />
                   <span className="text-xs font-semibold uppercase tracking-widest">
                     Ubicación
