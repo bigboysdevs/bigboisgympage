@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
 
-const SIZE = 72;
-const STROKE = 5;
+const SIZE = 46;
+const STROKE = 3;
 const RADIUS = (SIZE - STROKE) / 2 - 2;
 const CENTER = SIZE / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -98,7 +98,7 @@ export default function FloatingScrollProgress() {
         type="button"
         onClick={scrollToTop}
         className={[
-          'pointer-events-auto relative flex h-[72px] w-[72px] items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 focus-visible:outline-none',
+          'pointer-events-auto relative flex h-[46px] w-[46px] items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 focus-visible:outline-none',
           onLightBg
             ? 'bg-white/95 shadow-[0_8px_28px_rgba(12,12,12,0.18)] ring-2 ring-[#0C0C0C]/10 hover:ring-red-500/40 focus-visible:ring-2 focus-visible:ring-red-500/55'
             : 'bg-[#0a0a0a]/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-white/10 hover:ring-[#5EEAD4]/35 focus-visible:ring-2 focus-visible:ring-[#5EEAD4]/60',
@@ -141,10 +141,10 @@ export default function FloatingScrollProgress() {
             onLightBg ? 'text-[#0C0C0C]' : 'text-white',
           ].join(' ')}
         >
-          <span className="text-xl font-bold tabular-nums tracking-tight">{percent}</span>
+          <span className="text-sm font-bold tabular-nums tracking-tight">{percent}</span>
           <span
             className={[
-              'mt-0.5 text-[10px] font-medium transition-colors duration-300',
+              'mt-px text-[8px] font-medium leading-none transition-colors duration-300',
               onLightBg ? 'text-[#0C0C0C]/65' : 'text-white/85',
             ].join(' ')}
           >
