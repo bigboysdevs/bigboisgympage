@@ -34,13 +34,27 @@ export default function GymSpaceFanCard({
         opacity: hasActive && !isActive ? 0.72 : 1,
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 28, mass: 0.62 }}
+      tabIndex={0}
+      role="button"
+      aria-pressed={isActive}
+      aria-label={`${item.title} — ${item.subtitle}`}
       onMouseEnter={onActivate}
       onFocus={onActivate}
+      onClick={onActivate}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onActivate();
+        }
+      }}
       onPointerDown={(e) => {
-        if (e.pointerType === 'touch') onActivate();
+        if (e.pointerType === 'touch') {
+          e.preventDefault();
+          onActivate();
+        }
       }}
     >
-      <a href={item.href} className="gym-spaces-fan__card-link" aria-label={`${item.title} — ${item.subtitle}`}>
+      <div className="gym-spaces-fan__card-link">
         <PlanImage
           src={item.image}
           fallbackSrc={item.fallbackImage}
@@ -51,7 +65,7 @@ export default function GymSpaceFanCard({
           <p className="gym-spaces-fan__caption-sub">{item.subtitle}</p>
           <p className="gym-spaces-fan__caption-title">{item.title}</p>
         </div>
-      </a>
+      </div>
     </motion.article>
   );
 }

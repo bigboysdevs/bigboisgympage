@@ -86,7 +86,6 @@ export type GymSpaceFanItem = {
   subtitle: string;
   image: string;
   fallbackImage: string;
-  href: string;
 };
 
 export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
@@ -96,7 +95,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[0].category,
     image: GYM_SPACES[0].images.col1[0],
     fallbackImage: GYM_SPACES[0].fallbackImages.col1[0],
-    href: GYM_SPACES[0].href,
   },
   {
     id: '02-detail-a',
@@ -104,7 +102,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[1].category,
     image: GYM_SPACES[1].images.col1[0],
     fallbackImage: GYM_SPACES[1].fallbackImages.col1[0],
-    href: GYM_SPACES[1].href,
   },
   {
     id: '01-hero',
@@ -112,7 +109,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[0].category,
     image: GYM_SPACES[0].images.col2,
     fallbackImage: GYM_SPACES[0].fallbackImages.col2,
-    href: GYM_SPACES[0].href,
   },
   {
     id: '02-hero',
@@ -120,7 +116,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[1].category,
     image: GYM_SPACES[1].images.col2,
     fallbackImage: GYM_SPACES[1].fallbackImages.col2,
-    href: GYM_SPACES[1].href,
   },
   {
     id: '03-hero',
@@ -128,7 +123,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[2].category,
     image: GYM_SPACES[2].images.col2,
     fallbackImage: GYM_SPACES[2].fallbackImages.col2,
-    href: GYM_SPACES[2].href,
   },
   {
     id: '03-detail-a',
@@ -136,7 +130,6 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[2].category,
     image: GYM_SPACES[2].images.col1[0],
     fallbackImage: GYM_SPACES[2].fallbackImages.col1[0],
-    href: GYM_SPACES[2].href,
   },
   {
     id: '01-detail-b',
@@ -144,6 +137,5 @@ export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
     subtitle: GYM_SPACES[0].category,
     image: GYM_SPACES[0].images.col1[1],
     fallbackImage: GYM_SPACES[0].fallbackImages.col1[1],
-    href: GYM_SPACES[0].href,
   },
 ];
