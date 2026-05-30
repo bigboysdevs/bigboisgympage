@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -169,6 +169,44 @@ function FloatingFigure({
     group.current.rotation.z = Math.sin(t * 0.55) * 0.003;
   });
 
+  return <group ref={group}>{children}</group>;
+}
+
+/** Gira el logo de la navbar según el scroll de la página. */
+const NAV_SCROLL_SPIN_RAD_PER_PX = 0.014;
+
+function NavScrollSpin({
+  children,
+  enabled,
+}: {
+  children: ReactNode;
+  enabled: boolean;
+}) {
+  const group = useRef<Group>(null);
+  const scrollY = useRef(0);
+  const reducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
+
+  useEffect(() => {
+    if (!enabled || reducedMotion) return;
+    const onScroll = () => {
+      scrollY.current = window.scrollY;
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [enabled, reducedMotion]);
+
+  useFrame(() => {
+    if (!enabled || reducedMotion || !group.current) return;
+    group.current.rotation.y = scrollY.current * NAV_SCROLL_SPIN_RAD_PER_PX;
+  });
+
+  if (!enabled) return <>{children}</>;
   return <group ref={group}>{children}</group>;
 }
 
@@ -344,13 +382,15 @@ function FigureModel({
     <>
       <Bounds fit observe={false} margin={boundsMargin} maxDuration={0}>
         <Center>
-          <group position={[modelX, fitY, 0]} rotation={FIGURE_ROTATION}>
-            <FloatingFigure paused={dragging || variant === 'nav'}>
-              <Resize>
-                <primitive object={scene} />
-              </Resize>
-            </FloatingFigure>
-          </group>
+          <NavScrollSpin enabled={variant === 'nav'}>
+            <group position={[modelX, fitY, 0]} rotation={FIGURE_ROTATION}>
+              <FloatingFigure paused={dragging || variant === 'nav'}>
+                <Resize>
+                  <primitive object={scene} />
+                </Resize>
+              </FloatingFigure>
+            </group>
+          </NavScrollSpin>
         </Center>
       </Bounds>
       <FigureScreenOffset
