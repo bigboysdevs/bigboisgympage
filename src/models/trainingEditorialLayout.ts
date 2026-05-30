@@ -45,7 +45,7 @@ export function getDesktopEditorialRows(): EditorialDesktopRow[] {
     },
     {
       cells: [
-        { kind: 'video', flex: 0.62 },
+        { kind: 'video', flex: 1.95 },
         { kind: 'text', words: EDITORIAL_WORDS[1] },
       ],
       meta: p1,
@@ -59,7 +59,7 @@ export function getDesktopEditorialRows(): EditorialDesktopRow[] {
     },
     {
       cells: [
-        { kind: 'video', flex: 0.78 },
+        { kind: 'video', flex: 1.95 },
         { kind: 'text', words: EDITORIAL_WORDS[3] },
       ],
       meta: p3,

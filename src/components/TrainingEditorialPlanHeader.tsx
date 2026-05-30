@@ -8,6 +8,7 @@ type TrainingEditorialPlanHeaderProps = {
   plan: TrainingPlan;
   split?: 'both' | 'sans' | 'serif';
   textClassName?: string;
+  className?: string;
   align?: 'start' | 'center' | 'end';
 };
 
@@ -16,10 +17,13 @@ export default function TrainingEditorialPlanHeader({
   plan,
   split = 'both',
   textClassName = '',
+  className = '',
   align = 'start',
 }: TrainingEditorialPlanHeaderProps) {
   return (
-    <div className={`entrenamientos-editorial__plan entrenamientos-editorial__plan--${align}`.trim()}>
+    <div
+      className={`entrenamientos-editorial__plan entrenamientos-editorial__plan--${align} ${className}`.trim()}
+    >
       <TrainingEditorialText words={words} split={split} className={textClassName} />
       <TrainingEditorialMeta plan={plan} className="entrenamientos-editorial__meta--inline" />
     </div>

@@ -23,8 +23,9 @@ export default function TrainingEditorialDesktop() {
                       words={cell.words}
                       plan={plan}
                       split={cell.split}
-                      textClassName="entrenamientos-editorial__line--desktop"
+                      textClassName={`entrenamientos-editorial__line--desktop${textOnRight ? ' entrenamientos-editorial__line--desktop-right' : ''}`}
                       align={textOnRight ? 'end' : 'start'}
+                      className={textOnRight ? 'entrenamientos-editorial__plan--flush-end' : undefined}
                     />
                   );
                 }
