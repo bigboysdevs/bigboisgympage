@@ -864,6 +864,7 @@
 
 /* Entrenamientos — lista estilo broadcast / F1 */
 .entrenamientos-section {
+  width: 100%;
   background: transparent;
   border-radius: 40px 40px 0 0;
   overflow: hidden;
@@ -887,13 +888,14 @@
 
 .entrenamientos-section__inner {
   width: 100%;
+  max-width: none;
   min-height: min(100vh, 920px);
-  padding: clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 4vw, 2.5rem)
-    clamp(3.5rem, 8vw, 6rem);
+  padding: clamp(4.5rem, 10vw, 8rem) 0 clamp(3.5rem, 8vw, 6rem);
 }
 
 .entrenamientos-section__heading {
   margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
   text-align: center;
   font-weight: 900;
   text-transform: uppercase;
@@ -1075,6 +1077,204 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.92);
+}
+
+/* Entrenamientos — layout editorial tipográfico + video strips */
+.entrenamientos-editorial {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.entrenamientos-editorial-mobile,
+.entrenamientos-editorial-desktop {
+  width: 100%;
+}
+
+.entrenamientos-editorial__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.08em 0.18em;
+  line-height: 0.88;
+  text-align: center;
+}
+
+.entrenamientos-editorial__sans {
+  font-family: 'Anton', 'Kanit', sans-serif;
+  font-weight: 400;
+  font-size: clamp(3rem, 14.5vw, 4.75rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.entrenamientos-editorial__serif {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(2.65rem, 13.5vw, 4.35rem);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.entrenamientos-editorial__strip {
+  width: 100%;
+  height: clamp(74px, 19vw, 112px);
+  margin: 0.45rem 0 0.55rem;
+  overflow: hidden;
+  background: #111;
+}
+
+.entrenamientos-editorial__strip-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.entrenamientos-editorial__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.entrenamientos-editorial__meta--inline {
+  justify-content: inherit;
+  padding-inline: 0;
+  margin-top: 0.35rem;
+}
+
+.entrenamientos-editorial__plan {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.entrenamientos-editorial__plan--start {
+  align-items: flex-start;
+}
+
+.entrenamientos-editorial__plan--center {
+  align-items: center;
+}
+
+.entrenamientos-editorial__plan--center .entrenamientos-editorial__meta--inline {
+  justify-content: center;
+}
+
+.entrenamientos-editorial__plan--end {
+  align-items: flex-end;
+}
+
+.entrenamientos-editorial__plan--end .entrenamientos-editorial__meta--inline {
+  justify-content: flex-end;
+}
+
+.entrenamientos-editorial__plan--start .entrenamientos-editorial__meta--inline {
+  justify-content: flex-start;
+}
+
+.entrenamientos-editorial--mobile .entrenamientos-editorial__plan {
+  margin-bottom: 0.15rem;
+}
+
+.entrenamientos-editorial--mobile .entrenamientos-editorial__strip {
+  margin-top: 0.65rem;
+  margin-bottom: clamp(1.5rem, 5vw, 2.25rem);
+}
+
+.entrenamientos-editorial__meta-sep {
+  opacity: 0.65;
+}
+
+.entrenamientos-editorial--mobile .entrenamientos-editorial__line:last-of-type {
+  margin-bottom: 0;
+}
+
+.entrenamientos-editorial--desktop {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.35rem, 3vw, 2.35rem);
+}
+
+.entrenamientos-editorial__row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.85rem, 2.2vw, 2rem);
+  width: 100%;
+  min-height: clamp(88px, 11vw, 148px);
+  padding-inline: 0;
+}
+
+.entrenamientos-editorial__line--desktop {
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.entrenamientos-editorial__plan .entrenamientos-editorial__line--desktop {
+  width: auto;
+}
+
+.entrenamientos-editorial__strip-wrap {
+  flex: 1 1 0;
+  min-width: 0;
+  height: clamp(88px, 11vw, 148px);
+}
+
+.entrenamientos-editorial__strip--desktop {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.entrenamientos-editorial--desktop .entrenamientos-editorial__sans {
+  font-size: clamp(3.25rem, 7.2vw, 6.75rem);
+}
+
+.entrenamientos-editorial--desktop .entrenamientos-editorial__serif {
+  font-size: clamp(2.85rem, 6.5vw, 6.15rem);
+}
+
+.entrenamientos-editorial--desktop .entrenamientos-editorial__meta--inline {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 767px) {
+  .entrenamientos-section__inner {
+    min-height: auto;
+    padding-bottom: clamp(2.75rem, 8vw, 4rem);
+  }
+
+  .entrenamientos-section__heading {
+    margin-bottom: clamp(1.75rem, 5vw, 2.5rem);
+    font-size: clamp(2.25rem, 10vw, 3rem);
+  }
+
+  .entrenamientos-editorial--mobile .entrenamientos-editorial__strip:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .entrenamientos-editorial__row--1 .entrenamientos-editorial__plan--end .entrenamientos-editorial__line--desktop,
+  .entrenamientos-editorial__row--3 .entrenamientos-editorial__plan--end .entrenamientos-editorial__line--desktop {
+    justify-content: flex-end;
+    text-align: right;
+  }
 }
 
 @media (max-width: 767px) {
