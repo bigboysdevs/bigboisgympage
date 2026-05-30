@@ -1,13 +1,7 @@
 import { useEffect, useRef } from 'react';
-import type { TrainingPlan } from '@/models/trainingPlans';
+import { TRAINING_PREVIEW_VIDEO } from '@/models/trainingPlans';
 
-const FALLBACK_VIDEO = '/videos/hero.mp4';
-
-type TrainingPlanPreviewVideoProps = {
-  plan: TrainingPlan;
-};
-
-export default function TrainingPlanPreviewVideo({ plan }: TrainingPlanPreviewVideoProps) {
+export default function TrainingPlanPreviewVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -23,20 +17,18 @@ export default function TrainingPlanPreviewVideo({ plan }: TrainingPlanPreviewVi
     return () => {
       video.pause();
     };
-  }, [plan.number]);
+  }, []);
 
   return (
     <video
       ref={videoRef}
-      key={plan.number}
-      src={plan.video || FALLBACK_VIDEO}
-      poster={plan.image}
+      src={TRAINING_PREVIEW_VIDEO}
       className="h-full w-full object-cover"
       muted
       loop
       playsInline
       autoPlay
-      preload="metadata"
+      preload="auto"
       aria-hidden
     />
   );

@@ -36,7 +36,7 @@ function TrainingPlanMobileVideo({ plan }: { plan: TrainingPlan }) {
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="entrenamientos-mobile-video__frame">
-        <TrainingPlanPreviewVideo plan={plan} />
+        <TrainingPlanPreviewVideo />
         <div className="entrenamientos-mobile-video__overlay" aria-hidden />
         <p className="entrenamientos-mobile-video__caption">{plan.name}</p>
       </div>
@@ -165,7 +165,7 @@ export default function ServicesSection() {
                 transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                 aria-hidden
               >
-                <TrainingPlanPreviewVideo plan={activePlan} />
+                <TrainingPlanPreviewVideo />
                 <div className="entrenamientos-hover-preview__overlay" />
                 <p className="entrenamientos-hover-preview__caption">{activePlan.name}</p>
               </motion.div>
