@@ -656,7 +656,7 @@
 
 /* Espacios GYM — abanico de tarjetas (estilo social / F1) */
 .gym-spaces-section {
-  background: #0c0c0c;
+  background: transparent;
   border-radius: 40px 40px 0 0;
   overflow: hidden;
 }
@@ -864,7 +864,7 @@
 
 /* Entrenamientos — lista estilo broadcast / F1 */
 .entrenamientos-section {
-  background: #000;
+  background: transparent;
   border-radius: 40px 40px 0 0;
   overflow: hidden;
 }
