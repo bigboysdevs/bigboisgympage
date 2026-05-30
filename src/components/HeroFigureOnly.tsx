@@ -5,31 +5,24 @@ import {
 } from '../models/branding';
 import { useHeroFigureInteraction } from '../hooks/useHeroFigureInteraction';
 import { useLogo3dPerformanceMode } from '../hooks/useLogo3dPerformanceMode';
-import GalacticWarpBackground from './GalacticWarpBackground';
-import { HERO_FIGURE_RAISE, HERO_FIGURE_SCREEN_OFFSET } from '@/models/heroLogo3dLayout';
+import {
+  HERO_FIGURE_SCREEN_OFFSET,
+  HERO_VIDEO_FIGURE_SCREEN_OFFSET,
+} from '@/models/heroLogo3dLayout';
 
 const HeroLogo3D = lazy(() => import('./HeroLogo3D'));
 
-const FIGURE_ROOT_CLASS = 'relative h-full w-full overflow-visible';
+type HeroFigureVariant = 'classic' | 'video';
 
-/** Desktop: alturas originales. Móvil: sin marco, ocupa todo el hero. */
-const FIGURE_CANVAS_SLOT_CLASS =
+const CLASSIC_ROOT = 'relative h-full w-full overflow-visible';
+const CLASSIC_SLOT =
   'relative h-full min-h-[clamp(560px,78vh,920px)] w-full overflow-visible max-md:min-h-0 max-md:max-h-none max-md:h-full md:min-h-[clamp(640px,90vh,1000px)] lg:min-h-[clamp(680px,94vh,1040px)]';
-
-/** Desktop: ventana original. Móvil: capa responsive (.hero-figure-viewport en CSS). */
-const FIGURE_VIEWPORT_CLASS =
+const CLASSIC_VIEWPORT =
   'hero-figure-viewport relative z-10 h-[clamp(480px,70vh,860px)] w-full max-md:absolute max-md:inset-0 max-md:h-full max-md:min-h-0 max-md:max-h-none max-md:translate-x-0 max-md:overflow-visible overflow-visible -mt-24 pt-24 translate-y-24 md:h-[clamp(560px,84vh,940px)] md:-mt-28 md:pt-28 md:translate-y-28 lg:h-[clamp(600px,88vh,980px)] lg:-mt-32 lg:pt-32 lg:translate-y-32';
 
-/** Solo desplaza la figura dentro de la ventana (PNG). Resta HERO_FIGURE_RAISE para subir. */
-const FIGURE_CONTENT_OFFSET_CLASS =
-  `max-md:translate-x-0 max-md:translate-y-0 md:translate-y-[calc(8rem-${HERO_FIGURE_RAISE})] md:object-right lg:translate-y-[calc(9rem-${HERO_FIGURE_RAISE})]`;
-
-function FigureBackdrop({ lite }: { lite?: boolean }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-visible" aria-hidden>
-      <GalacticWarpBackground lite={lite} />
-    </div>
-  );
+interface HeroFigureOnlyProps {
+  modelUrl?: string;
+  variant?: HeroFigureVariant;
 }
 
 function TinyLoader() {
@@ -40,44 +33,45 @@ function TinyLoader() {
       aria-label="Cargando modelo"
     >
       <div
-        className="h-9 w-9 animate-spin rounded-full border-2 border-white/15 border-t-red-600/80 motion-reduce:animate-none"
+        className="h-7 w-7 animate-spin rounded-full border-2 border-white/15 border-t-red-600/80 motion-reduce:animate-none sm:h-8 sm:w-8"
         aria-hidden
       />
     </div>
   );
 }
 
-interface HeroFigureOnlyProps {
-  modelUrl?: string;
-  withBackdrop?: boolean;
-}
-
 export default function HeroFigureOnly({
   modelUrl = HERO_GLTF_URL,
-  withBackdrop = true,
+  variant = 'classic',
 }: HeroFigureOnlyProps) {
   const mode = useLogo3dPerformanceMode();
   const canRotateFigure = useHeroFigureInteraction();
+  const isVideo = variant === 'video';
+
+  const rootClass = isVideo ? 'hero-video-figure-root' : CLASSIC_ROOT;
+  const slotClass = isVideo ? 'hero-video-figure-canvas' : CLASSIC_SLOT;
+  const viewportClass = isVideo ? 'hero-video-figure-viewport' : CLASSIC_VIEWPORT;
+  const screenOffset = isVideo ? HERO_VIDEO_FIGURE_SCREEN_OFFSET : HERO_FIGURE_SCREEN_OFFSET;
 
   if (mode === 'deciding') {
     return (
-      <div
-        className={`${FIGURE_ROOT_CLASS} ${FIGURE_CANVAS_SLOT_CLASS} pointer-events-none`}
-        aria-hidden
-      />
+      <div className={`${rootClass} ${slotClass} pointer-events-none`} aria-hidden />
     );
   }
 
   if (mode === 'static') {
     return (
-      <div className={`${FIGURE_ROOT_CLASS} pointer-events-none`}>
-        <div className={FIGURE_CANVAS_SLOT_CLASS}>
-          {withBackdrop ? <FigureBackdrop lite /> : null}
-          <div className={FIGURE_VIEWPORT_CLASS}>
+      <div className={`${rootClass} pointer-events-none`}>
+        <div className={slotClass}>
+          <div className={viewportClass}>
             <img
               src={HERO_FIGURE_FALLBACK_PNG}
               alt="Big Boys Gym"
-              className={`hero-figure-fallback absolute inset-0 object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28] ${FIGURE_CONTENT_OFFSET_CLASS}`}
+              className={
+                isVideo
+                  ? 'hero-video-figure-fallback h-full w-full object-contain object-bottom animate-figure-float'
+                  : 'hero-figure-fallback absolute inset-0 object-contain object-center animate-figure-float md:scale-[1.22] lg:scale-[1.28]'
+              }
               draggable={false}
             />
           </div>
@@ -87,20 +81,20 @@ export default function HeroFigureOnly({
   }
 
   return (
-    <div className={FIGURE_ROOT_CLASS}>
+    <div className={rootClass}>
       <div
-        className={`${FIGURE_CANVAS_SLOT_CLASS} ${
+        className={`${slotClass} ${
           canRotateFigure ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
       >
-        {withBackdrop ? <FigureBackdrop lite={mode === 'lite'} /> : null}
         <Suspense fallback={<TinyLoader />}>
-          <div className={FIGURE_VIEWPORT_CLASS}>
+          <div className={viewportClass}>
             <HeroLogo3D
               modelUrl={modelUrl}
               performanceMode={mode === 'lite'}
-              figureScreenOffset={HERO_FIGURE_SCREEN_OFFSET}
+              figureScreenOffset={screenOffset}
               enableRotate={canRotateFigure}
+              variant={isVideo ? 'video' : 'hero'}
             />
           </div>
         </Suspense>

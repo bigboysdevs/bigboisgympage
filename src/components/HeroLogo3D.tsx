@@ -3,9 +3,10 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bounds, Center, OrbitControls, Resize, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { TOUCH } from 'three';
-import type { Group, Vector3 } from 'three';
+import type { Group, Object3D, Vector3 } from 'three';
 import { HERO_GLTF_URL } from '../models/branding';
 import { HERO_FIGURE_SCREEN_OFFSET } from '@/models/heroLogo3dLayout';
+import { prepareHeroGltfScene } from '@/utils/prepareHeroGltfScene';
 
 /** Encuadre del GLB dentro de Bounds (fijo; no usar para bajar en pantalla). */
 const FIGURE_FIT_Y = -0.72;
@@ -36,6 +37,16 @@ const FIGURE_FIT_Y_MOBILE = -0.66;
 /** Empuje vertical en móvil: figura anclada abajo-derecha. */
 const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.11;
 
+/** Encuadre centrado para el hero con video (figura pequeña). */
+const FIGURE_VIDEO_BOUNDS_MARGIN = 1.12;
+const FIGURE_VIDEO_CAMERA_Z = 1.78;
+const FIGURE_VIDEO_FOV = 34;
+const FIGURE_VIDEO_FIT_Y = -0.58;
+const FIGURE_VIDEO_MIN_ORBIT = 1.15;
+const FIGURE_VIDEO_MAX_ORBIT = 2.35;
+
+type FigureVariant = 'hero' | 'video';
+
 type LockedFigureLayout = {
   modelX: number;
   viewPanX: number;
@@ -48,47 +59,59 @@ type LockedFigureLayout = {
   profile: 'desktop' | 'mobile';
 };
 
-function useLockedFigureLayout(): LockedFigureLayout {
-  const locked = useRef<LockedFigureLayout | null>(null);
-  if (locked.current === null && typeof window !== 'undefined') {
-    const desktop = window.matchMedia('(min-width: 768px)').matches;
-    locked.current = desktop
-      ? {
-          modelX: FIGURE_MODEL_X_DESKTOP,
-          viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
-          boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
-          fitY: FIGURE_FIT_Y,
-          cameraZ: FIGURE_CAMERA_Z_DESKTOP,
-          cameraFov: FIGURE_CAMERA_FOV_DESKTOP,
-          minOrbitDistance: FIGURE_ORBIT_MIN_DESKTOP,
-          maxOrbitDistance: FIGURE_ORBIT_MAX_DESKTOP,
-          profile: 'desktop',
-        }
-      : {
-          modelX: FIGURE_MODEL_X_MOBILE,
-          viewPanX: FIGURE_VIEW_PAN_X_MOBILE,
-          boundsMargin: FIGURE_BOUNDS_MARGIN_MOBILE,
-          fitY: FIGURE_FIT_Y_MOBILE,
-          cameraZ: FIGURE_CAMERA_Z_MOBILE,
-          cameraFov: FIGURE_CAMERA_FOV_MOBILE,
-          minOrbitDistance: FIGURE_ORBIT_MIN_MOBILE,
-          maxOrbitDistance: FIGURE_ORBIT_MAX_MOBILE,
-          profile: 'mobile',
-        };
-  }
-  return (
-    locked.current ?? {
-      modelX: FIGURE_MODEL_X_DESKTOP,
-      viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
-      boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
-      fitY: FIGURE_FIT_Y,
-      cameraZ: FIGURE_CAMERA_Z_DESKTOP,
-      cameraFov: FIGURE_CAMERA_FOV_DESKTOP,
-      minOrbitDistance: FIGURE_ORBIT_MIN_DESKTOP,
-      maxOrbitDistance: FIGURE_ORBIT_MAX_DESKTOP,
-      profile: 'desktop',
+function useLockedFigureLayout(variant: FigureVariant): LockedFigureLayout {
+  const locked = useRef<{ key: string; layout: LockedFigureLayout } | null>(null);
+  const desktop =
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches;
+  const key = `${variant}-${desktop ? 'd' : 'm'}`;
+
+  if (locked.current === null || locked.current.key !== key) {
+    if (variant === 'video') {
+      locked.current = {
+        key,
+        layout: {
+          modelX: 0,
+          viewPanX: 0,
+          boundsMargin: FIGURE_VIDEO_BOUNDS_MARGIN,
+          fitY: FIGURE_VIDEO_FIT_Y,
+          cameraZ: FIGURE_VIDEO_CAMERA_Z,
+          cameraFov: FIGURE_VIDEO_FOV,
+          minOrbitDistance: FIGURE_VIDEO_MIN_ORBIT,
+          maxOrbitDistance: FIGURE_VIDEO_MAX_ORBIT,
+          profile: desktop ? 'desktop' : 'mobile',
+        },
+      };
+    } else {
+      locked.current = {
+        key,
+        layout: desktop
+          ? {
+              modelX: FIGURE_MODEL_X_DESKTOP,
+              viewPanX: FIGURE_VIEW_PAN_X_DESKTOP,
+              boundsMargin: FIGURE_BOUNDS_MARGIN_DESKTOP,
+              fitY: FIGURE_FIT_Y,
+              cameraZ: FIGURE_CAMERA_Z_DESKTOP,
+              cameraFov: FIGURE_CAMERA_FOV_DESKTOP,
+              minOrbitDistance: FIGURE_ORBIT_MIN_DESKTOP,
+              maxOrbitDistance: FIGURE_ORBIT_MAX_DESKTOP,
+              profile: 'desktop',
+            }
+          : {
+              modelX: FIGURE_MODEL_X_MOBILE,
+              viewPanX: FIGURE_VIEW_PAN_X_MOBILE,
+              boundsMargin: FIGURE_BOUNDS_MARGIN_MOBILE,
+              fitY: FIGURE_FIT_Y_MOBILE,
+              cameraZ: FIGURE_CAMERA_Z_MOBILE,
+              cameraFov: FIGURE_CAMERA_FOV_MOBILE,
+              minOrbitDistance: FIGURE_ORBIT_MIN_MOBILE,
+              maxOrbitDistance: FIGURE_ORBIT_MAX_MOBILE,
+              profile: 'mobile',
+            },
+      };
     }
-  );
+  }
+
+  return locked.current.layout;
 }
 
 const FIGURE_ROTATION: [number, number, number] = [0, -Math.PI / 2, 0];
@@ -262,11 +285,15 @@ function FigureModel({
   url,
   figureScreenOffset,
   enableRotate,
-}: ModelProps & { figureScreenOffset: number; enableRotate: boolean }) {
-  // PERF: GLB comprimido con Draco + texturas WebP 2048 (≈1 MB vs 16 MB original).
+  variant,
+}: ModelProps & {
+  figureScreenOffset: number;
+  enableRotate: boolean;
+  variant: FigureVariant;
+}) {
   const { scene } = useGLTF(url, true);
   const [dragging, setDragging] = useState(false);
-  const layout = useLockedFigureLayout();
+  const layout = useLockedFigureLayout(variant);
   const {
     modelX,
     viewPanX,
@@ -277,9 +304,17 @@ function FigureModel({
     profile,
   } = layout;
   const orbitTargetX = modelX + viewPanX * 0.92;
-  const orbitTargetY = -0.08;
+  const orbitTargetY = variant === 'video' ? -0.04 : -0.08;
   const pushDown =
-    profile === 'mobile' ? FIGURE_SCREEN_OFFSET_PUSH_MOBILE : figureScreenOffset;
+    variant === 'video'
+      ? 0
+      : profile === 'mobile'
+        ? FIGURE_SCREEN_OFFSET_PUSH_MOBILE
+        : figureScreenOffset;
+
+  useLayoutEffect(() => {
+    prepareHeroGltfScene(scene as Object3D);
+  }, [scene]);
 
   return (
     <>
@@ -318,6 +353,7 @@ export interface HeroLogo3DProps {
   performanceMode: boolean;
   figureScreenOffset?: number;
   enableRotate?: boolean;
+  variant?: 'hero' | 'video';
 }
 
 export default function HeroLogo3D({
@@ -325,17 +361,27 @@ export default function HeroLogo3D({
   performanceMode,
   figureScreenOffset = HERO_FIGURE_SCREEN_OFFSET,
   enableRotate = true,
+  variant = 'hero',
 }: HeroLogo3DProps) {
   const dpr: [number, number] = performanceMode ? [1, 1.25] : [1, 2];
-  const { cameraZ, cameraFov } = useLockedFigureLayout();
+  const { cameraZ, cameraFov } = useLockedFigureLayout(variant);
+  const isVideo = variant === 'video';
 
-  return (
-    <div
-      className={`absolute inset-x-0 -top-24 bottom-[-2rem] h-[calc(100%+8rem)] w-full max-md:inset-0 max-md:top-0 max-md:h-full max-md:bottom-0 max-md:translate-x-0 overflow-visible md:-top-28 md:bottom-[-2.5rem] md:h-[calc(100%+9rem)] lg:-top-32 lg:bottom-[-3rem] lg:h-[calc(100%+10rem)] ${
+  const wrapperClass = isVideo
+    ? `hero-video-canvas-wrap relative h-full w-full overflow-visible ${
         enableRotate
           ? 'cursor-grab active:cursor-grabbing'
           : 'pointer-events-none cursor-default'
-      }`}
+      }`
+    : `absolute inset-x-0 -top-24 bottom-[-2rem] h-[calc(100%+8rem)] w-full max-md:inset-0 max-md:top-0 max-md:h-full max-md:bottom-0 max-md:translate-x-0 overflow-visible md:-top-28 md:bottom-[-2.5rem] md:h-[calc(100%+9rem)] lg:-top-32 lg:bottom-[-3rem] lg:h-[calc(100%+10rem)] ${
+        enableRotate
+          ? 'cursor-grab active:cursor-grabbing'
+          : 'pointer-events-none cursor-default'
+      }`;
+
+  return (
+    <div
+      className={wrapperClass}
       style={{ touchAction: enableRotate ? 'none' : 'pan-y' }}
       aria-label={
         enableRotate
@@ -344,13 +390,14 @@ export default function HeroLogo3D({
       }
     >
       <Canvas
-        className="!bg-transparent h-full w-full"
+        className={`${isVideo ? 'hero-video-canvas' : ''} !bg-transparent h-full w-full`}
         style={{ background: 'transparent', overflow: 'visible' }}
         camera={{ position: [0, 0.04, cameraZ], fov: cameraFov }}
         dpr={dpr}
         gl={{
           alpha: true,
           antialias: !performanceMode,
+          premultipliedAlpha: false,
           powerPreference: performanceMode ? 'low-power' : 'high-performance',
         }}
         onCreated={({ gl, scene }) => {
@@ -358,6 +405,9 @@ export default function HeroLogo3D({
           gl.toneMappingExposure = LOGO_TONE_EXPOSURE;
           scene.background = null;
           const canvas = gl.domElement;
+          if (isVideo) canvas.classList.add('hero-video-canvas__gl');
+          canvas.style.background = 'transparent';
+          canvas.style.backgroundColor = 'transparent';
           canvas.style.touchAction = enableRotate ? 'none' : 'pan-y';
           canvas.style.pointerEvents = enableRotate ? 'auto' : 'none';
           canvas.addEventListener('webglcontextlost', (e) => e.preventDefault(), false);
@@ -372,6 +422,7 @@ export default function HeroLogo3D({
             url={modelUrl}
             figureScreenOffset={figureScreenOffset}
             enableRotate={enableRotate}
+            variant={variant}
           />
         </Suspense>
       </Canvas>

@@ -106,6 +106,168 @@
   }
 }
 
+/* Hero con video a pantalla completa + marca compacta abajo-centro */
+.hero-video-hero {
+  background-color: #0c0c0c;
+}
+
+.hero-video-bg__scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(12, 12, 12, 0.12) 0%,
+    rgba(12, 12, 12, 0.35) 55%,
+    rgba(12, 12, 12, 0.78) 100%
+  );
+}
+
+.hero-video-hero__foreground {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(12, 12, 12, 0.08) 40%,
+    rgba(12, 12, 12, 0.42) 100%
+  );
+}
+
+.hero-video-brand-anchor {
+  width: fit-content;
+  max-width: min(calc(100% - 1rem), 22rem);
+  margin-left: 50%;
+  transform: translateX(calc(-50% + clamp(2.25rem, 10vw, 4.5rem)));
+}
+
+.hero-video-brand-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  max-width: min(100%, 22rem);
+}
+
+.hero-video-figure-slot {
+  position: relative;
+  z-index: 2;
+  width: clamp(150px, 38vw, 260px);
+  height: clamp(165px, 30vh, 300px);
+  margin-bottom: clamp(-5rem, -18vh, -3.25rem);
+  transform: translate(
+    clamp(-2.15rem, -7.5vw, -1.15rem),
+    clamp(7.75rem, 24vh, 12.75rem)
+  );
+  overflow: visible;
+  background: transparent;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55));
+}
+
+.hero-video-figure-root,
+.hero-video-figure-canvas,
+.hero-video-figure-viewport,
+.hero-video-canvas-wrap {
+  background: transparent !important;
+}
+
+.hero-video-figure-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero-video-figure-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.hero-video-canvas,
+.hero-video-canvas__gl {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.hero-video-lockup {
+  gap: clamp(0, 0.2vw, 0.15rem);
+  padding-top: 0;
+  width: 100%;
+  justify-content: center;
+  isolation: isolate;
+}
+
+.hero-video-lockup h1 {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-video-bolt {
+  position: relative;
+  z-index: 0;
+  width: clamp(68px, 16.5vw, 118px);
+  height: clamp(145px, 27vh, 240px);
+  margin-bottom: clamp(0.1rem, 1vh, 0.35rem);
+  margin-left: clamp(-2rem, -8vw, -0.85rem);
+  transform: translate(
+    clamp(-2.25rem, -9vw, -1.15rem),
+    clamp(2.5rem, 8vh, 4rem)
+  );
+}
+
+.hero-video-bolt__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hero-facade-yellow);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transform: scaleX(-1);
+  filter: drop-shadow(0 0 10px rgba(255, 232, 0, 0.55))
+    drop-shadow(0 0 22px rgba(255, 210, 0, 0.28));
+}
+
+.hero-video-hero__title {
+  transform: skewX(-7deg);
+}
+
+@media (min-width: 768px) {
+  .hero-video-brand-anchor {
+    transform: translateX(calc(-50% + clamp(1.25rem, 2.5vw, 2.5rem)));
+  }
+
+  .hero-video-figure-slot {
+    width: clamp(170px, 18vw, 280px);
+    height: clamp(185px, 32vh, 320px);
+    margin-bottom: clamp(-5.55rem, -19vh, -3.65rem);
+    transform: translate(
+      clamp(-2.35rem, -5.5vw, -1.25rem),
+      clamp(8.25rem, 26vh, 14rem)
+    );
+  }
+
+  .hero-video-bolt {
+    width: clamp(76px, 9.5vw, 125px);
+    height: clamp(158px, 29vh, 260px);
+    margin-left: clamp(-2.35rem, -5.5vw, -1rem);
+    transform: translate(
+      clamp(-2.65rem, -6.5vw, -1.35rem),
+      clamp(2.85rem, 9vh, 4.5rem)
+    );
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-video-figure-slot canvas,
+  .hero-video-canvas__gl {
+    touch-action: pan-y !important;
+  }
+}
+
 .hero-heading {
   display: inline-block;
   width: fit-content;
@@ -411,15 +573,7 @@
   }
 }
 
-/* Capas home: galáctico (0) → rayo (5) → secciones (10) */
-.page-galactic-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
+/* Capas home: rayo (5) → secciones (10) */
 .site-main > section {
   position: relative;
   z-index: 10;

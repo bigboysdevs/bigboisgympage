@@ -6,7 +6,6 @@ import Navbar from '@/components/Navbar';
 import FooterLegalSection from '@/components/FooterLegalSection';
 import InvertedBlendCursor from '@/components/InvertedBlendCursor';
 import FloatingScrollProgress from '@/components/FloatingScrollProgress';
-import PageGalacticBackdrop from '@/components/PageGalacticBackdrop';
 import PageLightningScroll from '@/components/PageLightningScroll';
 import EntrySplashScreen from '@/components/EntrySplashScreen';
 
@@ -27,7 +26,6 @@ export default function SiteLayout() {
       </header>
       <div className="site-page-shell">
         <main className="site-main relative z-[10] overflow-visible bg-transparent">
-          <PageGalacticBackdrop />
           <PageLightningScroll />
           <Outlet />
         </main>

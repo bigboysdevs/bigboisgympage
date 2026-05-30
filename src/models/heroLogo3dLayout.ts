@@ -11,3 +11,6 @@ export const HERO_FIGURE_SCREEN_OFFSET =
   HERO_FIGURE_SCREEN_OFFSET_BASE - HERO_FIGURE_SCREEN_RAISE;
 
 export const FIGURE_SCREEN_OFFSET_PUSH_MOBILE = 0.11;
+
+/** Encuadre compacto del GLB sobre el video del hero (sin pan lateral). */
+export const HERO_VIDEO_FIGURE_SCREEN_OFFSET = 0;

@@ -1,38 +1,52 @@
 import FadeIn from './FadeIn';
 import HeroFigureOnly from './HeroFigureOnly';
+import HeroVideoBackground from './HeroVideoBackground';
+import { HERO_LIGHTNING_IMAGE } from '@/models/branding';
 
 const TITLE_LINES = ['Big', 'Boys'] as const;
 
-/** Estilo fachada del gym — amarillo neón, borde negro, inclinado (.hero-facade-title) */
-const TITLE_LINE_CLASS =
-  'hero-facade-title text-[11vw] sm:text-[13vw] md:text-[14vw] lg:text-[15vw]';
+const TITLE_CLASS =
+  'hero-facade-title hero-video-hero__title text-[clamp(2rem,7vw,4rem)] sm:text-[clamp(2.25rem,6vw,4.35rem)]';
 
 export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative z-[20] flex min-h-[100svh] flex-col overflow-visible scroll-mt-8 bg-transparent pt-[4.75rem] max-md:overflow-hidden md:pt-[5.25rem]"
+      className="hero-video-hero relative z-[20] min-h-[100svh] w-full overflow-hidden scroll-mt-8"
     >
-      <div className="relative flex min-h-0 flex-1 flex-col overflow-visible max-md:min-h-[calc(100svh-4.75rem)]">
-        <div className="hero-figure-layer pointer-events-none absolute inset-0 z-[22] flex -mx-5 justify-center overflow-visible max-md:h-full max-md:w-full max-md:items-end max-md:justify-center sm:-mx-8 md:z-[25] md:pointer-events-auto md:mx-0 md:block md:touch-none md:justify-end">
-          <HeroFigureOnly withBackdrop={false} />
-        </div>
+      <HeroVideoBackground />
 
-        <div className="hero-title-layer pointer-events-none relative z-[40] flex flex-col justify-start px-5 pb-4 sm:px-8 sm:pb-5 md:px-10 md:pb-6 md:pr-2 lg:pr-3">
+      <div className="hero-video-hero__foreground pointer-events-none absolute inset-x-0 bottom-0 z-[25] px-4 pb-[clamp(1.25rem,4.5vh,2.75rem)] sm:px-6 md:pb-[clamp(1.5rem,5vh,3rem)]">
+        <div className="hero-video-brand-anchor pointer-events-none">
           <FadeIn
             effect="inView"
-            delay={0.15}
-            y={32}
-            className="hero-title-layer pointer-events-none !bg-transparent shadow-none"
-            style={{ background: 'transparent', backgroundColor: 'transparent' }}
+            delay={0.1}
+            y={20}
+            className="hero-video-brand-stack pointer-events-none relative"
           >
-            <h1 className="pointer-events-none flex w-fit flex-col bg-transparent text-left">
+          <div className="hero-video-figure-slot pointer-events-auto">
+            <HeroFigureOnly variant="video" />
+          </div>
+
+          <div className="hero-video-lockup relative z-[1] flex items-end justify-center">
+            <h1 className="flex flex-col items-start text-left leading-none">
               {TITLE_LINES.map((line) => (
-                <span key={line} className={TITLE_LINE_CLASS}>
+                <span key={line} className={TITLE_CLASS}>
                   {line}
                 </span>
               ))}
             </h1>
+
+            <div className="hero-video-bolt pointer-events-none shrink-0" aria-hidden>
+              <div
+                className="hero-video-bolt__img h-full w-full"
+                style={{
+                  WebkitMaskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+                  maskImage: `url(${HERO_LIGHTNING_IMAGE})`,
+                }}
+              />
+            </div>
+          </div>
           </FadeIn>
         </div>
       </div>
