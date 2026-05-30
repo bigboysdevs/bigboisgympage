@@ -780,18 +780,18 @@
 @media (max-width: 767px) {
   .gym-spaces-section__header {
     padding-top: clamp(3rem, 8vw, 4.5rem);
-    padding-bottom: 0.25rem;
+    padding-bottom: 0;
   }
 
   .gym-spaces-fan {
-    margin-top: -0.75rem;
+    margin-top: -3.25rem;
     padding-bottom: clamp(2.5rem, 7vw, 4rem);
   }
 
   .gym-spaces-fan__deck {
     min-height: clamp(280px, 46vh, 420px);
     width: min(100%, 720px);
-    transform: scale(0.9) translateY(-2.75rem);
+    transform: scale(0.9) translateY(-5.75rem);
     transform-origin: center bottom;
   }
 
