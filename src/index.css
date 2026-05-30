@@ -315,6 +315,39 @@
   color: transparent;
 }
 
+/* Filosofía — año con foto dentro del texto (estilo Ethos Media) */
+.filosofia-stat-year {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@supports not (-webkit-background-clip: text) {
+  .filosofia-stat-year {
+    background-image: none !important;
+    -webkit-text-fill-color: #bbccd7;
+    color: #bbccd7;
+  }
+}
+
+.filosofia-stat-label {
+  mix-blend-mode: difference;
+}
+
+@media (max-width: 767px) {
+  .filosofia-stat-label {
+    mix-blend-mode: normal;
+  }
+}
+
 /* Sin caja negra detrás del título: solo el gradiente de las letras */
 .hero-title-layer,
 .hero-title-layer h1 {

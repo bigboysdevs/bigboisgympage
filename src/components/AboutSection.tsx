@@ -1,30 +1,38 @@
 import FadeIn from './FadeIn';
-import AnimatedText from './AnimatedText';
-
-const FILOSOFIA =
-  'En Big Boys Gym creemos en el trabajo duro, la técnica impecable y el respeto mutuo. No vendemos atajos: construimos atletas que aguantan la presión dentro y fuera del box. Cada sesión es una oportunidad de superarte — nosotros ponemos el plan, tú traes la actitud.';
+import yearStatImage from '../assets/WhatsApp Image 2026-05-29 at 9.07.12 PM.jpeg';
 
 export default function AboutSection() {
   return (
     <section
       id="filosofia"
       className="relative z-[10] flex min-h-screen flex-col justify-center overflow-hidden bg-transparent px-5 py-20 scroll-mt-8 sm:px-8 md:px-10"
+      aria-labelledby="filosofia-stat-label"
     >
-      <div className="relative ml-auto mr-[clamp(1.5rem,8vw,9rem)] flex w-full max-w-4xl flex-col items-center gap-10 sm:gap-14 md:gap-16">
-        <FadeIn delay={0} y={40}>
+      <div className="relative ml-auto mr-[clamp(1.5rem,8vw,9rem)] flex w-full max-w-5xl flex-col items-center gap-6 sm:gap-8 md:gap-10">
+        <FadeIn delay={0} y={28}>
           <h2
-            className="hero-heading w-full text-center font-black uppercase leading-none tracking-tight"
-            style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+            id="filosofia-stat-label"
+            className="filosofia-stat-label text-center font-black uppercase leading-none tracking-[0.12em] text-[#D7E2EA]"
+            style={{ fontSize: 'clamp(1.35rem, 4.5vw, 3.25rem)' }}
           >
-            Nuestra filosofía
+            Desde
           </h2>
         </FadeIn>
 
-        <AnimatedText
-          text={FILOSOFIA}
-          className="max-w-[560px] text-center font-medium leading-relaxed text-[#D7E2EA] [overflow-wrap:normal] [word-break:normal]"
-          style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
-        />
+        <FadeIn delay={0.1} y={48}>
+          <p
+            className="filosofia-stat-year text-center font-black uppercase leading-[0.85] tracking-tighter"
+            style={{
+              fontSize: 'clamp(5.5rem, 26vw, 20rem)',
+              backgroundImage: `url(${yearStatImage})`,
+            }}
+            aria-hidden
+          >
+            1992
+          </p>
+        </FadeIn>
+
+        <p className="sr-only">Big Boys Gym — desde 1992</p>
       </div>
     </section>
   );
