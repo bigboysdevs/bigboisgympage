@@ -701,8 +701,8 @@
 
 .gym-spaces-fan__card {
   flex-shrink: 0;
-  width: clamp(142px, 13.8vw, 228px);
-  margin-left: clamp(-102px, -13.2vw, -58px);
+  width: clamp(152px, 14.5vw, 248px);
+  margin-left: clamp(-112px, -14.5vw, -66px);
   transform-origin: 50% 100%;
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
@@ -780,24 +780,24 @@
 @media (max-width: 767px) {
   .gym-spaces-section__header {
     padding-top: clamp(3rem, 8vw, 4.5rem);
-    padding-bottom: 0;
+    padding-bottom: 0.35rem;
   }
 
   .gym-spaces-fan {
-    margin-top: -3.25rem;
+    margin-top: -2rem;
     padding-bottom: clamp(2.5rem, 7vw, 4rem);
   }
 
   .gym-spaces-fan__deck {
-    min-height: clamp(280px, 46vh, 420px);
+    min-height: clamp(300px, 50vh, 440px);
     width: min(100%, 720px);
-    transform: scale(0.9) translateY(-5.75rem);
+    transform: scale(1) translateY(-4.5rem);
     transform-origin: center bottom;
   }
 
   .gym-spaces-fan__card {
-    width: clamp(96px, 24vw, 132px);
-    margin-left: clamp(-62px, -16vw, -42px);
+    width: clamp(112px, 29vw, 156px);
+    margin-left: clamp(-78px, -20vw, -54px);
   }
 }
 
