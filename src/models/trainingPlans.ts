@@ -9,6 +9,7 @@ export type TrainingPlan = {
   price: string;
   description: string;
   image: string;
+  video: string;
 };
 
 export const TRAINING_PLANS: TrainingPlan[] = [
@@ -23,6 +24,7 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     description:
       'Acceso al box y a las sesiones del plan mensual. Entrena con la estructura del gym y el acompañamiento del equipo Big Boys.',
     image: '/gallery/gym-hack-squat.jpeg',
+    video: '/videos/hero.mp4',
   },
   {
     number: '02',
@@ -35,6 +37,7 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     description:
       'Entrenamientos personalizados con plan de alimentación y manejo de cargas para deportistas de alto rendimiento de cualquier deporte.',
     image: '/gallery/gym-pullover-espalda.jpeg',
+    video: '/videos/hero.mp4',
   },
   {
     number: '03',
@@ -47,6 +50,7 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     description:
       'Plan personalizado de hipertrofia y fitness con alimentación a tu medida. Volumen, técnica e intensidad pensados para tus objetivos.',
     image: '/gallery/gym-painting-bodybuilder.jpeg',
+    video: '/videos/hero.mp4',
   },
   {
     number: '04',
@@ -59,5 +63,6 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     description:
       'Programa personalizado con el kit Big Boys: seguimiento cercano, plan de entrenamiento y todo lo que necesitas para avanzar con el sello del gym.',
     image: '/gallery/gym-logo-machine.jpeg',
+    video: '/videos/hero.mp4',
   },
 ];

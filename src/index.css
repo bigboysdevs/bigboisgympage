@@ -654,6 +654,148 @@
   position: sticky;
 }
 
+/* Espacios GYM — abanico de tarjetas (estilo social / F1) */
+.gym-spaces-section {
+  background: #0c0c0c;
+  border-radius: 40px 40px 0 0;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .gym-spaces-section {
+    border-radius: 50px 50px 0 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .gym-spaces-section {
+    border-radius: 60px 60px 0 0;
+  }
+}
+
+.gym-spaces-section__header {
+  padding: clamp(4rem, 9vw, 6.5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
+  text-align: center;
+}
+
+.gym-spaces-fan {
+  display: flex;
+  justify-content: center;
+  padding: 0 clamp(0.5rem, 2vw, 1.5rem) clamp(4.5rem, 11vw, 8rem);
+  overflow: hidden;
+}
+
+.gym-spaces-fan__deck {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: min(100%, 980px);
+  min-height: clamp(400px, 58vh, 700px);
+  perspective: 1600px;
+}
+
+.gym-spaces-fan__card {
+  flex-shrink: 0;
+  width: clamp(142px, 13.8vw, 228px);
+  margin-left: clamp(-102px, -13.2vw, -58px);
+  transform-origin: 50% 100%;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.gym-spaces-fan__card:first-child {
+  margin-left: 0;
+}
+
+.gym-spaces-fan__card-link {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4.55;
+  overflow: hidden;
+  border-radius: clamp(1.15rem, 2.4vw, 1.85rem);
+  background: #111;
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+}
+
+.gym-spaces-fan__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gym-spaces-fan__card--active .gym-spaces-fan__img {
+  transform: scale(1.04);
+}
+
+.gym-spaces-fan__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem 0.9rem 0.9rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, transparent 100%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  pointer-events: none;
+}
+
+.gym-spaces-fan__card--active .gym-spaces-fan__caption,
+.gym-spaces-fan__card:hover .gym-spaces-fan__caption,
+.gym-spaces-fan__card:focus-within .gym-spaces-fan__caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gym-spaces-fan__caption-sub {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.gym-spaces-fan__caption-title {
+  margin-top: 0.18rem;
+  font-size: clamp(0.68rem, 1.2vw, 0.88rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  .gym-spaces-section__header {
+    padding-top: clamp(3rem, 8vw, 4.5rem);
+    padding-bottom: 0.25rem;
+  }
+
+  .gym-spaces-fan {
+    margin-top: -0.75rem;
+    padding-bottom: clamp(2.5rem, 7vw, 4rem);
+  }
+
+  .gym-spaces-fan__deck {
+    min-height: clamp(280px, 46vh, 420px);
+    width: min(100%, 720px);
+    transform: scale(0.9) translateY(-2.75rem);
+    transform-origin: center bottom;
+  }
+
+  .gym-spaces-fan__card {
+    width: clamp(96px, 24vw, 132px);
+    margin-left: clamp(-62px, -16vw, -42px);
+  }
+}
+
 .page-lightning-scroll {
   position: fixed;
   left: clamp(1rem, 4vw, 3.25rem);
@@ -769,6 +911,47 @@
   margin-inline: auto;
 }
 
+.entrenamientos-list__item {
+  width: 100%;
+}
+
+.entrenamientos-mobile-video {
+  width: 100%;
+  overflow: hidden;
+}
+
+.entrenamientos-mobile-video__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #111;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.entrenamientos-mobile-video__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.entrenamientos-mobile-video__caption {
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+}
+
 .entrenamientos-row {
   display: grid;
   grid-template-columns: 2.75rem minmax(0, 1.35fr) minmax(0, 0.75fr) auto minmax(4.5rem, auto);
@@ -779,10 +962,10 @@
   cursor: default;
   transition: background-color 0.25s ease, opacity 0.25s ease;
   -webkit-tap-highlight-color: transparent;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
-.entrenamientos-row:first-child {
+.entrenamientos-list__item:first-child .entrenamientos-row {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -863,13 +1046,13 @@
   white-space: nowrap;
 }
 
-.entrenamientos-hover-image {
+.entrenamientos-hover-preview {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #111;
   isolation: isolate;
 }
 
-.entrenamientos-hover-image__overlay {
+.entrenamientos-hover-preview__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -881,7 +1064,7 @@
   pointer-events: none;
 }
 
-.entrenamientos-hover-image__caption {
+.entrenamientos-hover-preview__caption {
   position: absolute;
   left: 0.85rem;
   right: 0.85rem;
@@ -899,8 +1082,10 @@
     opacity: 1;
   }
 
-  .entrenamientos-row--active {
+  .entrenamientos-row--active,
+  .entrenamientos-row--mobile {
     opacity: 1 !important;
+    cursor: pointer;
   }
 
   .entrenamientos-row {

@@ -4,55 +4,29 @@ import type { TrainingPlan } from '@/models/trainingPlans';
 type TrainingPlanRowProps = {
   plan: TrainingPlan;
   isActive: boolean;
+  isMobileLayout: boolean;
   onPointerHover: (plan: TrainingPlan, clientX: number, clientY: number) => void;
-  onPointerDown: (plan: TrainingPlan, clientX: number, clientY: number) => void;
-  onPointerDrag: (plan: TrainingPlan, clientX: number, clientY: number) => void;
-  onPointerRelease: () => void;
+  onMobileSelect: (plan: TrainingPlan) => void;
 };
 
 export default function TrainingPlanRow({
   plan,
   isActive,
+  isMobileLayout,
   onPointerHover,
-  onPointerDown,
-  onPointerDrag,
-  onPointerRelease,
+  onMobileSelect,
 }: TrainingPlanRowProps) {
   return (
     <article
-      className={`entrenamientos-row group ${isActive ? 'entrenamientos-row--active' : ''}`}
-      onPointerEnter={(e) => {
-        if (e.pointerType === 'mouse') onPointerHover(plan, e.clientX, e.clientY);
+      className={`entrenamientos-row group ${isActive ? 'entrenamientos-row--active' : ''} ${isMobileLayout ? 'entrenamientos-row--mobile' : ''}`}
+      onMouseEnter={(e) => onPointerHover(plan, e.clientX, e.clientY)}
+      onMouseMove={(e) => onPointerHover(plan, e.clientX, e.clientY)}
+      onClick={() => {
+        if (isMobileLayout) onMobileSelect(plan);
       }}
-      onPointerMove={(e) => {
-        if (e.pointerType === 'mouse') {
-          onPointerHover(plan, e.clientX, e.clientY);
-          return;
-        }
-
-        if (e.pointerType === 'touch') {
-          onPointerDrag(plan, e.clientX, e.clientY);
-        }
-      }}
-      onPointerDown={(e) => {
-        if (e.pointerType !== 'touch') return;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        onPointerDown(plan, e.clientX, e.clientY);
-      }}
-      onPointerUp={(e) => {
-        if (e.pointerType !== 'touch') return;
-        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-          e.currentTarget.releasePointerCapture(e.pointerId);
-        }
-        onPointerRelease();
-      }}
-      onPointerCancel={(e) => {
-        if (e.pointerType !== 'touch') return;
-        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-          e.currentTarget.releasePointerCapture(e.pointerId);
-        }
-        onPointerRelease();
-      }}
+      role={isMobileLayout ? 'button' : undefined}
+      tabIndex={isMobileLayout ? 0 : undefined}
+      aria-pressed={isMobileLayout ? isActive : undefined}
       aria-label={`${plan.name} — ${plan.price}`}
     >
       <span className="entrenamientos-row__tag">{plan.tag}</span>
