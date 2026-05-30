@@ -1,89 +1,72 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useId, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
 
 const SIZE = 46;
-const STROKE = 3;
-const RADIUS = (SIZE - STROKE) / 2 - 2;
+const STROKE = 2.5;
 const CENTER = SIZE / 2;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+/** Dientes de la «culebra» — más segmentos = más zigzags. */
+const SERPENT_TEETH = 18;
+const SERPENT_OUTER_R = (SIZE - STROKE) / 2 - 1;
+const SERPENT_BITE = 4.25;
+const TRACK_STROKE = '#3F3F46';
 
-function getButtonRect() {
-  const isSm = window.innerWidth >= 640;
-  const size = SIZE;
-  const left = isSm ? 24 : 16;
-  const bottom = isSm ? 32 : 20;
-  const top = window.innerHeight - bottom - size;
+type Point = [number, number];
 
-  return {
-    top,
-    left,
-    right: left + size,
-    bottom: window.innerHeight - bottom,
-  };
+function buildSerpentPoints(
+  cx: number,
+  cy: number,
+  outerRadius: number,
+  teeth: number,
+  biteDepth: number,
+): Point[] {
+  const steps = teeth * 2;
+  const points: Point[] = [];
+
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * Math.PI * 2 - Math.PI / 2;
+    const radius = i % 2 === 0 ? outerRadius : outerRadius - biteDepth;
+    points.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+  }
+
+  return points;
 }
 
-function rectsOverlap(
-  a: { top: number; left: number; right: number; bottom: number },
-  b: DOMRect,
-) {
-  return !(
-    a.right < b.left ||
-    a.left > b.right ||
-    a.bottom < b.top ||
-    a.top > b.bottom
-  );
+function pointsToPath(points: Point[]): string {
+  return points
+    .map(([x, y], index) =>
+      index === 0 ? `M ${x.toFixed(2)} ${y.toFixed(2)}` : `L ${x.toFixed(2)} ${y.toFixed(2)}`,
+    )
+    .join(' ');
 }
+
+function measurePathLength(points: Point[]): number {
+  let length = 0;
+
+  for (let i = 1; i < points.length; i++) {
+    const dx = points[i][0] - points[i - 1][0];
+    const dy = points[i][1] - points[i - 1][1];
+    length += Math.hypot(dx, dy);
+  }
+
+  return length;
+}
+
+const SERPENT_POINTS = buildSerpentPoints(CENTER, CENTER, SERPENT_OUTER_R, SERPENT_TEETH, SERPENT_BITE);
+const SERPENT_PATH = pointsToPath(SERPENT_POINTS);
+const SERPENT_LENGTH = measurePathLength(SERPENT_POINTS);
 
 export default function FloatingScrollProgress() {
-  const { pathname } = useLocation();
   const { scrollYProgress } = useScroll();
   const [percent, setPercent] = useState(0);
-  const [onLightBg, setOnLightBg] = useState(false);
+  const gradientId = useId().replace(/:/g, '');
+  const glowId = `snake-glow-${gradientId}`;
+  const progressStroke = `url(#snake-progress-${gradientId})`;
 
-  const strokeDashoffset = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [CIRCUMFERENCE, 0],
-  );
+  const strokeDashoffset = useTransform(scrollYProgress, [0, 1], [SERPENT_LENGTH, 0]);
 
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     setPercent(Math.min(100, Math.max(0, Math.round(latest * 100))));
   });
-
-  const updateLightBg = useCallback(() => {
-    if (pathname !== '/') {
-      setOnLightBg(false);
-      return;
-    }
-
-    const section = document.getElementById('entrenamientos');
-    if (!section) {
-      setOnLightBg(false);
-      return;
-    }
-
-    setOnLightBg(rectsOverlap(getButtonRect(), section.getBoundingClientRect()));
-  }, [pathname]);
-
-  useEffect(() => {
-    updateLightBg();
-
-    let raf = 0;
-    const onScrollOrResize = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(updateLightBg);
-    };
-
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
-      cancelAnimationFrame(raf);
-    };
-  }, [updateLightBg]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -97,59 +80,57 @@ export default function FloatingScrollProgress() {
       <button
         type="button"
         onClick={scrollToTop}
-        className={[
-          'pointer-events-auto relative flex h-[46px] w-[46px] items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 focus-visible:outline-none',
-          onLightBg
-            ? 'bg-white/95 shadow-[0_8px_28px_rgba(12,12,12,0.18)] ring-2 ring-[#0C0C0C]/10 hover:ring-red-500/40 focus-visible:ring-2 focus-visible:ring-red-500/55'
-            : 'bg-[#0a0a0a]/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-white/10 hover:ring-[#5EEAD4]/35 focus-visible:ring-2 focus-visible:ring-[#5EEAD4]/60',
-        ].join(' ')}
+        className="pointer-events-auto relative flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#0a0a0a]/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:ring-[#5EEAD4]/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5EEAD4]/60"
         aria-label={`Progreso de la página: ${percent} por ciento. Clic para volver arriba.`}
       >
         <svg
           width={SIZE}
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
-          className="absolute inset-0 m-auto -rotate-90 transition-opacity duration-300"
+          className="absolute inset-0 m-auto"
           aria-hidden
         >
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
+          <defs>
+            <linearGradient id={`snake-progress-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2DD4BF" />
+              <stop offset="38%" stopColor="#FFE800" />
+              <stop offset="72%" stopColor="#FB923C" />
+              <stop offset="100%" stopColor="#EF4444" />
+            </linearGradient>
+            <filter id={glowId} x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="1.1" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <path
+            d={SERPENT_PATH}
             fill="none"
-            stroke={onLightBg ? '#E5E7EB' : '#374151'}
+            stroke={TRACK_STROKE}
             strokeWidth={STROKE}
-            className="transition-[stroke] duration-300"
-          />
-          <motion.circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
-            fill="none"
-            stroke={onLightBg ? '#dc2626' : '#5EEAD4'}
-            strokeWidth={STROKE}
+            strokeLinejoin="round"
             strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
+          />
+
+          <motion.path
+            d={SERPENT_PATH}
+            fill="none"
+            stroke={progressStroke}
+            strokeWidth={STROKE + 0.35}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeDasharray={SERPENT_LENGTH}
             style={{ strokeDashoffset }}
-            className="transition-[stroke] duration-300"
+            filter={`url(#${glowId})`}
           />
         </svg>
 
-        <span
-          className={[
-            'relative flex flex-col items-center leading-none transition-colors duration-300',
-            onLightBg ? 'text-[#0C0C0C]' : 'text-white',
-          ].join(' ')}
-        >
+        <span className="relative flex flex-col items-center leading-none text-white">
           <span className="text-sm font-bold tabular-nums tracking-tight">{percent}</span>
-          <span
-            className={[
-              'mt-px text-[8px] font-medium leading-none transition-colors duration-300',
-              onLightBg ? 'text-[#0C0C0C]/65' : 'text-white/85',
-            ].join(' ')}
-          >
-            %
-          </span>
+          <span className="mt-px text-[8px] font-medium leading-none text-white/85">%</span>
         </span>
       </button>
     </div>
