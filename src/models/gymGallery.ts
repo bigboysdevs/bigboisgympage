@@ -8,4 +8,9 @@ export const GYM_GALLERY = [
   '/gallery/image3.jpg',
   '/gallery/Image%202.jpg',
   '/gallery/image.jpg',
+  '/gallery/gym-hack-squat.jpeg',
+  '/gallery/gym-logo-machine.jpeg',
+  '/gallery/gym-pullover-espalda.jpeg',
+  '/gallery/gym-doormat-bulldog.jpeg',
+  '/gallery/gym-painting-bodybuilder.jpeg',
 ] as const;
