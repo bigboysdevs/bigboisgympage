@@ -30,16 +30,13 @@ export const whatsAppButtonClass =
 export const whatsAppButtonSizeClass =
   'px-6 py-3 text-xs sm:px-8 sm:py-3.5 sm:text-sm';
 
-/** Botón Instagram — gradiente oficial. */
-export const instagramButtonClass =
-  'inline-flex items-center justify-center gap-3 rounded-full font-semibold uppercase tracking-widest whitespace-nowrap ' +
-  'border-2 border-transparent bg-gradient-to-r from-[#f09433] via-[#e6683c] to-[#bc1888] text-white ' +
-  'shadow-[0_4px_24px_rgba(225,48,108,0.3)] transition-all duration-200 ' +
-  'hover:brightness-110 hover:shadow-[0_0_32px_rgba(225,48,108,0.38)] ' +
-  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e6683c]';
-
-export const instagramButtonSizeClass =
-  'px-8 py-4 text-sm sm:px-10';
+/** Botón Instagram flotante — circular, gradiente radial oficial de la marca. */
+export const floatingInstagramButtonClass =
+  'instagram-brand-bg inline-flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full ' +
+  'border-2 border-white/10 text-white ' +
+  'shadow-[0_8px_28px_rgba(214,36,159,0.45),0_4px_12px_rgba(40,90,235,0.25)] transition-all duration-200 ' +
+  'hover:brightness-110 hover:scale-105 active:scale-95 ' +
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d6249f]';
 
 /** Botón Tienda en navbar — misma familia, más compacto y translúcido. */
 export const ctaNavClass =

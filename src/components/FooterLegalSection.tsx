@@ -1,6 +1,4 @@
-import { Instagram } from 'lucide-react';
 import { GYM_CONTACT, GYM_LOGO_TRANSPARENT_PNG } from '../models/branding';
-import { instagramButtonClass, instagramButtonSizeClass } from '@/lib/ctaStyles';
 
 const LEGAL_ITEMS = [
   {
@@ -95,7 +93,7 @@ export default function FooterLegalSection() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid gap-10 sm:grid-cols-[auto_1fr] lg:grid-cols-[auto_minmax(0,1fr)_minmax(220px,280px)] lg:items-start lg:gap-x-10">
+        <div className="grid gap-10 sm:grid-cols-[auto_1fr] lg:items-start lg:gap-x-10">
           <div className="flex shrink-0 justify-center sm:row-span-2 sm:justify-start lg:row-span-1 lg:pt-1">
             <img
               src={GYM_LOGO_TRANSPARENT_PNG}
@@ -138,42 +136,6 @@ export default function FooterLegalSection() {
               ))}
             </ul>
           </nav>
-
-          <aside
-            className="flex flex-col items-center border-t border-white/10 pt-10 sm:col-span-2 sm:col-start-2 lg:col-span-1 lg:col-start-3 lg:items-end lg:justify-center lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
-            aria-labelledby="footer-community-heading"
-          >
-            <div className="flex w-full max-w-xs flex-col items-center lg:max-w-none lg:items-end">
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-red-500/90">
-                Comunidad
-              </p>
-              <h2
-                id="footer-community-heading"
-                className="hero-heading text-center font-black uppercase tracking-tight lg:text-right"
-                style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)' }}
-              >
-                Síguenos
-              </h2>
-
-              <a
-                href={GYM_CONTACT.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={[
-                  instagramButtonClass,
-                  instagramButtonSizeClass,
-                  'group mt-8 w-full sm:w-auto lg:justify-end',
-                ].join(' ')}
-              >
-                <Instagram
-                  className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110"
-                  aria-hidden
-                />
-                Instagram
-                <span className="sr-only"> — @bigboys.gym en Instagram</span>
-              </a>
-            </div>
-          </aside>
         </div>
 
         <p className="mt-12 border-t border-white/10 pt-8 text-center text-xs font-light leading-relaxed text-white/40">
