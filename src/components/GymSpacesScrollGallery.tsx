@@ -5,6 +5,40 @@ import { GYM_SPACE_SCROLL_ITEMS, type GymSpaceScrollItem } from '@/models/gymSpa
 
 const ITEMS = GYM_SPACE_SCROLL_ITEMS;
 const SLIDE_COUNT = ITEMS.length;
+/** vh de scroll por cada transición entre slides */
+const SCROLL_PER_SLIDE_VH = 100;
+
+function getSnapPoints(total: number) {
+  if (total <= 1) return [0];
+  return Array.from({ length: total }, (_, i) => i / (total - 1));
+}
+
+function getSlideOpacity(index: number, progress: number, total: number) {
+  if (total <= 1) return index === 0 ? 1 : 0;
+
+  const step = 1 / (total - 1);
+  const distance = Math.abs(progress - index * step) / step;
+  if (distance >= 1) return 0;
+
+  const solid = 0.55;
+  if (distance <= solid) return 1;
+  return 1 - (distance - solid) / (1 - solid);
+}
+
+function getActiveIndex(progress: number, total: number) {
+  if (total <= 1) return 0;
+  const points = getSnapPoints(total);
+  let closest = 0;
+  let minDist = Infinity;
+  for (let i = 0; i < points.length; i++) {
+    const dist = Math.abs(progress - points[i]!);
+    if (dist < minDist) {
+      minDist = dist;
+      closest = i;
+    }
+  }
+  return closest;
+}
 
 function SideNav({ activeIndex, total }: { activeIndex: number; total: number }) {
   const progress = total > 1 ? activeIndex / (total - 1) : 0;
@@ -68,6 +102,9 @@ export default function GymSpacesScrollGallery() {
   const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const scrollHeightVh =
+    SLIDE_COUNT <= 1 ? 100 : 100 + (SLIDE_COUNT - 1) * SCROLL_PER_SLIDE_VH;
+
   useLayoutEffect(() => {
     if (reduceMotion) return;
 
@@ -88,6 +125,7 @@ export default function GymSpacesScrollGallery() {
       gsap.registerPlugin(ScrollTrigger);
 
       const total = SLIDE_COUNT;
+      const snapPoints = getSnapPoints(total);
 
       ctx = gsap.context(() => {
         ScrollTrigger.create({
@@ -97,59 +135,40 @@ export default function GymSpacesScrollGallery() {
           pin: pin,
           pinSpacing: false,
           anticipatePin: 1,
-          scrub: 0.85,
-          ...(total > 1
-            ? {
-                snap: {
-                  snapTo: 1 / (total - 1),
-                  duration: { min: 0.25, max: 0.55 },
-                  delay: 0.02,
+          scrub: 0.35,
+          snap:
+            total > 1
+              ? {
+                  snapTo: (value) => {
+                    let nearest = snapPoints[0]!;
+                    let minDist = Math.abs(value - nearest);
+                    for (const point of snapPoints) {
+                      const dist = Math.abs(value - point);
+                      if (dist < minDist) {
+                        minDist = dist;
+                        nearest = point;
+                      }
+                    }
+                    return nearest;
+                  },
+                  duration: { min: 0.45, max: 0.75 },
+                  delay: 0.05,
                   ease: 'power2.inOut',
-                },
-              }
-            : {}),
+                }
+              : undefined,
           onUpdate: (self) => {
-            const idx =
-              total > 1 ? Math.round(self.progress * (total - 1)) : 0;
+            const progress = self.progress;
+
+            slideRefs.current.forEach((slide, i) => {
+              if (!slide) return;
+              const opacity = getSlideOpacity(i, progress, total);
+              gsap.set(slide, { opacity, scale: 1, zIndex: opacity > 0.05 ? i + 1 : 0 });
+            });
+
+            const idx = getActiveIndex(progress, total);
             setActiveIndex((prev) => (prev === idx ? prev : idx));
           },
           invalidateOnRefresh: true,
-        });
-
-        slideRefs.current.forEach((slide, i) => {
-          if (!slide) return;
-
-          if (total <= 1) {
-            gsap.set(slide, { opacity: 1, scale: 1 });
-            return;
-          }
-
-          const step = 1 / (total - 1);
-          const enter = Math.max(0, i * step - step * 0.42);
-          const center = i * step;
-          const exit = Math.min(1, i * step + step * 0.42);
-
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 0.85,
-            },
-          });
-
-          if (i === 0) {
-            tl.set(slide, { opacity: 1, scale: 1 })
-              .to(slide, { opacity: 0, scale: 1.05, ease: 'none', duration: exit - center }, center);
-          } else if (i === total - 1) {
-            tl.set(slide, { opacity: 0, scale: 1.05 }, 0)
-              .to(slide, { opacity: 1, scale: 1, ease: 'none', duration: center - enter }, enter)
-              .to(slide, { opacity: 1, scale: 1, ease: 'none', duration: 1 - center }, center);
-          } else {
-            tl.set(slide, { opacity: 0, scale: 1.05 }, 0)
-              .to(slide, { opacity: 1, scale: 1, ease: 'none', duration: center - enter }, enter)
-              .to(slide, { opacity: 0, scale: 1.04, ease: 'none', duration: exit - center }, center);
-          }
         });
       }, section);
 
@@ -190,7 +209,7 @@ export default function GymSpacesScrollGallery() {
     <div
       ref={sectionRef}
       className="gym-spaces-scroll"
-      style={{ height: `${SLIDE_COUNT * 100}vh` }}
+      style={{ height: `${scrollHeightVh}vh` }}
       aria-roledescription="carousel"
       aria-label="Galería de espacios del gym"
     >
@@ -209,11 +228,9 @@ export default function GymSpacesScrollGallery() {
               src={item.image}
               fallbackSrc={item.fallbackImage}
               alt={item.title}
-              className={`gym-spaces-scroll__img${item.imageFit === 'contain' ? ' gym-spaces-scroll__img--contain' : ''}`}
+              className="gym-spaces-scroll__img"
               style={
-                item.imagePosition
-                  ? { objectPosition: item.imagePosition }
-                  : undefined
+                item.imagePosition ? { objectPosition: item.imagePosition } : undefined
               }
             />
             <div className="gym-spaces-scroll__scrim" aria-hidden />

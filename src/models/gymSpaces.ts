@@ -56,11 +56,11 @@ export const GYM_SPACES: GymSpace[] = [
     ctaLabel: 'Visítanos',
     images: {
       col1: ['/spaces/metcon-1.jpg', '/spaces/metcon-2.jpg'],
-      col2: '/gallery/gym-logo-machine.jpeg',
+      col2: '/gallery/gym-zona-espalda.png',
     },
     fallbackImages: {
       col1: [GALLERY.d, GALLERY.e],
-      col2: '/gallery/gym-logo-machine.jpeg',
+      col2: '/gallery/gym-zona-espalda.png',
     },
   },
   {
@@ -93,6 +93,7 @@ export type GymSpaceScrollItem = GymSpaceFanItem & {
   /** Ajuste por slide sin tocar la animación de scroll. */
   imageFit?: 'cover' | 'contain';
   imagePosition?: string;
+  scrimLight?: boolean;
 };
 
 const SPACE_DESCRIPTIONS: Record<string, string> = {
@@ -112,9 +113,7 @@ export const GYM_SPACE_SCROLL_ITEMS: GymSpaceScrollItem[] = GYM_SPACES.map((spac
   description: SPACE_DESCRIPTIONS[space.number] ?? space.category,
   image: space.images.col2,
   fallbackImage: space.fallbackImages.col2,
-  ...(space.number === '02'
-    ? { imageFit: 'contain' as const, imagePosition: 'center center' }
-    : {}),
+  ...(space.number === '02' ? { imagePosition: '50% 45%' } : {}),
 }));
 
 export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
