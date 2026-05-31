@@ -13,7 +13,17 @@ export const GYM_GALLERY = [
   '/gallery/gym-pullover-espalda.jpeg',
   '/gallery/gym-doormat-bulldog.jpeg',
   '/gallery/gym-painting-bodybuilder.jpeg',
+  '/gallery/gym-predicador-sentado.jpeg',
+  '/gallery/gym-hammer-brazo.jpeg',
+  '/gallery/gym-fachada-exterior.jpeg',
+  '/gallery/gym-extension-piernas-fila.jpeg',
+  '/gallery/gym-adductor-naranja.jpeg',
+  '/gallery/gym-extension-piernas-verde.jpeg',
+  '/gallery/gym-trofeos.jpeg',
+  '/gallery/gym-interior-racks.jpeg',
+  '/gallery/gym-prensa-piernas-lateral.jpeg',
+  '/gallery/gym-prensa-piernas-frontal.jpeg',
 ] as const;
 
 /** Imagen dentro del texto «1992» — sección Desde 1992. */
-export const FILOSOFIA_YEAR_STAT_IMAGE = '/gallery/gym-painting-bodybuilder.jpeg';
+export const FILOSOFIA_YEAR_STAT_IMAGE = '/gallery/gym-fachada-exterior.jpeg';

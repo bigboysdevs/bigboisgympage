@@ -336,7 +336,7 @@
   margin-inline: auto;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: center top;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

@@ -1,17 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GYM_GALLERY } from '@/models/gymGallery';
+import { shuffleArray } from '@/utils/shuffleArray';
 import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
 import { wrapMarqueeOffset } from '../utils/marqueeLoop';
 
-function rotateGallery<T>(items: readonly T[], shift: number): T[] {
-  const n = items.length;
-  if (n === 0) return [];
-  const s = ((shift % n) + n) % n;
-  return [...items.slice(s), ...items.slice(0, s)];
+/** Mezcla la galería y reparte mitades disjuntas entre fila superior e inferior. */
+function splitShuffledGallery(items: readonly string[]) {
+  const shuffled = shuffleArray(items);
+  const splitAt = Math.ceil(shuffled.length / 2);
+  return {
+    row1: shuffled.slice(0, splitAt),
+    row2: shuffled.slice(splitAt),
+  };
 }
 
-const ROW_1 = [...GYM_GALLERY];
-const ROW_2 = rotateGallery(GYM_GALLERY, Math.ceil(GYM_GALLERY.length / 2));
+function useShuffledMarqueeRows() {
+  return useMemo(() => splitShuffledGallery(GYM_GALLERY), []);
+}
 
 const SCROLL_BASE_OFFSET = -200;
 const SCROLL_FACTOR = 0.3;
@@ -130,6 +135,7 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
 export default function MarqueeSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [scrollBase, setScrollBase] = useState(SCROLL_BASE_OFFSET);
+  const { row1, row2 } = useShuffledMarqueeRows();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -161,8 +167,8 @@ export default function MarqueeSection() {
         horizontal en un carrete infinito.
       </p>
       <div className="relative flex flex-col gap-1 sm:gap-1.5 md:gap-2">
-        <MarqueeRow items={ROW_1} scrollDirection={1} scrollBase={scrollBase} />
-        <MarqueeRow items={ROW_2} scrollDirection={-1} scrollBase={scrollBase} />
+        <MarqueeRow items={row1} scrollDirection={1} scrollBase={scrollBase} />
+        <MarqueeRow items={row2} scrollDirection={-1} scrollBase={scrollBase} />
       </div>
     </section>
   );
