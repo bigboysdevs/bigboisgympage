@@ -555,6 +555,59 @@
 }
 
 /* Galería: tarjetas proporcionales + arrastre horizontal */
+.marquee-gallery__track-wrap {
+  position: relative;
+}
+
+.marquee-gallery__track {
+  position: relative;
+}
+
+.marquee-gallery__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.25rem, 7vw, 2.75rem);
+  height: clamp(2.25rem, 7vw, 2.75rem);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(12, 12, 12, 0.72);
+  color: #ffe800;
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.marquee-gallery__arrow:hover {
+  background: rgba(12, 12, 12, 0.92);
+  border-color: rgba(255, 232, 0, 0.45);
+}
+
+.marquee-gallery__arrow:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.marquee-gallery__arrow--left {
+  left: clamp(0.35rem, 2vw, 0.85rem);
+}
+
+.marquee-gallery__arrow--right {
+  right: clamp(0.35rem, 2vw, 0.85rem);
+}
+
+.marquee-gallery__arrow-icon {
+  width: clamp(1.15rem, 3.5vw, 1.45rem);
+  height: clamp(1.15rem, 3.5vw, 1.45rem);
+  stroke-width: 2.25;
+}
+
 .marquee-gallery__card {
   width: min(72vw, 360px);
   height: clamp(200px, 48vw, 270px);

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { GYM_GALLERY } from '@/models/gymGallery';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
@@ -20,6 +21,30 @@ function useShuffledMarqueeRows() {
 
 const SCROLL_BASE_OFFSET = -200;
 const SCROLL_FACTOR = 0.3;
+const NUDGE_PX = 220;
+
+function MarqueeArrow({
+  direction,
+  onClick,
+}: {
+  direction: 'left' | 'right';
+  onClick: () => void;
+}) {
+  const Icon = direction === 'left' ? ChevronLeft : ChevronRight;
+  const label =
+    direction === 'left' ? 'Desplazar galería a la izquierda' : 'Desplazar galería a la derecha';
+
+  return (
+    <button
+      type="button"
+      className={`marquee-gallery__arrow marquee-gallery__arrow--${direction}`}
+      aria-label={label}
+      onClick={onClick}
+    >
+      <Icon className="marquee-gallery__arrow-icon" aria-hidden />
+    </button>
+  );
+}
 
 type MarqueeRowProps = {
   items: readonly string[];
@@ -102,31 +127,44 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
     },
   };
 
+  const nudge = useCallback(
+    (direction: 'left' | 'right') => {
+      const delta = direction === 'left' ? -NUDGE_PX : NUDGE_PX;
+      drag.nudgeBy(delta, loopWidthRef.current);
+      applyTransform();
+    },
+    [drag, applyTransform],
+  );
+
   return (
-    <div className="marquee-gallery__track overflow-hidden w-full">
-      <div
-        ref={trackRef}
-        role="region"
-        aria-label="Galería — arrastra en horizontal (carrete infinito)"
-        className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
-        style={{ willChange: 'transform', touchAction: 'pan-y' }}
-        {...dragHandlers}
-      >
-        {[...items, ...items, ...items].map((src, i) => (
-          <div
-            key={`${src}-${i}`}
-            className="marquee-gallery__card flex-shrink-0 overflow-hidden rounded-2xl sm:rounded-3xl"
-          >
-            <img
-              src={src}
-              alt="Big Boys Gym — galería"
-              className="pointer-events-none h-full w-full select-none object-cover"
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-            />
-          </div>
-        ))}
+    <div className="marquee-gallery__track-wrap">
+      <MarqueeArrow direction="left" onClick={() => nudge('left')} />
+      <MarqueeArrow direction="right" onClick={() => nudge('right')} />
+      <div className="marquee-gallery__track overflow-hidden w-full">
+        <div
+          ref={trackRef}
+          role="region"
+          aria-label="Galería — arrastra en horizontal (carrete infinito)"
+          className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
+          style={{ willChange: 'transform', touchAction: 'pan-y' }}
+          {...dragHandlers}
+        >
+          {[...items, ...items, ...items].map((src, i) => (
+            <div
+              key={`${src}-${i}`}
+              className="marquee-gallery__card flex-shrink-0 overflow-hidden rounded-2xl sm:rounded-3xl"
+            >
+              <img
+                src={src}
+                alt="Big Boys Gym — galería"
+                className="pointer-events-none h-full w-full select-none object-cover"
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -164,7 +202,7 @@ export default function MarqueeSection() {
     >
       <p className="sr-only">
         Al bajar o subir la página las filas se mueven con el scroll. Puedes arrastrar las fotos en
-        horizontal en un carrete infinito.
+        horizontal en un carrete infinito, o usar las flechas izquierda y derecha.
       </p>
       <div className="relative flex flex-col gap-1 sm:gap-1.5 md:gap-2">
         <MarqueeRow items={row1} scrollDirection={1} scrollBase={scrollBase} />

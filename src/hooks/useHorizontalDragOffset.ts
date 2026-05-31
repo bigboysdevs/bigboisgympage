@@ -71,8 +71,16 @@ export function useHorizontalDragOffset() {
 
   const getOffset = useCallback(() => offsetRef.current, []);
 
+  const nudgeBy = useCallback((delta: number, loopWidth?: number) => {
+    offsetRef.current += delta;
+    if (loopWidth && loopWidth > 0) {
+      offsetRef.current = normalizeDragOffset(offsetRef.current, loopWidth);
+    }
+  }, []);
+
   return {
     getOffset,
+    nudgeBy,
     onPointerDown,
     onPointerMove,
     onPointerUp: endDrag,
