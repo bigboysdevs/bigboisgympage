@@ -88,6 +88,26 @@ export type GymSpaceFanItem = {
   fallbackImage: string;
 };
 
+export type GymSpaceScrollItem = GymSpaceFanItem & {
+  description: string;
+};
+
+const SPACE_DESCRIPTIONS: Record<string, string> = {
+  '01': 'Racks, mancuernas y máquinas para hipertrofia y fuerza controlada. El espacio donde construyes masa y técnica.',
+  '02': 'Cajones, cuerdas y kettlebells para MetCon de alta intensidad. Cardio, potencia y resistencia en un solo piso.',
+  '03': 'Plataformas olímpicas y zona de levantamiento para competir y superar PRs. Donde se pone a prueba tu máximo.',
+};
+
+/** Secuencia scroll — una imagen principal por zona del box. */
+export const GYM_SPACE_SCROLL_ITEMS: GymSpaceScrollItem[] = GYM_SPACES.map((space) => ({
+  id: space.number,
+  title: space.name,
+  subtitle: space.category,
+  description: SPACE_DESCRIPTIONS[space.number] ?? space.category,
+  image: space.images.col2,
+  fallbackImage: space.fallbackImages.col2,
+}));
+
 export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
   {
     id: '01-detail-a',

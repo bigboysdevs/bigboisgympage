@@ -612,11 +612,11 @@
   z-index: 10;
 }
 
-/* Espacios GYM — abanico de tarjetas (estilo social / F1) */
+/* Espacios GYM — sección con galería scroll full-screen */
 .gym-spaces-section {
   background: transparent;
   border-radius: 40px 40px 0 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 @media (min-width: 640px) {
@@ -636,121 +636,190 @@
   text-align: center;
 }
 
-.gym-spaces-fan {
-  display: flex;
-  justify-content: center;
-  padding: 0 clamp(0.5rem, 2vw, 1.5rem) clamp(4.5rem, 11vw, 8rem);
-  overflow: hidden;
-}
-
-.gym-spaces-fan__deck {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  width: min(100%, 980px);
-  min-height: clamp(400px, 58vh, 700px);
-  perspective: 1600px;
-}
-
-.gym-spaces-fan__card {
-  flex-shrink: 0;
-  width: clamp(152px, 14.5vw, 248px);
-  margin-left: clamp(-112px, -14.5vw, -66px);
-  transform-origin: 50% 100%;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.gym-spaces-fan__card:first-child {
-  margin-left: 0;
-}
-
-.gym-spaces-fan__card-link {
+/* Espacios GYM — pin + scroll (estilo cre8iongroup.com) */
+.gym-spaces-scroll {
   position: relative;
-  display: block;
-  aspect-ratio: 3 / 4.55;
-  overflow: hidden;
-  border-radius: clamp(1.15rem, 2.4vw, 1.85rem);
-  background: #111;
-  box-shadow:
-    0 22px 54px rgba(0, 0, 0, 0.62),
-    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  width: 100%;
 }
 
-.gym-spaces-fan__img {
+.gym-spaces-scroll--static {
+  height: auto;
+}
+
+.gym-spaces-scroll__pin {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 22rem;
+  overflow: hidden;
+  background: #0c0c0c;
+}
+
+.gym-spaces-scroll__slide {
+  position: absolute;
+  inset: 0;
+  will-change: opacity, transform;
+}
+
+.gym-spaces-scroll__img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  object-position: center;
 }
 
-.gym-spaces-fan__card--active .gym-spaces-fan__img {
-  transform: scale(1.04);
-}
-
-.gym-spaces-fan__caption {
+.gym-spaces-scroll__scrim {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 2.5rem 0.9rem 0.9rem;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, transparent 100%);
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(12, 12, 12, 0.82) 0%,
+    rgba(12, 12, 12, 0.52) 38%,
+    rgba(12, 12, 12, 0.28) 68%,
+    rgba(12, 12, 12, 0.45) 100%
+  );
   pointer-events: none;
 }
 
-.gym-spaces-fan__card--active .gym-spaces-fan__caption,
-.gym-spaces-fan__card:hover .gym-spaces-fan__caption,
-.gym-spaces-fan__card:focus-within .gym-spaces-fan__caption {
-  opacity: 1;
-  transform: translateY(0);
+/* Barra lateral — números + línea con indicador deslizante */
+.gym-spaces-scroll__side {
+  position: absolute;
+  left: clamp(1.25rem, 5vw, 3.5rem);
+  top: 50%;
+  z-index: 25;
+  width: 4rem;
+  height: min(58vh, 28rem);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
-.gym-spaces-fan__caption-sub {
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+.gym-spaces-scroll__side-track {
+  position: absolute;
+  left: 3.15rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.gym-spaces-fan__caption-title {
-  margin-top: 0.18rem;
-  font-size: clamp(0.68rem, 1.2vw, 0.88rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.gym-spaces-scroll__side-indicator {
+  position: absolute;
+  left: 50%;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: 0 0 0 3px rgba(255, 232, 0, 0.5);
+  transform: translate(-50%, -50%);
+  transition: top 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gym-spaces-scroll__side-list {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gym-spaces-scroll__side-step {
+  position: absolute;
+  left: 0;
+  top: calc(var(--step-position, 0) * 100%);
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+  transition:
+    opacity 0.45s ease,
+    color 0.45s ease;
+}
+
+.gym-spaces-scroll__side-num {
+  display: block;
+  min-width: 2.25rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  transition:
+    font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.gym-spaces-scroll__side-step--active .gym-spaces-scroll__side-num {
+  font-size: clamp(2.75rem, 7vw, 4.25rem);
   color: #fff;
+  opacity: 1;
+}
+
+.gym-spaces-scroll__side-step--upcoming .gym-spaces-scroll__side-num {
+  font-size: clamp(1.35rem, 3.5vw, 2rem);
+  color: rgba(255, 255, 255, 0.42);
+  opacity: 0.85;
+}
+
+.gym-spaces-scroll__side-step--past .gym-spaces-scroll__side-num {
+  font-size: clamp(1.1rem, 2.8vw, 1.65rem);
+  color: rgba(255, 255, 255, 0.22);
+  opacity: 0.7;
+}
+
+/* Texto — título grande + párrafo (estilo Discover) */
+.gym-spaces-scroll__content-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.gym-spaces-scroll__content {
+  position: absolute;
+  top: 50%;
+  left: clamp(5rem, 16vw, 10rem);
+  max-width: min(36rem, 72vw);
+  transform: translateY(-50%);
+}
+
+.gym-spaces-scroll__content-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: capitalize;
+  color: #fff;
+}
+
+.gym-spaces-scroll__content-desc {
+  margin-top: clamp(1rem, 3vw, 1.75rem);
+  max-width: 32rem;
+  font-size: clamp(0.95rem, 2.1vw, 1.12rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
 }
 
 @media (max-width: 767px) {
   .gym-spaces-section__header {
     padding-top: clamp(3rem, 8vw, 4.5rem);
-    padding-bottom: 0.35rem;
+    padding-bottom: 0.75rem;
   }
 
-  .gym-spaces-fan {
-    margin-top: -2rem;
-    padding-bottom: clamp(2.5rem, 7vw, 4rem);
+  .gym-spaces-scroll__side {
+    height: min(50vh, 20rem);
+    width: 3.25rem;
   }
 
-  .gym-spaces-fan__deck {
-    min-height: clamp(300px, 50vh, 440px);
-    width: min(100%, 720px);
-    transform: scale(1) translateY(-4.5rem);
-    transform-origin: center bottom;
+  .gym-spaces-scroll__content {
+    top: auto;
+    bottom: clamp(2rem, 10vh, 3.5rem);
+    left: clamp(4rem, 14vw, 5.5rem);
+    transform: none;
   }
 
-  .gym-spaces-fan__card {
-    width: clamp(112px, 29vw, 156px);
-    margin-left: clamp(-78px, -20vw, -54px);
+  .gym-spaces-scroll__content-title {
+    font-size: clamp(2rem, 10vw, 2.75rem);
   }
 }
 

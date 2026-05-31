@@ -1,5 +1,5 @@
 import FadeIn from './FadeIn';
-import GymSpacesFan from './GymSpacesFan';
+import GymSpacesScrollGallery from './GymSpacesScrollGallery';
 
 export default function ProjectsSection() {
   return (
@@ -23,9 +23,7 @@ export default function ProjectsSection() {
         </FadeIn>
       </div>
 
-      <FadeIn delay={0.08} y={32}>
-        <GymSpacesFan />
-      </FadeIn>
+      <GymSpacesScrollGallery />
     </section>
   );
 }
