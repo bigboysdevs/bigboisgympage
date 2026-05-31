@@ -57,7 +57,6 @@ function SlideCaption({ item }: { item: GymSpaceScrollItem }) {
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
       <h3 className="gym-spaces-scroll__content-title">{item.title}</h3>
-      <p className="gym-spaces-scroll__content-desc">{item.description}</p>
     </motion.div>
   );
 }
@@ -210,7 +209,12 @@ export default function GymSpacesScrollGallery() {
               src={item.image}
               fallbackSrc={item.fallbackImage}
               alt={item.title}
-              className="gym-spaces-scroll__img"
+              className={`gym-spaces-scroll__img${item.imageFit === 'contain' ? ' gym-spaces-scroll__img--contain' : ''}`}
+              style={
+                item.imagePosition
+                  ? { objectPosition: item.imagePosition }
+                  : undefined
+              }
             />
             <div className="gym-spaces-scroll__scrim" aria-hidden />
           </div>

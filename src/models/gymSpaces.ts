@@ -35,8 +35,8 @@ export type GymSpace = {
 export const GYM_SPACES: GymSpace[] = [
   {
     number: '01',
-    category: 'Zona de fuerza',
-    name: 'Hypertrophy Engine',
+    category: 'Piernas',
+    name: 'Zona de pierna',
     href: '#contacto',
     ctaLabel: 'Visítanos',
     images: {
@@ -50,32 +50,32 @@ export const GYM_SPACES: GymSpace[] = [
   },
   {
     number: '02',
-    category: 'Zona MetCon',
-    name: 'MetCon Assault',
+    category: 'Espalda',
+    name: 'Zona de espalda',
     href: '#contacto',
     ctaLabel: 'Visítanos',
     images: {
       col1: ['/spaces/metcon-1.jpg', '/spaces/metcon-2.jpg'],
-      col2: '/spaces/metcon-main.jpg',
+      col2: '/gallery/gym-logo-machine.jpeg',
     },
     fallbackImages: {
       col1: [GALLERY.d, GALLERY.e],
-      col2: GALLERY.f,
+      col2: '/gallery/gym-logo-machine.jpeg',
     },
   },
   {
     number: '03',
-    category: 'Zona competición',
-    name: 'Total Strength',
+    category: 'Calentamiento y glúteo',
+    name: 'Zona de calentamiento / glúteo',
     href: '#contacto',
     ctaLabel: 'Visítanos',
     images: {
       col1: ['/spaces/strength-1.jpg', '/spaces/strength-2.jpg'],
-      col2: '/spaces/strength-main.jpg',
+      col2: '/gallery/70a73709-9078-4c5b-9ada-25f8df250fd0.jpg',
     },
     fallbackImages: {
       col1: [GALLERY.b, GALLERY.c],
-      col2: GALLERY.d,
+      col2: '/gallery/70a73709-9078-4c5b-9ada-25f8df250fd0.jpg',
     },
   },
 ];
@@ -90,12 +90,18 @@ export type GymSpaceFanItem = {
 
 export type GymSpaceScrollItem = GymSpaceFanItem & {
   description: string;
+  /** Ajuste por slide sin tocar la animación de scroll. */
+  imageFit?: 'cover' | 'contain';
+  imagePosition?: string;
 };
 
 const SPACE_DESCRIPTIONS: Record<string, string> = {
-  '01': 'Racks, mancuernas y máquinas para hipertrofia y fuerza controlada. El espacio donde construyes masa y técnica.',
-  '02': 'Cajones, cuerdas y kettlebells para MetCon de alta intensidad. Cardio, potencia y resistencia en un solo piso.',
-  '03': 'Plataformas olímpicas y zona de levantamiento para competir y superar PRs. Donde se pone a prueba tu máximo.',
+  '01':
+    'Prensa, extensión y máquinas pa\' armar pierna con intención. Acá se sube volumen, se aprieta la técnica y queda esa quemadera bacana que se siente al bajar las escaleras.',
+  '02':
+    'Pull over, remo y poleas pa\' engrosar la espalda como manda el reglamento. Agarre firme, control en cada rep y esa V que se nota cuando te echan el ojo.',
+  '03':
+    'Spinning, balón y zona de activación pa\' calentar motor y despertar glúteos antes de la pesada. Movilidad, cardio suave y el pump inicial que pone el cuerpo en modo bestia.',
 };
 
 /** Secuencia scroll — una imagen principal por zona del box. */
@@ -106,6 +112,9 @@ export const GYM_SPACE_SCROLL_ITEMS: GymSpaceScrollItem[] = GYM_SPACES.map((spac
   description: SPACE_DESCRIPTIONS[space.number] ?? space.category,
   image: space.images.col2,
   fallbackImage: space.fallbackImages.col2,
+  ...(space.number === '02'
+    ? { imageFit: 'contain' as const, imagePosition: 'center center' }
+    : {}),
 }));
 
 export const GYM_SPACE_FAN_ITEMS: GymSpaceFanItem[] = [
