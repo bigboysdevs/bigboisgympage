@@ -570,28 +570,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(2.25rem, 7vw, 2.75rem);
-  height: clamp(2.25rem, 7vw, 2.75rem);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(12, 12, 12, 0.72);
-  color: #ffe800;
-  backdrop-filter: blur(8px);
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 232, 0, 0.78);
   transform: translateY(-50%);
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease,
     transform 0.2s ease;
 }
 
 .marquee-gallery__arrow:hover {
-  background: rgba(12, 12, 12, 0.92);
-  border-color: rgba(255, 232, 0, 0.45);
+  color: #ffe800;
 }
 
 .marquee-gallery__arrow:active {
   transform: translateY(-50%) scale(0.94);
+  color: #fff176;
 }
 
 .marquee-gallery__arrow--left {
@@ -603,9 +600,9 @@
 }
 
 .marquee-gallery__arrow-icon {
-  width: clamp(1.15rem, 3.5vw, 1.45rem);
-  height: clamp(1.15rem, 3.5vw, 1.45rem);
-  stroke-width: 2.25;
+  width: clamp(1.65rem, 5vw, 2.25rem);
+  height: clamp(1.65rem, 5vw, 2.25rem);
+  stroke-width: 2;
 }
 
 .marquee-gallery__card {
