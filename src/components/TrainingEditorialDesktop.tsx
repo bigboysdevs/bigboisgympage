@@ -1,7 +1,7 @@
 import FadeIn from './FadeIn';
 import TrainingEditorialPlanHeader from './TrainingEditorialPlanHeader';
 import TrainingEditorialVideoStrip from './TrainingEditorialVideoStrip';
-import { getDesktopEditorialRows } from '@/models/trainingEditorialLayout';
+import { getDesktopEditorialRows, getPlanPreviewVideo, getPlanPreviewVideoPosition } from '@/models/trainingEditorialLayout';
 
 export default function TrainingEditorialDesktop() {
   const rows = getDesktopEditorialRows();
@@ -39,7 +39,11 @@ export default function TrainingEditorialDesktop() {
                   className="entrenamientos-editorial__strip-wrap"
                   style={{ flex: cell.flex }}
                 >
-                  <TrainingEditorialVideoStrip className="entrenamientos-editorial__strip--desktop" />
+                  <TrainingEditorialVideoStrip
+                    className="entrenamientos-editorial__strip--desktop"
+                    src={row.meta ? getPlanPreviewVideo(row.meta) : undefined}
+                    objectPosition={row.meta ? getPlanPreviewVideoPosition(row.meta) : undefined}
+                  />
                 </div>
               );
             })}

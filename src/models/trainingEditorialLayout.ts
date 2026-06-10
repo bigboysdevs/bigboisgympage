@@ -1,4 +1,16 @@
-import { TRAINING_PLANS, type TrainingPlan } from '@/models/trainingPlans';
+import {
+  TRAINING_PLANS,
+  TRAINING_PREVIEW_VIDEO,
+  type TrainingPlan,
+} from '@/models/trainingPlans';
+
+export function getPlanPreviewVideo(plan: TrainingPlan): string {
+  return plan.previewVideo ?? TRAINING_PREVIEW_VIDEO;
+}
+
+export function getPlanPreviewVideoPosition(plan: TrainingPlan): string {
+  return plan.previewVideoPosition ?? 'center center';
+}
 
 export type EditorialWords = {
   sans: string;
@@ -7,7 +19,7 @@ export type EditorialWords = {
 
 export type EditorialMobileBlock =
   | { type: 'text'; words: EditorialWords; plan: TrainingPlan }
-  | { type: 'video' };
+  | { type: 'video'; plan: TrainingPlan };
 
 export type EditorialDesktopCell =
   | { kind: 'text'; words: EditorialWords; split?: 'both' | 'sans' | 'serif' }
@@ -28,7 +40,7 @@ const EDITORIAL_WORDS: EditorialWords[] = [
 export function getMobileEditorialBlocks(): EditorialMobileBlock[] {
   return TRAINING_PLANS.flatMap((plan, index) => [
     { type: 'text' as const, words: EDITORIAL_WORDS[index], plan },
-    { type: 'video' as const },
+    { type: 'video' as const, plan },
   ]);
 }
 

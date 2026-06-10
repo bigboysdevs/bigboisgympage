@@ -3,10 +3,14 @@ import { TRAINING_PREVIEW_VIDEO } from '@/models/trainingPlans';
 
 type TrainingEditorialVideoStripProps = {
   className?: string;
+  src?: string;
+  objectPosition?: string;
 };
 
 export default function TrainingEditorialVideoStrip({
   className = '',
+  src = TRAINING_PREVIEW_VIDEO,
+  objectPosition = 'center center',
 }: TrainingEditorialVideoStripProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -43,14 +47,15 @@ export default function TrainingEditorialVideoStrip({
       observer.disconnect();
       video.pause();
     };
-  }, []);
+  }, [src]);
 
   return (
     <div ref={rootRef} className={`entrenamientos-editorial__strip ${className}`.trim()} aria-hidden>
       <video
         ref={videoRef}
-        src={TRAINING_PREVIEW_VIDEO}
+        src={src}
         className="entrenamientos-editorial__strip-video"
+        style={{ objectPosition }}
         muted
         loop
         playsInline

@@ -1,7 +1,12 @@
 /** Planes de entrenamiento con precio — sección Entrenamientos (lista). */
 
-/** Video de preview al hover/tap — por ahora un solo clip para todos los planes. */
+/** Fallback si un plan no define clip propio. */
 export const TRAINING_PREVIEW_VIDEO = '/videos/hero.mp4';
+
+export const TRAINING_MENSUAL_PREVIEW_VIDEO = '/videos/mensualtrain.webm';
+export const TRAINING_ALTO_RENDIMIENTO_PREVIEW_VIDEO = '/videos/highrendiment.webm';
+export const TRAINING_HIPERTROFIA_PREVIEW_VIDEO = '/videos/mensual2.webm';
+export const TRAINING_KIDS_PREVIEW_VIDEO = '/videos/kidstrain.webm';
 
 export type TrainingPlan = {
   number: string;
@@ -12,6 +17,9 @@ export type TrainingPlan = {
   badge: string;
   price: string;
   description: string;
+  previewVideo?: string;
+  /** Encuadre del clip en la tira editorial (`object-position`). */
+  previewVideoPosition?: string;
 };
 
 export const TRAINING_PLANS: TrainingPlan[] = [
@@ -25,6 +33,8 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     price: '$110.000',
     description:
       'Acceso al box y a las sesiones del plan mensual. Entrena con la estructura del gym y el acompañamiento del equipo Big Boys.',
+    previewVideo: TRAINING_MENSUAL_PREVIEW_VIDEO,
+    previewVideoPosition: 'center center',
   },
   {
     number: '02',
@@ -36,6 +46,8 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     price: '$500.000',
     description:
       'Entrenamientos personalizados con plan de alimentación y manejo de cargas para deportistas de alto rendimiento de cualquier deporte.',
+    previewVideo: TRAINING_ALTO_RENDIMIENTO_PREVIEW_VIDEO,
+    previewVideoPosition: 'center center',
   },
   {
     number: '03',
@@ -47,6 +59,8 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     price: '$500.000',
     description:
       'Plan personalizado de hipertrofia y fitness con alimentación a tu medida. Volumen, técnica e intensidad pensados para tus objetivos.',
+    previewVideo: TRAINING_HIPERTROFIA_PREVIEW_VIDEO,
+    previewVideoPosition: 'center center',
   },
   {
     number: '04',
@@ -58,5 +72,7 @@ export const TRAINING_PLANS: TrainingPlan[] = [
     price: '$500.000',
     description:
       'Espacio y entrenamiento pensados para niños: técnica, diversión y acompañamiento del equipo Big Boys en un ambiente seguro.',
+    previewVideo: TRAINING_KIDS_PREVIEW_VIDEO,
+    previewVideoPosition: 'center 22%',
   },
 ];

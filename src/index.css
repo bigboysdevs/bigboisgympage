@@ -1147,11 +1147,6 @@
   height: clamp(88px, 11vw, 148px);
 }
 
-.entrenamientos-editorial__row--1 .entrenamientos-editorial__strip-wrap,
-.entrenamientos-editorial__row--3 .entrenamientos-editorial__strip-wrap {
-  height: clamp(120px, 15vw, 200px);
-}
-
 .entrenamientos-editorial__strip--desktop {
   width: 100%;
   height: 100%;
@@ -1187,9 +1182,3 @@
   }
 }
 
-@media (min-width: 768px) {
-  .entrenamientos-editorial__row--1,
-  .entrenamientos-editorial__row--3 {
-    min-height: clamp(120px, 15vw, 200px);
-  }
-}

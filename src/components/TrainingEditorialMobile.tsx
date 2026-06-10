@@ -1,7 +1,7 @@
 import FadeIn from './FadeIn';
 import TrainingEditorialPlanHeader from './TrainingEditorialPlanHeader';
 import TrainingEditorialVideoStrip from './TrainingEditorialVideoStrip';
-import { getMobileEditorialBlocks } from '@/models/trainingEditorialLayout';
+import { getMobileEditorialBlocks, getPlanPreviewVideo, getPlanPreviewVideoPosition } from '@/models/trainingEditorialLayout';
 
 export default function TrainingEditorialMobile() {
   const blocks = getMobileEditorialBlocks();
@@ -22,8 +22,11 @@ export default function TrainingEditorialMobile() {
         }
 
         return (
-          <FadeIn key={`video-${index}`} effect="inView" delay={index * 0.04} y={12}>
-            <TrainingEditorialVideoStrip />
+          <FadeIn key={`video-${block.plan.number}`} effect="inView" delay={index * 0.04} y={12}>
+            <TrainingEditorialVideoStrip
+              src={getPlanPreviewVideo(block.plan)}
+              objectPosition={getPlanPreviewVideoPosition(block.plan)}
+            />
           </FadeIn>
         );
       })}
