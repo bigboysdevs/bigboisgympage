@@ -27,7 +27,7 @@ export const GYM_CONTACT = {
   mapsEmbedUrl:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.784!2d-75.5073282!3d5.0461215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e47654202262e67%3A0xc1d7d3f3a4ab48b8!2sBig%20Boys%20GYM!5e0!3m2!1ses!2sco!4v1747500000000!5m2!1ses!2sco',
   hours: [
-    { label: 'Lun — Vie', value: '5:00 a. m. — 10:00 p. m.' },
+    { label: 'Lunes - Viernes', value: '5:00 a. m. — 10:00 p. m.' },
     { label: 'Sábados y festivos', value: '10:00 a. m. — 1:00 p. m.' },
     { label: 'Domingos', value: 'Cerrado' },
   ],
