@@ -1,4 +1,5 @@
 import { GYM_CONTACT, GYM_LOGO_TRANSPARENT_PNG } from '../models/branding';
+import CodevsLogoLockup from './CodevsLogoLockup';
 
 const LEGAL_ITEMS = [
   {
@@ -142,15 +143,16 @@ export default function FooterLegalSection() {
           © {year} {GYM_CONTACT.name}. Todos los derechos reservados. {GYM_CONTACT.addressLines[1]}.
         </p>
 
-        <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
-          Developed by{' '}
+        <p className="mt-3 flex flex-wrap items-center justify-center gap-2 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
+          <span>Developed by</span>
           <a
             href="https://landing-page-codevs-ia.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/55 underline-offset-2 transition-colors hover:text-red-400/90 hover:underline"
+            className="inline-flex items-center opacity-90 transition-opacity hover:opacity-100"
+            aria-label="CODEVS IA — sitio oficial"
           >
-            CODEVS IA
+            <CodevsLogoLockup />
           </a>
         </p>
       </div>
