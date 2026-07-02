@@ -74,7 +74,9 @@ function openingHoursFromLabel(label: string, value: string) {
   const dayMap: Record<string, string[]> = {
     'Lun — Vie': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     Sábado: ['Saturday'],
+    'Sábados y festivos': ['Saturday'],
     Domingo: ['Sunday'],
+    Domingos: ['Sunday'],
   };
 
   const days = dayMap[label];

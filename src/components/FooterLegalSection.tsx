@@ -141,6 +141,18 @@ export default function FooterLegalSection() {
         <p className="mt-12 border-t border-white/10 pt-8 text-center text-xs font-light leading-relaxed text-white/40">
           © {year} {GYM_CONTACT.name}. Todos los derechos reservados. {GYM_CONTACT.addressLines[1]}.
         </p>
+
+        <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
+          Developed by{' '}
+          <a
+            href="https://landing-page-codevs-ia.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/55 underline-offset-2 transition-colors hover:text-red-400/90 hover:underline"
+          >
+            CODEVS IA
+          </a>
+        </p>
       </div>
     </footer>
   );
