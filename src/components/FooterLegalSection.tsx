@@ -146,7 +146,7 @@ export default function FooterLegalSection() {
         <p className="mt-3 flex flex-wrap items-center justify-center gap-2 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
           <span>Developed by</span>
           <a
-            href="https://landing-page-codevs-ia.vercel.app/"
+            href="https://www.codevsia.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center opacity-90 transition-opacity hover:opacity-100"
