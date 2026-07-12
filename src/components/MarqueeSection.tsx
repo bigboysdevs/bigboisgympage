@@ -5,10 +5,8 @@ import { wrapMarqueeOffset } from '../utils/marqueeLoop';
 
 /** Duración de una vuelta completa del carrete (ms). */
 const MARQUEE_LOOP_MS = 48_000;
-/** Extra de velocidad al hacer scroll (px/s por delta de scroll). */
-const SCROLL_BOOST_GAIN = 3.2;
-/** Decaimiento del boost de scroll. */
-const SCROLL_BOOST_DECAY = 0.92;
+/** En móvil: más lento = menos carga de GPU al scrollear. */
+const MARQUEE_LOOP_MS_MOBILE = 64_000;
 
 /** Mezcla la galería y reparte mitades disjuntas entre fila superior e inferior. */
 function splitShuffledGallery(items: readonly string[]) {
@@ -24,29 +22,27 @@ function useShuffledMarqueeRows() {
   return useMemo(() => splitShuffledGallery(GYM_GALLERY), []);
 }
 
+function useIsMobileScroll() {
+  return useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(pointer: coarse)').matches ||
+        window.matchMedia('(max-width: 767px)').matches),
+    [],
+  );
+}
+
 type MarqueeDirection = 'left' | 'right';
 
 type MarqueeRowProps = {
   items: readonly string[];
-  /**
-   * Dirección base de esta fila.
-   * La otra fila usa la opuesta: siempre una a la derecha y la otra a la izquierda.
-   */
-  baseDirection: MarqueeDirection;
-  /**
-   * Si el scroll invierte el sentido (subir/bajar).
-   * true = invertir respecto a baseDirection.
-   */
-  invertRef: MutableRefObject<boolean>;
-  scrollBoostRef: MutableRefObject<number>;
+  direction: MarqueeDirection;
+  loopMs: number;
+  /** Pausa el RAF cuando la sección no está visible. */
+  isActiveRef: MutableRefObject<boolean>;
 };
 
-function MarqueeRow({
-  items,
-  baseDirection,
-  invertRef,
-  scrollBoostRef,
-}: MarqueeRowProps) {
+function MarqueeRow({ items, direction, loopMs, isActiveRef }: MarqueeRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const loopWidthRef = useRef(0);
   const offsetRef = useRef(0);
@@ -102,28 +98,23 @@ function MarqueeRow({
     lastTsRef.current = performance.now();
 
     const tick = (now: number) => {
-      const el = trackRef.current;
-      const loop = loopWidthRef.current;
-      if (el && loop > 0) {
-        const dt = Math.min((now - lastTsRef.current) / 1000, 0.064);
-        lastTsRef.current = now;
+      if (isActiveRef.current) {
+        const el = trackRef.current;
+        const loop = loopWidthRef.current;
+        if (el && loop > 0) {
+          const dt = Math.min((now - lastTsRef.current) / 1000, 0.064);
+          lastTsRef.current = now;
 
-        const baseSpeed = loop / (MARQUEE_LOOP_MS / 1000);
-        let dir: MarqueeDirection = baseDirection;
-        if (invertRef.current) {
-          dir = baseDirection === 'left' ? 'right' : 'left';
+          const baseSpeed = loop / (loopMs / 1000);
+          const signedBase = direction === 'left' ? -baseSpeed : baseSpeed;
+
+          offsetRef.current += signedBase * dt;
+          const x = wrapMarqueeOffset(offsetRef.current, loop);
+          offsetRef.current = x;
+          el.style.transform = `translate3d(${x}px,0,0)`;
         }
-        const signedBase = dir === 'left' ? -baseSpeed : baseSpeed;
-
-        // Boost del scroll: misma lógica de sentido (bajar → izq, subir → der)
-        // y con signo según la fila para que sigan opuestas.
-        const scrollSign = baseDirection === 'left' ? 1 : -1;
-        const boostSpeed = -scrollBoostRef.current * SCROLL_BOOST_GAIN * scrollSign;
-
-        offsetRef.current += (signedBase + boostSpeed) * dt;
-        const x = wrapMarqueeOffset(offsetRef.current, loop);
-        offsetRef.current = x;
-        el.style.transform = `translateX(${x}px)`;
+      } else {
+        lastTsRef.current = now;
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -131,10 +122,18 @@ function MarqueeRow({
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [baseDirection, reducedMotion, invertRef, scrollBoostRef]);
+  }, [direction, reducedMotion, loopMs, isActiveRef]);
+
+  // En móvil: 2 copias bastan; en desktop: 3 para el bucle más largo.
+  const copies = useIsMobileScroll() ? 2 : 3;
+  const trackItems = useMemo(() => {
+    const out: string[] = [];
+    for (let c = 0; c < copies; c++) out.push(...items);
+    return out;
+  }, [items, copies]);
 
   return (
-    <div className="marquee-gallery__track-wrap">
+    <div className="marquee-gallery__track-wrap pointer-events-none">
       <div className="marquee-gallery__track overflow-hidden w-full">
         <div
           ref={trackRef}
@@ -143,7 +142,7 @@ function MarqueeRow({
           className="marquee-gallery__row flex gap-3 sm:gap-4"
           style={{ willChange: reducedMotion ? undefined : 'transform' }}
         >
-          {[...items, ...items, ...items].map((src, i) => (
+          {trackItems.map((src, i) => (
             <div
               key={`${src}-${i}`}
               className="marquee-gallery__card flex-shrink-0 overflow-hidden rounded-2xl sm:rounded-3xl"
@@ -165,76 +164,47 @@ function MarqueeRow({
 }
 
 export default function MarqueeSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isActiveRef = useRef(true);
   const { row1, row2 } = useShuffledMarqueeRows();
-  const scrollBoostRef = useRef(0);
-  /** Al subir se invierten los sentidos (siguen opuestos entre sí). */
-  const invertRef = useRef(false);
-  const lastScrollYRef = useRef(
-    typeof window !== 'undefined' ? window.scrollY : 0,
-  );
-
-  const reducedMotion = useMemo(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    [],
-  );
+  const isMobile = useIsMobileScroll();
+  const loopMs = isMobile ? MARQUEE_LOOP_MS_MOBILE : MARQUEE_LOOP_MS;
 
   useEffect(() => {
-    if (reducedMotion) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
-        const delta = y - lastScrollYRef.current;
-        lastScrollYRef.current = y;
-        if (delta === 0) return;
-
-        // Bajar = sentidos base; subir = invertidos (siguen una izq / una der)
-        invertRef.current = delta < 0;
-        scrollBoostRef.current += delta;
-        scrollBoostRef.current *= SCROLL_BOOST_DECAY;
-      });
-    };
-
-    const decay = () => {
-      scrollBoostRef.current *= SCROLL_BOOST_DECAY;
-      if (Math.abs(scrollBoostRef.current) < 0.05) scrollBoostRef.current = 0;
-      rafDecay = requestAnimationFrame(decay);
-    };
-    let rafDecay = requestAnimationFrame(decay);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(raf);
-      cancelAnimationFrame(rafDecay);
-    };
-  }, [reducedMotion]);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isActiveRef.current = entry?.isIntersecting ?? false;
+      },
+      { rootMargin: '20% 0px', threshold: 0 },
+    );
+    io.observe(section);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       className="marquee-gallery relative z-[10] mt-[clamp(2.5rem,9vh,6.5rem)] w-full overflow-hidden bg-transparent pb-10 pt-2 sm:pt-3 md:pt-4"
       aria-label="Galería de entrenamiento"
     >
       <p className="sr-only">
-        Galería en movimiento continuo: una fila va a la izquierda y la otra a la derecha. Al
-        subir o bajar la página se invierten los sentidos, siempre opuestos.
+        Galería en movimiento continuo: una fila va a la izquierda y la otra a la derecha.
       </p>
       <div className="relative flex flex-col gap-1 sm:gap-1.5 md:gap-2">
         <MarqueeRow
           items={row1}
-          baseDirection="left"
-          invertRef={invertRef}
-          scrollBoostRef={scrollBoostRef}
+          direction="left"
+          loopMs={loopMs}
+          isActiveRef={isActiveRef}
         />
         <MarqueeRow
           items={row2}
-          baseDirection="right"
-          invertRef={invertRef}
-          scrollBoostRef={scrollBoostRef}
+          direction="right"
+          loopMs={loopMs}
+          isActiveRef={isActiveRef}
         />
       </div>
     </section>

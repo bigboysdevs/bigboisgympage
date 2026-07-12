@@ -129,6 +129,9 @@ export default function GymSpacesScrollGallery() {
 
       const total = SLIDE_COUNT;
       const snapPoints = getSnapPoints(total);
+      const isMobile =
+        window.matchMedia('(pointer: coarse)').matches ||
+        window.matchMedia('(max-width: 767px)').matches;
 
       ctx = gsap.context(() => {
         ScrollTrigger.create({
@@ -138,9 +141,10 @@ export default function GymSpacesScrollGallery() {
           pin: pin,
           pinSpacing: false,
           anticipatePin: 1,
-          scrub: 0.55,
+          // Móvil: scrub más suave y sin snap (el snap pelea con el momentum nativo).
+          scrub: isMobile ? 0.85 : 0.55,
           snap:
-            total > 1
+            !isMobile && total > 1
               ? {
                   snapTo: (value) => {
                     let nearest = snapPoints[0]!;
@@ -168,6 +172,7 @@ export default function GymSpacesScrollGallery() {
               gsap.set(slide, {
                 opacity,
                 zIndex: opacity > 0.02 ? i + 1 : 0,
+                force3D: true,
               });
             });
 

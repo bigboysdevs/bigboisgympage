@@ -110,6 +110,8 @@ export function ImageCursorTrail({
 
   const handleTouchMove = useCallback(
     (event: TouchEvent<HTMLDivElement>) => {
+      // En móvil el rastro pelea con el scroll nativo — solo desktop.
+      if (window.matchMedia('(pointer: coarse)').matches) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const touch = event.touches[0];
       if (touch) spawnAt(touch.clientX, touch.clientY);

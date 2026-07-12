@@ -54,13 +54,17 @@ export default function PageLightningScroll() {
           return;
         }
 
+        const isMobile =
+          window.matchMedia('(pointer: coarse)').matches ||
+          window.matchMedia('(max-width: 767px)').matches;
+
         const scrollTrigger = {
           trigger: inicio,
           endTrigger: filosofia,
           start: 'top top',
           /** Termina al centrar Filosofía: el rayo queda en esa sección, orientación inicial. */
           end: 'center center',
-          scrub: 0.85,
+          scrub: isMobile ? 1.15 : 0.85,
           invalidateOnRefresh: true,
         };
 
@@ -70,9 +74,11 @@ export default function PageLightningScroll() {
             bolt,
             { rotateY: 0, y: 0 },
             {
-              rotateY: 360 * SCROLL_ROTATION_TURNS,
-              y: () => window.innerHeight * MAX_DRIFT_VH,
+              // En móvil: menos rotación 3D (más fluida).
+              rotateY: 360 * (isMobile ? 1 : SCROLL_ROTATION_TURNS),
+              y: () => window.innerHeight * (isMobile ? MAX_DRIFT_VH * 0.5 : MAX_DRIFT_VH),
               ease: 'none',
+              force3D: true,
             },
             0,
           )
@@ -80,8 +86,9 @@ export default function PageLightningScroll() {
             root,
             { x: 0 },
             {
-              x: () => -window.innerWidth * MAX_DRIFT_VW,
+              x: () => -window.innerWidth * (isMobile ? MAX_DRIFT_VW * 0.6 : MAX_DRIFT_VW),
               ease: 'none',
+              force3D: true,
             },
             0,
           );
