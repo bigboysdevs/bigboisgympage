@@ -20,9 +20,12 @@ function getSlideOpacity(index: number, progress: number, total: number) {
   const distance = Math.abs(progress - index * step) / step;
   if (distance >= 1) return 0;
 
-  const solid = 0.55;
+  // Cruce corto y limpio: mantiene opacidad plena un tramo breve, luego fade suave.
+  const solid = 0.38;
   if (distance <= solid) return 1;
-  return 1 - (distance - solid) / (1 - solid);
+  const t = (distance - solid) / (1 - solid);
+  // smoothstep — menos “doble exposición” en el cruce
+  return 1 - t * t * (3 - 2 * t);
 }
 
 function getActiveIndex(progress: number, total: number) {
@@ -85,10 +88,10 @@ function SlideCaption({ item }: { item: GymSpaceScrollItem }) {
     <motion.div
       key={item.id}
       className="gym-spaces-scroll__content"
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <h3 className="gym-spaces-scroll__content-title">{item.title}</h3>
     </motion.div>
@@ -135,7 +138,7 @@ export default function GymSpacesScrollGallery() {
           pin: pin,
           pinSpacing: false,
           anticipatePin: 1,
-          scrub: 0.35,
+          scrub: 0.55,
           snap:
             total > 1
               ? {
@@ -151,9 +154,9 @@ export default function GymSpacesScrollGallery() {
                     }
                     return nearest;
                   },
-                  duration: { min: 0.45, max: 0.75 },
-                  delay: 0.05,
-                  ease: 'power2.inOut',
+                  duration: { min: 0.35, max: 0.55 },
+                  delay: 0.02,
+                  ease: 'power1.out',
                 }
               : undefined,
           onUpdate: (self) => {
@@ -162,7 +165,10 @@ export default function GymSpacesScrollGallery() {
             slideRefs.current.forEach((slide, i) => {
               if (!slide) return;
               const opacity = getSlideOpacity(i, progress, total);
-              gsap.set(slide, { opacity, scale: 1, zIndex: opacity > 0.05 ? i + 1 : 0 });
+              gsap.set(slide, {
+                opacity,
+                zIndex: opacity > 0.02 ? i + 1 : 0,
+              });
             });
 
             const idx = getActiveIndex(progress, total);
@@ -233,9 +239,10 @@ export default function GymSpacesScrollGallery() {
                 item.imagePosition ? { objectPosition: item.imagePosition } : undefined
               }
             />
-            <div className="gym-spaces-scroll__scrim" aria-hidden />
           </div>
         ))}
+
+        <div className="gym-spaces-scroll__scrim" aria-hidden />
 
         <SideNav activeIndex={activeIndex} total={SLIDE_COUNT} />
 

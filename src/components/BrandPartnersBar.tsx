@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useHorizontalDragOffset } from '@/hooks/useHorizontalDragOffset';
 import {
-  BRAND_PARTNERS_BAR_TITLE,
   BRAND_PARTNERS_MARQUEE_MS,
   PARTNER_BRANDS,
 } from '@/models/partnerBrands';
@@ -162,17 +161,10 @@ export default function BrandPartnersBar() {
 
   return (
     <section
-      className="brand-partners-bar relative z-[15] w-full border-y border-white/10 bg-[#0a0a0a]/90 py-5 backdrop-blur-[2px] sm:py-6"
-      aria-labelledby="brand-partners-heading"
+      className="brand-partners-bar relative z-[15] mt-[clamp(2.5rem,8vh,5rem)] w-full border-y border-white/10 bg-[#0a0a0a]/90 py-5 backdrop-blur-[2px] sm:py-6"
+      aria-label="Marcas aliadas"
     >
-      <div className="mx-auto flex max-w-[100vw] flex-col items-center gap-4 sm:gap-5">
-        <p
-          id="brand-partners-heading"
-          className="px-5 text-center text-[10px] font-semibold uppercase tracking-[0.32em] text-white/55 sm:text-[11px] sm:tracking-[0.36em]"
-        >
-          {BRAND_PARTNERS_BAR_TITLE}
-        </p>
-
+      <div className="mx-auto flex max-w-[100vw] flex-col items-center">
         <p className="sr-only">
           Carrusel de marcas aliadas: se mueve solo y puedes arrastrarlo en horizontal hacia la
           izquierda o la derecha.

@@ -757,7 +757,7 @@
 .gym-spaces-scroll__slide {
   position: absolute;
   inset: 0;
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
 .gym-spaces-scroll__img {
@@ -771,12 +771,13 @@
 .gym-spaces-scroll__scrim {
   position: absolute;
   inset: 0;
+  z-index: 15;
   background: linear-gradient(
     90deg,
-    rgba(12, 12, 12, 0.82) 0%,
-    rgba(12, 12, 12, 0.52) 38%,
-    rgba(12, 12, 12, 0.28) 68%,
-    rgba(12, 12, 12, 0.45) 100%
+    rgba(12, 12, 12, 0.72) 0%,
+    rgba(12, 12, 12, 0.38) 42%,
+    rgba(12, 12, 12, 0.18) 72%,
+    rgba(12, 12, 12, 0.32) 100%
   );
   pointer-events: none;
 }
@@ -799,20 +800,19 @@
   top: 0.5rem;
   bottom: 0.5rem;
   width: 1px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .gym-spaces-scroll__side-indicator {
   position: absolute;
   left: 50%;
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 2px solid #fff;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1.5px solid #fff;
   border-radius: 999px;
   background: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 232, 0, 0.5);
   transform: translate(-50%, -50%);
-  transition: top 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: top 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .gym-spaces-scroll__side-list {
@@ -830,9 +830,7 @@
   display: flex;
   align-items: center;
   transform: translateY(-50%);
-  transition:
-    opacity 0.45s ease,
-    color 0.45s ease;
+  transition: opacity 0.35s ease, color 0.35s ease;
 }
 
 .gym-spaces-scroll__side-num {
@@ -842,27 +840,27 @@
   line-height: 1;
   letter-spacing: -0.02em;
   transition:
-    font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.45s ease,
-    opacity 0.45s ease;
+    font-size 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s ease,
+    opacity 0.35s ease;
 }
 
 .gym-spaces-scroll__side-step--active .gym-spaces-scroll__side-num {
-  font-size: clamp(2.75rem, 7vw, 4.25rem);
+  font-size: clamp(2.35rem, 6vw, 3.5rem);
   color: #fff;
   opacity: 1;
 }
 
 .gym-spaces-scroll__side-step--upcoming .gym-spaces-scroll__side-num {
-  font-size: clamp(1.35rem, 3.5vw, 2rem);
-  color: rgba(255, 255, 255, 0.42);
-  opacity: 0.85;
+  font-size: clamp(1.2rem, 3vw, 1.75rem);
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 0.8;
 }
 
 .gym-spaces-scroll__side-step--past .gym-spaces-scroll__side-num {
-  font-size: clamp(1.1rem, 2.8vw, 1.65rem);
-  color: rgba(255, 255, 255, 0.22);
-  opacity: 0.7;
+  font-size: clamp(1.05rem, 2.5vw, 1.45rem);
+  color: rgba(255, 255, 255, 0.2);
+  opacity: 0.65;
 }
 
 /* Texto — título grande + párrafo (estilo Discover) */

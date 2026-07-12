@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react';
 import { GYM_GALLERY } from '@/models/gymGallery';
 import { shuffleArray } from '@/utils/shuffleArray';
-import { useHorizontalDragOffset } from '../hooks/useHorizontalDragOffset';
 import { wrapMarqueeOffset } from '../utils/marqueeLoop';
+
+/** Duración de una vuelta completa del carrete (ms). */
+const MARQUEE_LOOP_MS = 48_000;
+/** Extra de velocidad al hacer scroll (px/s por delta de scroll). */
+const SCROLL_BOOST_GAIN = 3.2;
+/** Decaimiento del boost de scroll. */
+const SCROLL_BOOST_DECAY = 0.92;
 
 /** Mezcla la galería y reparte mitades disjuntas entre fila superior e inferior. */
 function splitShuffledGallery(items: readonly string[]) {
@@ -19,44 +24,41 @@ function useShuffledMarqueeRows() {
   return useMemo(() => splitShuffledGallery(GYM_GALLERY), []);
 }
 
-const SCROLL_BASE_OFFSET = -200;
-const SCROLL_FACTOR = 0.3;
-const NUDGE_PX = 220;
-
-function MarqueeArrow({
-  direction,
-  onClick,
-}: {
-  direction: 'left' | 'right';
-  onClick: () => void;
-}) {
-  const Icon = direction === 'left' ? ChevronLeft : ChevronRight;
-  const label =
-    direction === 'left' ? 'Desplazar galería a la izquierda' : 'Desplazar galería a la derecha';
-
-  return (
-    <button
-      type="button"
-      className={`marquee-gallery__arrow marquee-gallery__arrow--${direction}`}
-      aria-label={label}
-      onClick={onClick}
-    >
-      <Icon className="marquee-gallery__arrow-icon" aria-hidden />
-    </button>
-  );
-}
+type MarqueeDirection = 'left' | 'right';
 
 type MarqueeRowProps = {
   items: readonly string[];
-  /** Scroll de página: fila 2 va en sentido contrario a la 1 */
-  scrollDirection: 1 | -1;
-  scrollBase: number;
+  /**
+   * Dirección base de esta fila.
+   * La otra fila usa la opuesta: siempre una a la derecha y la otra a la izquierda.
+   */
+  baseDirection: MarqueeDirection;
+  /**
+   * Si el scroll invierte el sentido (subir/bajar).
+   * true = invertir respecto a baseDirection.
+   */
+  invertRef: MutableRefObject<boolean>;
+  scrollBoostRef: MutableRefObject<number>;
 };
 
-function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
+function MarqueeRow({
+  items,
+  baseDirection,
+  invertRef,
+  scrollBoostRef,
+}: MarqueeRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const loopWidthRef = useRef(0);
-  const drag = useHorizontalDragOffset();
+  const offsetRef = useRef(0);
+  const lastTsRef = useRef(0);
+  const rafRef = useRef(0);
+
+  const reducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
 
   const measureLoop = useCallback(() => {
     const track = trackRef.current;
@@ -71,83 +73,75 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
     if (width > 0) loopWidthRef.current = width;
   }, [items.length]);
 
-  const applyTransform = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-
-    const scrollX = scrollDirection === 1 ? scrollBase : -scrollBase;
-    const dragRaw = drag.getOffset();
-    const loop = loopWidthRef.current;
-    const dragLooped = loop > 0 ? wrapMarqueeOffset(dragRaw, loop) : dragRaw;
-    const x = scrollX + dragLooped;
-    el.style.transform = `translateX(${x}px)`;
-  }, [scrollDirection, drag, scrollBase]);
-
-  useEffect(() => {
-    applyTransform();
-  }, [applyTransform]);
-
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
     measureLoop();
-    applyTransform();
 
     const ro = new ResizeObserver(() => {
       measureLoop();
-      applyTransform();
     });
     ro.observe(track);
 
-    const onImgLoad = () => {
-      measureLoop();
-      applyTransform();
-    };
+    const onImgLoad = () => measureLoop();
     track.querySelectorAll('img').forEach((img) => {
       if (!img.complete) img.addEventListener('load', onImgLoad, { once: true });
     });
 
     return () => ro.disconnect();
-  }, [applyTransform, measureLoop, items]);
+  }, [measureLoop, items]);
 
-  const dragHandlers = {
-    onPointerDown: drag.onPointerDown,
-    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerMove(e);
-      applyTransform();
-    },
-    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerUp(e, loopWidthRef.current);
-      applyTransform();
-    },
-    onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerCancel(e, loopWidthRef.current);
-      applyTransform();
-    },
-  };
+  useEffect(() => {
+    if (reducedMotion) {
+      const el = trackRef.current;
+      if (el) el.style.transform = '';
+      return;
+    }
 
-  const nudge = useCallback(
-    (direction: 'left' | 'right') => {
-      const delta = direction === 'left' ? -NUDGE_PX : NUDGE_PX;
-      drag.nudgeBy(delta, loopWidthRef.current);
-      applyTransform();
-    },
-    [drag, applyTransform],
-  );
+    lastTsRef.current = performance.now();
+
+    const tick = (now: number) => {
+      const el = trackRef.current;
+      const loop = loopWidthRef.current;
+      if (el && loop > 0) {
+        const dt = Math.min((now - lastTsRef.current) / 1000, 0.064);
+        lastTsRef.current = now;
+
+        const baseSpeed = loop / (MARQUEE_LOOP_MS / 1000);
+        let dir: MarqueeDirection = baseDirection;
+        if (invertRef.current) {
+          dir = baseDirection === 'left' ? 'right' : 'left';
+        }
+        const signedBase = dir === 'left' ? -baseSpeed : baseSpeed;
+
+        // Boost del scroll: misma lógica de sentido (bajar → izq, subir → der)
+        // y con signo según la fila para que sigan opuestas.
+        const scrollSign = baseDirection === 'left' ? 1 : -1;
+        const boostSpeed = -scrollBoostRef.current * SCROLL_BOOST_GAIN * scrollSign;
+
+        offsetRef.current += (signedBase + boostSpeed) * dt;
+        const x = wrapMarqueeOffset(offsetRef.current, loop);
+        offsetRef.current = x;
+        el.style.transform = `translateX(${x}px)`;
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [baseDirection, reducedMotion, invertRef, scrollBoostRef]);
 
   return (
     <div className="marquee-gallery__track-wrap">
-      <MarqueeArrow direction="left" onClick={() => nudge('left')} />
-      <MarqueeArrow direction="right" onClick={() => nudge('right')} />
       <div className="marquee-gallery__track overflow-hidden w-full">
         <div
           ref={trackRef}
-          role="region"
-          aria-label="Galería — arrastra en horizontal (carrete infinito)"
-          className="marquee-gallery__row flex cursor-grab gap-3 active:cursor-grabbing sm:gap-4"
-          style={{ willChange: 'transform', touchAction: 'pan-y' }}
-          {...dragHandlers}
+          role="presentation"
+          aria-hidden
+          className="marquee-gallery__row flex gap-3 sm:gap-4"
+          style={{ willChange: reducedMotion ? undefined : 'transform' }}
         >
           {[...items, ...items, ...items].map((src, i) => (
             <div
@@ -156,7 +150,7 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
             >
               <img
                 src={src}
-                alt="Big Boys Gym — galería"
+                alt=""
                 className="pointer-events-none h-full w-full select-none object-cover"
                 loading="lazy"
                 decoding="async"
@@ -171,42 +165,77 @@ function MarqueeRow({ items, scrollDirection, scrollBase }: MarqueeRowProps) {
 }
 
 export default function MarqueeSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [scrollBase, setScrollBase] = useState(SCROLL_BASE_OFFSET);
   const { row1, row2 } = useShuffledMarqueeRows();
+  const scrollBoostRef = useRef(0);
+  /** Al subir se invierten los sentidos (siguen opuestos entre sí). */
+  const invertRef = useRef(false);
+  const lastScrollYRef = useRef(
+    typeof window !== 'undefined' ? window.scrollY : 0,
+  );
+
+  const reducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  );
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionTop = window.scrollY + rect.top;
-      const scrolled = window.scrollY - sectionTop + window.innerHeight;
-      setScrollBase(scrolled * SCROLL_FACTOR + SCROLL_BASE_OFFSET);
+    if (reducedMotion) return;
+
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastScrollYRef.current;
+        lastScrollYRef.current = y;
+        if (delta === 0) return;
+
+        // Bajar = sentidos base; subir = invertidos (siguen una izq / una der)
+        invertRef.current = delta < 0;
+        scrollBoostRef.current += delta;
+        scrollBoostRef.current *= SCROLL_BOOST_DECAY;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    handleScroll();
+    const decay = () => {
+      scrollBoostRef.current *= SCROLL_BOOST_DECAY;
+      if (Math.abs(scrollBoostRef.current) < 0.05) scrollBoostRef.current = 0;
+      rafDecay = requestAnimationFrame(decay);
+    };
+    let rafDecay = requestAnimationFrame(decay);
 
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafDecay);
     };
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section
-      ref={sectionRef}
       className="marquee-gallery relative z-[10] mt-[clamp(2.5rem,9vh,6.5rem)] w-full overflow-hidden bg-transparent pb-10 pt-2 sm:pt-3 md:pt-4"
       aria-label="Galería de entrenamiento"
     >
       <p className="sr-only">
-        Al bajar o subir la página las filas se mueven con el scroll. Puedes arrastrar las fotos en
-        horizontal en un carrete infinito, o usar las flechas izquierda y derecha.
+        Galería en movimiento continuo: una fila va a la izquierda y la otra a la derecha. Al
+        subir o bajar la página se invierten los sentidos, siempre opuestos.
       </p>
       <div className="relative flex flex-col gap-1 sm:gap-1.5 md:gap-2">
-        <MarqueeRow items={row1} scrollDirection={1} scrollBase={scrollBase} />
-        <MarqueeRow items={row2} scrollDirection={-1} scrollBase={scrollBase} />
+        <MarqueeRow
+          items={row1}
+          baseDirection="left"
+          invertRef={invertRef}
+          scrollBoostRef={scrollBoostRef}
+        />
+        <MarqueeRow
+          items={row2}
+          baseDirection="right"
+          invertRef={invertRef}
+          scrollBoostRef={scrollBoostRef}
+        />
       </div>
     </section>
   );
