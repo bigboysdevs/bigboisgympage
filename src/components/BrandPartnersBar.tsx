@@ -1,51 +1,23 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useHorizontalDragOffset } from '@/hooks/useHorizontalDragOffset';
 import {
   BRAND_PARTNERS_MARQUEE_MS,
   PARTNER_BRANDS,
 } from '@/models/partnerBrands';
 import { wrapMarqueeOffset } from '@/utils/marqueeLoop';
 
-function PartnerLogo({
-  name,
-  logoSrc,
-  href,
-}: {
-  name: string;
-  logoSrc: string;
-  href?: string;
-}) {
-  const img = (
-    <img
-      src={logoSrc}
-      alt={name}
-      className="brand-partners-bar__logo pointer-events-none h-7 w-auto max-w-[9rem] select-none object-contain object-center opacity-80 sm:h-8 md:h-9"
-      width={140}
-      height={36}
-      loading="lazy"
-      decoding="async"
-      draggable={false}
-    />
-  );
-
-  if (href) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="brand-partners-bar__link flex shrink-0 items-center px-6 transition-opacity duration-200 hover:opacity-100 sm:px-8 md:px-10"
-        aria-label={`${name} — sitio oficial`}
-        draggable={false}
-      >
-        {img}
-      </a>
-    );
-  }
-
+function PartnerLogo({ name, logoSrc }: { name: string; logoSrc: string }) {
   return (
     <div className="brand-partners-bar__link flex shrink-0 items-center px-6 sm:px-8 md:px-10">
-      {img}
+      <img
+        src={logoSrc}
+        alt={name}
+        className="brand-partners-bar__logo pointer-events-none h-7 w-auto max-w-[9rem] select-none object-contain object-center opacity-80 sm:h-8 md:h-9"
+        width={140}
+        height={36}
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
     </div>
   );
 }
@@ -55,7 +27,6 @@ export default function BrandPartnersBar() {
   const loopWidthRef = useRef(0);
   const marqueeStartRef = useRef(0);
   const rafRef = useRef(0);
-  const drag = useHorizontalDragOffset();
 
   const reducedMotion = useMemo(
     () =>
@@ -87,8 +58,6 @@ export default function BrandPartnersBar() {
     if (!el) return;
 
     const loop = loopWidthRef.current;
-    const dragRaw = drag.getOffset();
-    const dragLooped = loop > 0 ? wrapMarqueeOffset(dragRaw, loop) : dragRaw;
 
     let autoOffset = 0;
     if (!reducedMotion && loop > 0 && marqueeStartRef.current > 0) {
@@ -97,7 +66,7 @@ export default function BrandPartnersBar() {
       autoOffset = -progress * loop;
     }
 
-    const x = loop > 0 ? wrapMarqueeOffset(autoOffset + dragLooped, loop) : dragLooped;
+    const x = loop > 0 ? wrapMarqueeOffset(autoOffset, loop) : 0;
 
     if (reducedMotion && x === 0) {
       el.style.transform = '';
@@ -105,7 +74,7 @@ export default function BrandPartnersBar() {
     }
 
     el.style.transform = `translateX(${x}px)`;
-  }, [drag, reducedMotion]);
+  }, [reducedMotion]);
 
   useEffect(() => {
     marqueeStartRef.current = performance.now();
@@ -143,52 +112,30 @@ export default function BrandPartnersBar() {
     return () => ro.disconnect();
   }, [applyTransform, measureLoop]);
 
-  const dragHandlers = {
-    onPointerDown: drag.onPointerDown,
-    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerMove(e);
-      applyTransform();
-    },
-    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerUp(e, loopWidthRef.current);
-      applyTransform();
-    },
-    onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => {
-      drag.onPointerCancel(e, loopWidthRef.current);
-      applyTransform();
-    },
-  };
-
   return (
     <section
       className="brand-partners-bar relative z-[15] mt-[clamp(2.5rem,8vh,5rem)] w-full border-y border-white/10 bg-[#0a0a0a]/90 py-5 backdrop-blur-[2px] sm:py-6"
       aria-label="Marcas aliadas"
     >
       <div className="mx-auto flex max-w-[100vw] flex-col items-center">
-        <p className="sr-only">
-          Carrusel de marcas aliadas: se mueve solo y puedes arrastrarlo en horizontal hacia la
-          izquierda o la derecha.
-        </p>
+        <p className="sr-only">Carrusel automático de marcas aliadas.</p>
 
         <div
           className="brand-partners-bar__viewport relative w-full overflow-hidden"
-          aria-label="Logos de marcas aliadas — arrastra en horizontal"
+          aria-hidden
         >
           <div className="brand-partners-bar__fade brand-partners-bar__fade--left" aria-hidden />
           <div className="brand-partners-bar__fade brand-partners-bar__fade--right" aria-hidden />
 
           <div
             ref={trackRef}
-            className="brand-partners-bar__track flex w-max cursor-grab items-center active:cursor-grabbing"
-            style={{ touchAction: 'pan-y' }}
-            {...dragHandlers}
+            className="brand-partners-bar__track pointer-events-none flex w-max items-center"
           >
             {loop.map((brand, index) => (
               <PartnerLogo
                 key={`${brand.id}-${index}`}
                 name={brand.name}
                 logoSrc={brand.logoSrc}
-                href={brand.href}
               />
             ))}
           </div>
