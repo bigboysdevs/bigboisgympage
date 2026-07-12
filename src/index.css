@@ -657,13 +657,6 @@
   }
 }
 
-/* Mientras el usuario hace touch/scroll en móvil: pausar marquees */
-html.is-touch-scrolling .brand-partners-bar__track--auto,
-html.is-touch-scrolling .marquee-gallery__row--css-left,
-html.is-touch-scrolling .marquee-gallery__row--css-right {
-  animation-play-state: paused;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .marquee-gallery__row--css-left,
   .marquee-gallery__row--css-right {
