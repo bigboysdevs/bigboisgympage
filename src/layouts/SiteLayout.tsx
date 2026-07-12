@@ -8,6 +8,7 @@ import InvertedBlendCursor from '@/components/InvertedBlendCursor';
 import FloatingScrollProgress from '@/components/FloatingScrollProgress';
 import PageLightningScroll from '@/components/PageLightningScroll';
 import EntrySplashScreen from '@/components/EntrySplashScreen';
+import MobileScrollMarqueePause from '@/components/MobileScrollMarqueePause';
 
 // PERF: Howler + UI de radio fuera del camino crítico de la home.
 const FloatingRadioPlayer = lazy(() => import('@/components/FloatingRadioPlayer'));
@@ -17,6 +18,7 @@ export default function SiteLayout() {
     <>
       <SeoHead />
       <EntrySplashScreen />
+      <MobileScrollMarqueePause />
       <ScrollToHash />
       <header
         id="site-header"

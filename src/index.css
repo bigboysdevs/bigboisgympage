@@ -530,7 +530,11 @@
   }
 }
 
-/* Barra de marcas aliadas — marquee lento debajo del hero */
+/* Barra de marcas aliadas — marquee CSS (sin JS) */
+.brand-partners-bar {
+  touch-action: pan-y;
+}
+
 .brand-partners-bar__viewport {
   mask-image: linear-gradient(
     90deg,
@@ -567,8 +571,18 @@
   background: linear-gradient(270deg, #0a0a0a 0%, transparent 100%);
 }
 
-.brand-partners-bar__track {
+.brand-partners-bar__track--auto {
+  animation: brand-partners-marquee var(--brand-marquee-ms, 52s) linear infinite;
   will-change: transform;
+}
+
+@keyframes brand-partners-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .brand-partners-bar__link:hover .brand-partners-bar__logo {
@@ -576,6 +590,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .brand-partners-bar__track--auto {
+    animation: none;
+  }
+
   .brand-partners-bar__track {
     flex-wrap: wrap;
     justify-content: center;
@@ -583,7 +601,6 @@
     max-width: 72rem;
     margin-inline: auto;
     gap: 0.5rem 0;
-    cursor: grab;
   }
 
   .brand-partners-bar__viewport {
@@ -597,19 +614,61 @@
   }
 }
 
-@media (max-width: 1023px) {
-  .brand-partners-bar__track {
-    will-change: auto;
-  }
+/* Galería: marquees CSS opuestos (sin RAF) */
+.marquee-gallery {
+  touch-action: pan-y;
 }
 
-/* Galería: tarjetas proporcionales + arrastre horizontal */
 .marquee-gallery__track-wrap {
   position: relative;
 }
 
 .marquee-gallery__track {
   position: relative;
+}
+
+.marquee-gallery__row--css-left {
+  width: max-content;
+  animation: gallery-marquee-left 56s linear infinite;
+  will-change: transform;
+}
+
+.marquee-gallery__row--css-right {
+  width: max-content;
+  animation: gallery-marquee-right 56s linear infinite;
+  will-change: transform;
+}
+
+@keyframes gallery-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes gallery-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Mientras el usuario hace touch/scroll en móvil: pausar marquees */
+html.is-touch-scrolling .brand-partners-bar__track--auto,
+html.is-touch-scrolling .marquee-gallery__row--css-left,
+html.is-touch-scrolling .marquee-gallery__row--css-right {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-gallery__row--css-left,
+  .marquee-gallery__row--css-right {
+    animation: none;
+  }
 }
 
 .marquee-gallery__arrow {
@@ -966,16 +1025,28 @@
     drop-shadow(0 0 56px rgba(255, 190, 0, 0.22));
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .page-lightning-scroll {
     left: clamp(0.5rem, 2.5vw, 1.5rem);
     width: 48%;
     max-width: 48vw;
+    will-change: auto;
+    perspective: none;
+  }
+
+  .page-lightning-scroll__bolt {
+    will-change: auto;
   }
 
   .page-lightning-scroll__img {
     -webkit-mask-position: 88% top;
     mask-position: 88% top;
+  }
+
+  .brand-partners-bar__track--auto,
+  .marquee-gallery__row--css-left,
+  .marquee-gallery__row--css-right {
+    will-change: auto;
   }
 }
 

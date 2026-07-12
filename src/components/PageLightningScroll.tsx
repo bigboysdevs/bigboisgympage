@@ -12,6 +12,7 @@ const MAX_DRIFT_VW = 0.055;
 /**
  * Rayo fijo en pantalla (columna izquierda), detrás del título (z-5).
  * Scroll (#inicio → #filosofia): gira, baja un poco y se desplaza a la izquierda.
+ * En móvil: estático (sin GSAP) para no interferir con el scroll táctil.
  */
 export default function PageLightningScroll() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -28,13 +29,18 @@ export default function PageLightningScroll() {
     const reducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches;
+    const isMobile =
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(max-width: 767px)').matches;
+
+    // Móvil: sin ScrollTrigger / rotateY (causa interferencia al tocar el hero).
+    if (isMobile || reducedMotion) return;
 
     let cancelled = false;
     let ctx: { revert: () => void } | undefined;
     let refreshOnLoad: (() => void) | undefined;
 
     const setup = async () => {
-      // PERF: GSAP + ScrollTrigger fuera del bundle inicial; el rayo CSS ya es visible.
       const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
         import('gsap'),
         import('gsap/ScrollTrigger'),
@@ -48,23 +54,12 @@ export default function PageLightningScroll() {
       if (!inicio || !filosofia) return;
 
       ctx = gsap.context(() => {
-        if (reducedMotion) {
-          gsap.set(bolt, { y: 0, rotateY: 0 });
-          gsap.set(root, { x: 0 });
-          return;
-        }
-
-        const isMobile =
-          window.matchMedia('(pointer: coarse)').matches ||
-          window.matchMedia('(max-width: 767px)').matches;
-
         const scrollTrigger = {
           trigger: inicio,
           endTrigger: filosofia,
           start: 'top top',
-          /** Termina al centrar Filosofía: el rayo queda en esa sección, orientación inicial. */
           end: 'center center',
-          scrub: isMobile ? 1.15 : 0.85,
+          scrub: 0.85,
           invalidateOnRefresh: true,
         };
 
@@ -74,9 +69,8 @@ export default function PageLightningScroll() {
             bolt,
             { rotateY: 0, y: 0 },
             {
-              // En móvil: menos rotación 3D (más fluida).
-              rotateY: 360 * (isMobile ? 1 : SCROLL_ROTATION_TURNS),
-              y: () => window.innerHeight * (isMobile ? MAX_DRIFT_VH * 0.5 : MAX_DRIFT_VH),
+              rotateY: 360 * SCROLL_ROTATION_TURNS,
+              y: () => window.innerHeight * MAX_DRIFT_VH,
               ease: 'none',
               force3D: true,
             },
@@ -86,7 +80,7 @@ export default function PageLightningScroll() {
             root,
             { x: 0 },
             {
-              x: () => -window.innerWidth * (isMobile ? MAX_DRIFT_VW * 0.6 : MAX_DRIFT_VW),
+              x: () => -window.innerWidth * MAX_DRIFT_VW,
               ease: 'none',
               force3D: true,
             },
